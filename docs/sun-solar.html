@@ -1,0 +1,982 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Sun &amp; Solar — Lot #86</title>
+<style>
+  .viz-root {
+    color-scheme: light;
+    --surface-1: #fcfcfb; --page: #f9f9f7; --text-primary: #0b0b0b;
+    --text-secondary: #52514e; --text-muted: #898781; --grid: #e1e0d9;
+    --baseline: #c3c2b7; --border: rgba(11,11,11,0.10);
+    --badge-bg: #eef0ea; --accent: #e07b39;
+  }
+  @media (prefers-color-scheme: dark) {
+    :root:where(:not([data-theme="light"])) .viz-root {
+      color-scheme: dark;
+      --surface-1: #1a1a19; --page: #0d0d0d; --text-primary: #ffffff;
+      --text-secondary: #c3c2b7; --text-muted: #898781; --grid: #2c2c2a;
+      --baseline: #383835; --border: rgba(255,255,255,0.10);
+      --badge-bg: #23261f; --accent: #e8935a;
+    }
+  }
+  :root[data-theme="dark"] .viz-root {
+    color-scheme: dark;
+    --surface-1: #1a1a19; --page: #0d0d0d; --text-primary: #ffffff;
+    --text-secondary: #c3c2b7; --text-muted: #898781; --grid: #2c2c2a;
+    --baseline: #383835; --border: rgba(255,255,255,0.10);
+    --badge-bg: #23261f; --accent: #e8935a;
+  }
+  * { box-sizing: border-box; }
+  body { margin: 0; }
+  .viz-root {
+    font-family: system-ui, -apple-system, "Segoe UI", sans-serif;
+    background: var(--page); color: var(--text-primary);
+    min-height: 60vh; padding: 32px 20px 60px;
+  }
+  .wrap { max-width: 1280px; margin: 0 auto; }
+  .section-title { font-size: 21px; font-weight: 600; margin: 0 0 6px; }
+  .subhead { color: var(--text-secondary); font-size: 14px; line-height: 1.5; margin: 0 0 12px; }
+  .badge-row { display: flex; flex-wrap: wrap; gap: 8px; margin-bottom: 20px; }
+  .badge {
+    background: var(--badge-bg); border: 1px solid var(--border); border-radius: 999px;
+    padding: 5px 12px; font-size: 12px; color: var(--text-secondary);
+    text-decoration: none;
+  }
+  .badge b { color: var(--text-primary); font-weight: 600; }
+  a.badge:hover { border-color: var(--accent); color: var(--text-primary); }
+  .panel {
+    background: var(--surface-1); border: 1px solid var(--border);
+    border-radius: 10px; padding: 16px 16px 10px;
+  }
+  .panel-title { font-size: 15px; font-weight: 600; margin: 0 0 2px; }
+  .panel-sub { font-size: 12px; color: var(--text-muted); margin: 0 0 10px; }
+  svg.chart { width: 100%; height: auto; display: block; overflow: visible; }
+  section.page-section { margin-bottom: 48px; padding-bottom: 4px; border-bottom: 1px solid var(--border); }
+  section.page-section:last-of-type { border-bottom: none; }
+  .tooltip {
+    position: absolute; pointer-events: none; opacity: 0; transition: opacity .1s;
+    background: var(--text-primary); color: var(--surface-1); font-size: 11.5px;
+    padding: 5px 8px; border-radius: 6px; white-space: nowrap; transform: translate(-50%, -100%);
+    z-index: 5;
+  }
+
+  /* ---- sun-path-charts.html (spc-) ---- */
+  .viz-root { --spc-series-winter: #2a78d6; --spc-series-spring: #008300; --spc-series-summer: #e87ba4; --spc-series-fall: #eda100; }
+  @media (prefers-color-scheme: dark) {
+    :root:where(:not([data-theme="light"])) .viz-root { --spc-series-winter: #3987e5; --spc-series-spring: #008300; --spc-series-summer: #d55181; --spc-series-fall: #c98500; }
+  }
+  :root[data-theme="dark"] .viz-root { --spc-series-winter: #3987e5; --spc-series-spring: #008300; --spc-series-summer: #d55181; --spc-series-fall: #c98500; }
+  header.spc-page-head { margin-bottom: 28px; }
+  .spc-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 20px; }
+  @media (max-width: 720px) { .spc-grid { grid-template-columns: 1fr; } }
+  .spc-panel-stats { display: flex; flex-wrap: wrap; gap: 4px 14px; font-size: 12px; color: var(--text-secondary); margin-bottom: 8px; }
+  .spc-panel-stats b { color: var(--text-primary); font-weight: 600; }
+  .spc-grid-line { stroke: var(--grid); stroke-width: 1; }
+  .spc-baseline { stroke: var(--baseline); stroke-width: 1; }
+  .spc-axis-label { fill: var(--text-muted); font-size: 9.5px; }
+  .spc-axis-label-strong { fill: var(--text-secondary); font-size: 9.5px; font-weight: 600; }
+  .spc-sun-path { fill: none; stroke-width: 2; stroke-linecap: round; stroke-linejoin: round; }
+  .spc-hour-dot { stroke-width: 2; }
+  .spc-direct-label { fill: var(--text-secondary); font-size: 10px; }
+  .spc-direct-label-strong { fill: var(--text-primary); font-size: 10.5px; font-weight: 600; }
+  .spc-crosshair-line { stroke: var(--text-muted); stroke-width: 1; stroke-dasharray: 2,2; pointer-events: none; opacity: 0; }
+  .spc-hover-dot { pointer-events: none; opacity: 0; }
+  .spc-hit-layer { fill: transparent; cursor: crosshair; }
+  details.spc-table-toggle { margin-top: 28px; background: var(--surface-1); border: 1px solid var(--border); border-radius: 12px; padding: 14px 18px; }
+  details.spc-table-toggle summary { cursor: pointer; font-size: 14px; font-weight: 600; color: var(--text-primary); }
+  .spc-tables { display: grid; grid-template-columns: 1fr 1fr; gap: 24px; margin-top: 14px; }
+  @media (max-width: 720px) { .spc-tables { grid-template-columns: 1fr; } }
+  table.data-table { width: 100%; border-collapse: collapse; font-size: 12px; font-variant-numeric: tabular-nums; }
+  table.data-table caption { text-align: left; font-size: 12px; font-weight: 600; color: var(--text-primary); margin-bottom: 6px; font-variant-numeric: normal; }
+  table.data-table th, table.data-table td { text-align: right; padding: 3px 6px; color: var(--text-secondary); border-bottom: 1px solid var(--grid); }
+  table.data-table th:first-child, table.data-table td:first-child { text-align: left; color: var(--text-primary); }
+  table.data-table th { color: var(--text-muted); font-weight: 500; font-variant-numeric: normal; }
+  footer.spc-notes { margin-top: 22px; font-size: 12px; color: var(--text-muted); line-height: 1.6; }
+
+  /* ---- sun-path-3d.html (sp3d-) ---- */
+  .viz-root { --sp3d-series-winter: #2a78d6; --sp3d-series-spring: #008300; --sp3d-series-summer: #e87ba4; --sp3d-series-fall: #eda100; --sp3d-ground: #e9e6dc; --sp3d-ground-ring: #c9c5b6; }
+  @media (prefers-color-scheme: dark) {
+    :root:where(:not([data-theme="light"])) .viz-root { --sp3d-series-winter: #3987e5; --sp3d-series-spring: #008300; --sp3d-series-summer: #d55181; --sp3d-series-fall: #c98500; --sp3d-ground: #2a2a26; --sp3d-ground-ring: #3c3b34; }
+  }
+  :root[data-theme="dark"] .viz-root { --sp3d-series-winter: #3987e5; --sp3d-series-spring: #008300; --sp3d-series-summer: #d55181; --sp3d-series-fall: #c98500; --sp3d-ground: #2a2a26; --sp3d-ground-ring: #3c3b34; }
+  header.sp3d-page-head { margin-bottom: 20px; }
+  .sp3d-legend-row { display: flex; flex-wrap: wrap; gap: 16px; margin-top: 12px; font-size: 12.5px; color: var(--text-secondary); }
+  .sp3d-legend-row .item { display: flex; align-items: center; gap: 6px; }
+  .sp3d-legend-row .swatch { width: 14px; height: 3px; border-radius: 2px; }
+  footer.sp3d-notes { margin-top: 16px; font-size: 12px; color: var(--text-muted); line-height: 1.7; }
+
+  /* ---- sun-path-overlay.html (spo-) ---- */
+  .viz-root { --spo-series-winter: #2a78d6; --spo-series-spring: #008300; --spo-series-summer: #e87ba4; --spo-series-fall: #eda100; --spo-hour-grid: rgba(11,11,11,0.28); }
+  @media (prefers-color-scheme: dark) {
+    :root:where(:not([data-theme="light"])) .viz-root { --spo-series-winter: #3987e5; --spo-series-spring: #008300; --spo-series-summer: #d55181; --spo-series-fall: #c98500; --spo-hour-grid: rgba(255,255,255,0.3); }
+  }
+  :root[data-theme="dark"] .viz-root { --spo-series-winter: #3987e5; --spo-series-spring: #008300; --spo-series-summer: #d55181; --spo-series-fall: #c98500; --spo-hour-grid: rgba(255,255,255,0.3); }
+  header.spo-page-head { margin-bottom: 24px; }
+  #sun-path-overlay section { margin-bottom: 28px; }
+  .spo-aerial-frame { position: relative; border-radius: 8px; overflow: hidden; border: 1px solid var(--border); background: #000; }
+  .spo-aerial-frame img { display: block; width: 100%; height: auto; }
+  .spo-aerial-frame svg { position: absolute; inset: 0; width: 100%; height: 100%; }
+  .spo-season-path { fill: none; stroke-width: 3; opacity: 0.92; }
+  .spo-hour-dot { stroke-width: 1.5; }
+  .spo-anchor-dot { fill: var(--text-primary); stroke: #fff; stroke-width: 1.5; }
+  .spo-direct-label {
+    font-size: 15px; font-weight: 700; paint-order: stroke; stroke: rgba(255,255,255,0.9);
+    stroke-width: 4px; stroke-linejoin: round;
+  }
+  .spo-compass-label {
+    font-size: 13px; font-weight: 600; fill: var(--text-primary);
+    paint-order: stroke; stroke: rgba(255,255,255,0.85); stroke-width: 4px; stroke-linejoin: round;
+  }
+  .spo-legend-row {
+    display: flex; flex-wrap: wrap; gap: 16px; margin-top: 14px; font-size: 12.5px; color: var(--text-secondary);
+  }
+  .spo-legend-row .item { display: flex; align-items: center; gap: 6px; }
+  .spo-legend-row .swatch { width: 14px; height: 3px; border-radius: 2px; }
+  .spo-legend-row .note { color: var(--text-muted); font-size: 11.5px; margin-top: 2px; }
+  .spo-polar-wrap { display: flex; gap: 24px; flex-wrap: wrap; align-items: flex-start; }
+  .spo-polar-chart-holder { flex: 1 1 460px; min-width: 300px; }
+  .spo-month-line { fill: none; stroke-width: 1.75; }
+  .spo-hour-line { fill: none; stroke: var(--spo-hour-grid); stroke-width: 1; }
+  .spo-hour-line-label { font-size: 9.5px; fill: var(--text-muted); }
+  .spo-ring-line { fill: none; stroke: var(--grid); stroke-width: 1; }
+  .spo-polar-axis-label { font-size: 10.5px; fill: var(--text-muted); }
+  .spo-polar-compass-label { font-size: 12px; font-weight: 600; fill: var(--text-secondary); }
+  .spo-month-dot { r: 2.6; }
+  .spo-month-legend {
+    flex: 0 0 150px;
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 6px 14px;
+    font-size: 12px;
+    color: var(--text-secondary);
+    align-content: start;
+    padding-top: 8px;
+  }
+  .spo-month-legend .item { display: flex; align-items: center; gap: 6px; }
+  .spo-month-legend .dot { width: 8px; height: 8px; border-radius: 50%; flex: none; }
+  footer.spo-notes { margin-top: 8px; font-size: 12px; color: var(--text-muted); line-height: 1.7; }
+</style>
+</head>
+<body>
+<!-- NAV:START -->
+<style>
+  .site-nav {
+    font-family: system-ui, -apple-system, "Segoe UI", sans-serif;
+    display: flex; flex-wrap: wrap; align-items: center; justify-content: space-between;
+    gap: 12px; padding: 14px 20px;
+    background: #fcfcfb; border-bottom: 1px solid rgba(11,11,11,0.10);
+  }
+  .site-nav__brand { font-weight: 600; font-size: 14px; color: #0b0b0b; text-decoration: none; }
+  .site-nav__links { display: flex; gap: 18px; flex-wrap: wrap; }
+  .site-nav__links a { font-size: 13px; color: #52514e; text-decoration: none; }
+  .site-nav__links a:hover { color: #0b0b0b; }
+  @media (prefers-color-scheme: dark) {
+    :root:not([data-theme="light"]) .site-nav { background: #1a1a19; border-bottom-color: rgba(255,255,255,0.10); }
+    :root:not([data-theme="light"]) .site-nav__brand { color: #ffffff; }
+    :root:not([data-theme="light"]) .site-nav__links a { color: #c3c2b7; }
+    :root:not([data-theme="light"]) .site-nav__links a:hover { color: #ffffff; }
+  }
+  :root[data-theme="dark"] .site-nav { background: #1a1a19; border-bottom-color: rgba(255,255,255,0.10); }
+  :root[data-theme="dark"] .site-nav__brand { color: #ffffff; }
+  :root[data-theme="dark"] .site-nav__links a { color: #c3c2b7; }
+  :root[data-theme="dark"] .site-nav__links a:hover { color: #ffffff; }
+</style>
+<nav class="site-nav">
+  <a class="site-nav__brand" href="index.html">Lot #86 — Site Profile</a>
+  <div class="site-nav__links">
+    <a href="base-map.html">Base Map</a>
+    <a href="sectors.html">Sectors</a>
+    <a href="zones-design.html">Zones &amp; Design</a>
+    <a href="climate.html">Climate</a>
+    <a href="water.html">Water</a>
+    <a href="sun-solar.html">Sun &amp; Solar</a>
+    <a href="flood-hazard.html">Flood &amp; Hazard</a>
+    <a href="species-inventory.html">Species Inventory</a>
+    <a href="project-plan.html">Project Plan</a>
+  </div>
+</nav>
+<!-- NAV:END -->
+<div class="viz-root">
+    <div class="wrap">
+      <header>
+        <h1 class="section-title" style="font-size:22px;">Sun &amp; Solar</h1>
+        <p class="subhead">Three views of solar exposure across the property, built from a bioclimatic design study of local weather and sun-position data.</p>
+        <div class="badge-row" id="section-nav">
+          <a class="badge" href="#sun-path-charts">Sun Path Charts</a>
+          <a class="badge" href="#sun-path-3d">Sun Path — 3D Site Diagram</a>
+          <a class="badge" href="#sun-path-overlay">Sun Path Overlay</a>
+        </div>
+      </header>
+
+      <section class="page-section" id="sun-path-charts">
+        <header class="spc-page-head">
+          <h2 class="section-title">Sun Path Charts</h2>
+          <p class="subhead">41.5728°N, 72.6344°W · altitude vs. azimuth, local clock time · winter solstice, spring equinox, summer solstice, fall equinox (2026)</p>
+        </header>
+
+        <div class="spc-grid" id="spc-chart-grid"></div>
+
+        <details class="spc-table-toggle">
+          <summary>View hourly data table</summary>
+          <div class="spc-tables" id="spc-table-grid"></div>
+        </details>
+
+        <footer class="spc-notes">
+          Computed with the NOAA solar-position algorithm (declination + equation-of-time series, ±0.01° accuracy) for the site's exact coordinates.
+          Times are local clock time (EST in December, EDT in March/June/September). Azimuth is measured clockwise from true north.
+          Cross-checked against the site's SunCalc-derived solstice figures in the Lesson 3 sector-analysis report — solar noon altitude and sunrise/sunset azimuth agree within ~1°.
+        </footer>
+      </section>
+
+      <section class="page-section" id="sun-path-3d">
+        <header class="sp3d-page-head">
+          <h2 class="section-title">Sun Path — 3D Site Diagram</h2>
+          <p class="subhead">
+            The same 4 seasonal sun paths as the aerial overlay, shown as true arcs through the sky above a simplified
+            isometric model of the site — house, camper, chicken coop, pool, and the major trees, at their real
+            relative positions and sizes.
+          </p>
+        </header>
+
+        <div class="panel" style="position:relative;">
+          <svg id="sp3d-scene-svg" viewBox="0 0 1160 1000" style="width:100%; height:auto; display:block;"></svg>
+          <div class="tooltip" id="sp3d-tooltip"></div>
+          <div class="sp3d-legend-row" id="sp3d-legend"></div>
+        </div>
+
+        <footer class="sp3d-notes">
+          Site massing: real footprints and positions from the Sector Compass base map (house, camper, chicken coop,
+          pool, and the largest trees within the parcel), converted to feet using the base map's own scale bar and
+          rotated to true north-up. Sun-path data: NOAA solar-position algorithm at the site's exact coordinates,
+          same series as Sun Path Charts and Sun Path Overlay. Projection: standard 30° isometric — building heights
+          and tree canopy sizes are reasonable estimates, not surveyed; arc geometry (sun azimuth/altitude) is exact.
+        </footer>
+      </section>
+
+      <section class="page-section" id="sun-path-overlay">
+        <header class="spo-page-head">
+          <h2 class="section-title">Sun Path Overlay</h2>
+          <p class="subhead">
+            Where the sun actually tracks across this specific yard, by season — plotted directly onto the site's
+            aerial photo — plus a full annual reference chart from the University of Oregon Solar Radiation
+            Monitoring Laboratory's Sun Chart Program for the site's exact coordinates (41.57°N, 72.65°W).
+          </p>
+        </header>
+
+        <section>
+          <div class="panel">
+            <p class="panel-title">Seasonal Sun Arcs Over the Site</p>
+            <p class="panel-sub">
+              Anchored near the main growing area, north-up aerial photo — arc direction (azimuth) is exact;
+              arc radius is schematic (winter drawn furthest out, summer closest in, echoing how low winter sun
+              reaches deep into a yard while high summer sun stays more overhead) — not a literal shadow-length
+              prediction.
+            </p>
+            <div class="spo-aerial-frame" id="spo-aerial-frame">
+              <img src="assets/parcel-aerial.svg" alt="Placeholder: Aerial photo of your project site&#x27;s parcel here" width="1400" height="799">
+              <svg id="spo-overlay-svg" viewBox="0 0 1400 799" preserveAspectRatio="xMidYMid slice"></svg>
+              <div class="tooltip" id="spo-overlay-tooltip"></div>
+            </div>
+            <div class="spo-legend-row" id="spo-overlay-legend"></div>
+          </div>
+        </section>
+
+        <section>
+          <div class="panel">
+            <p class="panel-title">Annual Sun Path Chart</p>
+            <p class="panel-sub">
+              21st of every month, 10-minute resolution · polar projection (center = directly overhead, edge = horizon) ·
+              faint radial lines mark 2-hour intervals on the spring equinox, matching the official UO SRML chart for this exact lat/lng.
+            </p>
+            <div class="spo-polar-wrap">
+              <div class="spo-polar-chart-holder">
+                <svg id="spo-polar-svg" viewBox="0 0 520 520"></svg>
+              </div>
+              <div class="spo-month-legend" id="spo-month-legend"></div>
+            </div>
+            <div class="tooltip" id="spo-polar-tooltip"></div>
+          </div>
+        </section>
+
+        <footer class="spo-notes">
+          Seasonal arc data: NOAA solar-position algorithm at the site's exact coordinates, the same series used in the
+          Sun Path Charts report (winter solstice, spring/fall equinox, summer solstice, 2026).
+          Annual chart data: University of Oregon Solar Radiation Monitoring Laboratory, Sun Chart Program
+          (<a href="https://solardat.uoregon.edu/SunChartProgram.html">solardat.uoregon.edu</a>), queried for 41.57°N, 72.65°W —
+          raw output in <code>site-solar-data/</code>, cross-checked against the lab's own rendered Polar/Cartesian/SunDial
+          charts included there. Aerial photo and its georeferencing (feet-per-pixel from the parcel's surveyed
+          865&nbsp;ft boundary perimeter, anchored via an OpenStreetMap geocode, confirmed north-up) match the method used
+          for the Species Inventory site map in Lesson 8 — the same image, not a re-shot or re-cropped version.
+        </footer>
+      </section>
+    </div>
+  </div>
+
+<script>
+(function(){
+const SUN_DATA = {"2026-12-21":{"label":"Winter Solstice","points":[{"time":"07:20","alt":0.215,"az":122.315},{"time":"07:25","alt":1.001,"az":123.15},{"time":"07:30","alt":1.78,"az":123.991},{"time":"07:35","alt":2.551,"az":124.841},{"time":"07:40","alt":3.314,"az":125.697},{"time":"07:45","alt":4.069,"az":126.562},{"time":"07:50","alt":4.816,"az":127.435},{"time":"07:55","alt":5.554,"az":128.317},{"time":"08:00","alt":6.283,"az":129.206},{"time":"08:05","alt":7.002,"az":130.105},{"time":"08:10","alt":7.713,"az":131.013},{"time":"08:15","alt":8.413,"az":131.93},{"time":"08:20","alt":9.103,"az":132.856},{"time":"08:25","alt":9.783,"az":133.792},{"time":"08:30","alt":10.453,"az":134.738},{"time":"08:35","alt":11.111,"az":135.693},{"time":"08:40","alt":11.759,"az":136.659},{"time":"08:45","alt":12.394,"az":137.635},{"time":"08:50","alt":13.018,"az":138.621},{"time":"08:55","alt":13.63,"az":139.618},{"time":"09:00","alt":14.23,"az":140.625},{"time":"09:05","alt":14.816,"az":141.643},{"time":"09:10","alt":15.39,"az":142.671},{"time":"09:15","alt":15.95,"az":143.71},{"time":"09:20","alt":16.496,"az":144.76},{"time":"09:25","alt":17.028,"az":145.821},{"time":"09:30","alt":17.546,"az":146.892},{"time":"09:35","alt":18.049,"az":147.975},{"time":"09:40","alt":18.538,"az":149.067},{"time":"09:45","alt":19.01,"az":150.171},{"time":"09:50","alt":19.467,"az":151.285},{"time":"09:55","alt":19.908,"az":152.409},{"time":"10:00","alt":20.333,"az":153.543},{"time":"10:05","alt":20.741,"az":154.687},{"time":"10:10","alt":21.132,"az":155.842},{"time":"10:15","alt":21.506,"az":157.005},{"time":"10:20","alt":21.863,"az":158.178},{"time":"10:25","alt":22.201,"az":159.36},{"time":"10:30","alt":22.521,"az":160.55},{"time":"10:35","alt":22.823,"az":161.749},{"time":"10:40","alt":23.107,"az":162.956},{"time":"10:45","alt":23.371,"az":164.17},{"time":"10:50","alt":23.617,"az":165.392},{"time":"10:55","alt":23.843,"az":166.619},{"time":"11:00","alt":24.049,"az":167.854},{"time":"11:05","alt":24.236,"az":169.093},{"time":"11:10","alt":24.403,"az":170.338},{"time":"11:15","alt":24.55,"az":171.588},{"time":"11:20","alt":24.676,"az":172.841},{"time":"11:25","alt":24.783,"az":174.098},{"time":"11:30","alt":24.868,"az":175.358},{"time":"11:35","alt":24.934,"az":176.62},{"time":"11:40","alt":24.979,"az":177.884},{"time":"11:45","alt":25.003,"az":179.149},{"time":"11:50","alt":25.006,"az":180.414},{"time":"11:55","alt":24.989,"az":181.679},{"time":"12:00","alt":24.951,"az":182.943},{"time":"12:05","alt":24.893,"az":184.206},{"time":"12:10","alt":24.814,"az":185.467},{"time":"12:15","alt":24.715,"az":186.725},{"time":"12:20","alt":24.595,"az":187.98},{"time":"12:25","alt":24.455,"az":189.231},{"time":"12:30","alt":24.295,"az":190.477},{"time":"12:35","alt":24.115,"az":191.719},{"time":"12:40","alt":23.916,"az":192.955},{"time":"12:45","alt":23.696,"az":194.185},{"time":"12:50","alt":23.457,"az":195.409},{"time":"12:55","alt":23.199,"az":196.625},{"time":"13:00","alt":22.922,"az":197.835},{"time":"13:05","alt":22.627,"az":199.036},{"time":"13:10","alt":22.313,"az":200.23},{"time":"13:15","alt":21.98,"az":201.414},{"time":"13:20","alt":21.63,"az":202.59},{"time":"13:25","alt":21.262,"az":203.757},{"time":"13:30","alt":20.877,"az":204.915},{"time":"13:35","alt":20.475,"az":206.062},{"time":"13:40","alt":20.055,"az":207.2},{"time":"13:45","alt":19.62,"az":208.328},{"time":"13:50","alt":19.168,"az":209.445},{"time":"13:55","alt":18.701,"az":210.552},{"time":"14:00","alt":18.218,"az":211.648},{"time":"14:05","alt":17.72,"az":212.734},{"time":"14:10","alt":17.207,"az":213.809},{"time":"14:15","alt":16.68,"az":214.874},{"time":"14:20","alt":16.138,"az":215.927},{"time":"14:25","alt":15.583,"az":216.97},{"time":"14:30","alt":15.014,"az":218.002},{"time":"14:35","alt":14.432,"az":219.024},{"time":"14:40","alt":13.837,"az":220.034},{"time":"14:45","alt":13.229,"az":221.035},{"time":"14:50","alt":12.609,"az":222.024},{"time":"14:55","alt":11.977,"az":223.004},{"time":"15:00","alt":11.334,"az":223.973},{"time":"15:05","alt":10.679,"az":224.932},{"time":"15:10","alt":10.014,"az":225.881},{"time":"15:15","alt":9.337,"az":226.82},{"time":"15:20","alt":8.65,"az":227.75},{"time":"15:25","alt":7.953,"az":228.67},{"time":"15:30","alt":7.246,"az":229.58},{"time":"15:35","alt":6.53,"az":230.482},{"time":"15:40","alt":5.804,"az":231.375},{"time":"15:45","alt":5.069,"az":232.259},{"time":"15:50","alt":4.325,"az":233.135},{"time":"15:55","alt":3.573,"az":234.002},{"time":"16:00","alt":2.813,"az":234.862},{"time":"16:05","alt":2.044,"az":235.714},{"time":"16:10","alt":1.268,"az":236.558},{"time":"16:15","alt":0.484,"az":237.395}],"sunrise":{"time":"07:20","alt":0.215,"az":122.315},"sunset":{"time":"16:15","alt":0.484,"az":237.395},"solar_noon":{"time":"11:50","alt":25.006,"az":180.414},"tz":"EST"},"2026-03-20":{"label":"Spring Equinox","points":[{"time":"07:00","alt":-0.13,"az":90.611},{"time":"07:05","alt":0.806,"az":91.44},{"time":"07:10","alt":1.742,"az":92.269},{"time":"07:15","alt":2.677,"az":93.1},{"time":"07:20","alt":3.612,"az":93.932},{"time":"07:25","alt":4.545,"az":94.765},{"time":"07:30","alt":5.478,"az":95.601},{"time":"07:35","alt":6.409,"az":96.44},{"time":"07:40","alt":7.339,"az":97.282},{"time":"07:45","alt":8.266,"az":98.128},{"time":"07:50","alt":9.192,"az":98.978},{"time":"07:55","alt":10.116,"az":99.833},{"time":"08:00","alt":11.037,"az":100.692},{"time":"08:05","alt":11.956,"az":101.558},{"time":"08:10","alt":12.872,"az":102.429},{"time":"08:15","alt":13.785,"az":103.307},{"time":"08:20","alt":14.694,"az":104.192},{"time":"08:25","alt":15.6,"az":105.085},{"time":"08:30","alt":16.502,"az":105.985},{"time":"08:35","alt":17.4,"az":106.895},{"time":"08:40","alt":18.294,"az":107.813},{"time":"08:45","alt":19.183,"az":108.741},{"time":"08:50","alt":20.067,"az":109.68},{"time":"08:55","alt":20.946,"az":110.629},{"time":"09:00","alt":21.82,"az":111.589},{"time":"09:05","alt":22.687,"az":112.562},{"time":"09:10","alt":23.549,"az":113.547},{"time":"09:15","alt":24.404,"az":114.545},{"time":"09:20","alt":25.253,"az":115.557},{"time":"09:25","alt":26.094,"az":116.583},{"time":"09:30","alt":26.927,"az":117.624},{"time":"09:35","alt":27.753,"az":118.681},{"time":"09:40","alt":28.571,"az":119.754},{"time":"09:45","alt":29.379,"az":120.844},{"time":"09:50","alt":30.179,"az":121.952},{"time":"09:55","alt":30.968,"az":123.077},{"time":"10:00","alt":31.748,"az":124.222},{"time":"10:05","alt":32.517,"az":125.386},{"time":"10:10","alt":33.275,"az":126.57},{"time":"10:15","alt":34.022,"az":127.775},{"time":"10:20","alt":34.756,"az":129.001},{"time":"10:25","alt":35.477,"az":130.249},{"time":"10:30","alt":36.186,"az":131.52},{"time":"10:35","alt":36.88,"az":132.814},{"time":"10:40","alt":37.56,"az":134.131},{"time":"10:45","alt":38.225,"az":135.473},{"time":"10:50","alt":38.874,"az":136.839},{"time":"10:55","alt":39.507,"az":138.231},{"time":"11:00","alt":40.122,"az":139.647},{"time":"11:05","alt":40.72,"az":141.09},{"time":"11:10","alt":41.299,"az":142.558},{"time":"11:15","alt":41.86,"az":144.052},{"time":"11:20","alt":42.4,"az":145.572},{"time":"11:25","alt":42.919,"az":147.119},{"time":"11:30","alt":43.418,"az":148.691},{"time":"11:35","alt":43.894,"az":150.289},{"time":"11:40","alt":44.347,"az":151.912},{"time":"11:45","alt":44.777,"az":153.56},{"time":"11:50","alt":45.182,"az":155.232},{"time":"11:55","alt":45.563,"az":156.927},{"time":"12:00","alt":45.918,"az":158.645},{"time":"12:05","alt":46.247,"az":160.384},{"time":"12:10","alt":46.548,"az":162.143},{"time":"12:15","alt":46.823,"az":163.921},{"time":"12:20","alt":47.069,"az":165.717},{"time":"12:25","alt":47.287,"az":167.528},{"time":"12:30","alt":47.476,"az":169.353},{"time":"12:35","alt":47.635,"az":171.191},{"time":"12:40","alt":47.765,"az":173.038},{"time":"12:45","alt":47.864,"az":174.894},{"time":"12:50","alt":47.934,"az":176.756},{"time":"12:55","alt":47.973,"az":178.622},{"time":"13:00","alt":47.982,"az":180.49},{"time":"13:05","alt":47.96,"az":182.357},{"time":"13:10","alt":47.907,"az":184.221},{"time":"13:15","alt":47.825,"az":186.081},{"time":"13:20","alt":47.712,"az":187.933},{"time":"13:25","alt":47.569,"az":189.777},{"time":"13:30","alt":47.397,"az":191.609},{"time":"13:35","alt":47.196,"az":193.429},{"time":"13:40","alt":46.966,"az":195.233},{"time":"13:45","alt":46.707,"az":197.021},{"time":"13:50","alt":46.421,"az":198.792},{"time":"13:55","alt":46.107,"az":200.542},{"time":"14:00","alt":45.767,"az":202.272},{"time":"14:05","alt":45.401,"az":203.98},{"time":"14:10","alt":45.01,"az":205.666},{"time":"14:15","alt":44.594,"az":207.327},{"time":"14:20","alt":44.154,"az":208.965},{"time":"14:25","alt":43.691,"az":210.577},{"time":"14:30","alt":43.205,"az":212.164},{"time":"14:35","alt":42.698,"az":213.725},{"time":"14:40","alt":42.169,"az":215.26},{"time":"14:45","alt":41.62,"az":216.769},{"time":"14:50","alt":41.052,"az":218.253},{"time":"14:55","alt":40.465,"az":219.71},{"time":"15:00","alt":39.86,"az":221.141},{"time":"15:05","alt":39.237,"az":222.547},{"time":"15:10","alt":38.597,"az":223.928},{"time":"15:15","alt":37.942,"az":225.284},{"time":"15:20","alt":37.271,"az":226.615},{"time":"15:25","alt":36.585,"az":227.923},{"time":"15:30","alt":35.884,"az":229.207},{"time":"15:35","alt":35.171,"az":230.469},{"time":"15:40","alt":34.444,"az":231.708},{"time":"15:45","alt":33.705,"az":232.925},{"time":"15:50","alt":32.954,"az":234.121},{"time":"15:55","alt":32.192,"az":235.297},{"time":"16:00","alt":31.418,"az":236.453},{"time":"16:05","alt":30.635,"az":237.59},{"time":"16:10","alt":29.841,"az":238.709},{"time":"16:15","alt":29.039,"az":239.809},{"time":"16:20","alt":28.227,"az":240.892},{"time":"16:25","alt":27.406,"az":241.959},{"time":"16:30","alt":26.578,"az":243.01},{"time":"16:35","alt":25.742,"az":244.045},{"time":"16:40","alt":24.898,"az":245.066},{"time":"16:45","alt":24.047,"az":246.073},{"time":"16:50","alt":23.19,"az":247.066},{"time":"16:55","alt":22.327,"az":248.047},{"time":"17:00","alt":21.457,"az":249.015},{"time":"17:05","alt":20.582,"az":249.972},{"time":"17:10","alt":19.702,"az":250.917},{"time":"17:15","alt":18.816,"az":251.852},{"time":"17:20","alt":17.926,"az":252.777},{"time":"17:25","alt":17.032,"az":253.693},{"time":"17:30","alt":16.133,"az":254.6},{"time":"17:35","alt":15.23,"az":255.498},{"time":"17:40","alt":14.324,"az":256.389},{"time":"17:45","alt":13.414,"az":257.272},{"time":"17:50","alt":12.501,"az":258.148},{"time":"17:55","alt":11.585,"az":259.019},{"time":"18:00","alt":10.666,"az":259.883},{"time":"18:05","alt":9.745,"az":260.742},{"time":"18:10","alt":8.822,"az":261.596},{"time":"18:15","alt":7.897,"az":262.446},{"time":"18:20","alt":6.969,"az":263.292},{"time":"18:25","alt":6.041,"az":264.134},{"time":"18:30","alt":5.11,"az":264.973},{"time":"18:35","alt":4.179,"az":265.81},{"time":"18:40","alt":3.247,"az":266.645},{"time":"18:45","alt":2.313,"az":267.478},{"time":"18:50","alt":1.38,"az":268.31},{"time":"18:55","alt":0.446,"az":269.141}],"sunrise":{"time":"07:05","alt":0.806,"az":91.44},"sunset":{"time":"18:55","alt":0.446,"az":269.141},"solar_noon":{"time":"13:00","alt":47.982,"az":180.49},"tz":"EDT"},"2026-06-21":{"label":"Summer Solstice","points":[{"time":"05:20","alt":-0.204,"az":57.649},{"time":"05:25","alt":0.589,"az":58.477},{"time":"05:30","alt":1.39,"az":59.298},{"time":"05:35","alt":2.197,"az":60.113},{"time":"05:40","alt":3.011,"az":60.921},{"time":"05:45","alt":3.831,"az":61.724},{"time":"05:50","alt":4.658,"az":62.52},{"time":"05:55","alt":5.49,"az":63.312},{"time":"06:00","alt":6.329,"az":64.098},{"time":"06:05","alt":7.172,"az":64.88},{"time":"06:10","alt":8.022,"az":65.657},{"time":"06:15","alt":8.876,"az":66.43},{"time":"06:20","alt":9.736,"az":67.199},{"time":"06:25","alt":10.6,"az":67.965},{"time":"06:30","alt":11.469,"az":68.727},{"time":"06:35","alt":12.343,"az":69.486},{"time":"06:40","alt":13.22,"az":70.242},{"time":"06:45","alt":14.102,"az":70.996},{"time":"06:50","alt":14.988,"az":71.748},{"time":"06:55","alt":15.878,"az":72.498},{"time":"07:00","alt":16.772,"az":73.246},{"time":"07:05","alt":17.669,"az":73.994},{"time":"07:10","alt":18.569,"az":74.741},{"time":"07:15","alt":19.473,"az":75.488},{"time":"07:20","alt":20.38,"az":76.234},{"time":"07:25","alt":21.289,"az":76.981},{"time":"07:30","alt":22.202,"az":77.729},{"time":"07:35","alt":23.117,"az":78.478},{"time":"07:40","alt":24.034,"az":79.228},{"time":"07:45","alt":24.954,"az":79.98},{"time":"07:50","alt":25.875,"az":80.735},{"time":"07:55","alt":26.799,"az":81.493},{"time":"08:00","alt":27.725,"az":82.254},{"time":"08:05","alt":28.652,"az":83.02},{"time":"08:10","alt":29.581,"az":83.789},{"time":"08:15","alt":30.511,"az":84.563},{"time":"08:20","alt":31.442,"az":85.343},{"time":"08:25","alt":32.375,"az":86.129},{"time":"08:30","alt":33.308,"az":86.922},{"time":"08:35","alt":34.242,"az":87.722},{"time":"08:40","alt":35.177,"az":88.53},{"time":"08:45","alt":36.112,"az":89.347},{"time":"08:50","alt":37.047,"az":90.174},{"time":"08:55","alt":37.981,"az":91.011},{"time":"09:00","alt":38.916,"az":91.858},{"time":"09:05","alt":39.85,"az":92.718},{"time":"09:10","alt":40.784,"az":93.591},{"time":"09:15","alt":41.717,"az":94.478},{"time":"09:20","alt":42.648,"az":95.381},{"time":"09:25","alt":43.578,"az":96.299},{"time":"09:30","alt":44.507,"az":97.235},{"time":"09:35","alt":45.433,"az":98.19},{"time":"09:40","alt":46.358,"az":99.164},{"time":"09:45","alt":47.28,"az":100.161},{"time":"09:50","alt":48.198,"az":101.181},{"time":"09:55","alt":49.114,"az":102.226},{"time":"10:00","alt":50.026,"az":103.297},{"time":"10:05","alt":50.934,"az":104.398},{"time":"10:10","alt":51.837,"az":105.53},{"time":"10:15","alt":52.735,"az":106.695},{"time":"10:20","alt":53.628,"az":107.895},{"time":"10:25","alt":54.515,"az":109.134},{"time":"10:30","alt":55.395,"az":110.415},{"time":"10:35","alt":56.267,"az":111.739},{"time":"10:40","alt":57.131,"az":113.112},{"time":"10:45","alt":57.987,"az":114.535},{"time":"10:50","alt":58.832,"az":116.014},{"time":"10:55","alt":59.667,"az":117.551},{"time":"11:00","alt":60.49,"az":119.152},{"time":"11:05","alt":61.3,"az":120.821},{"time":"11:10","alt":62.095,"az":122.562},{"time":"11:15","alt":62.875,"az":124.381},{"time":"11:20","alt":63.638,"az":126.284},{"time":"11:25","alt":64.382,"az":128.275},{"time":"11:30","alt":65.106,"az":130.36},{"time":"11:35","alt":65.806,"az":132.545},{"time":"11:40","alt":66.483,"az":134.835},{"time":"11:45","alt":67.132,"az":137.235},{"time":"11:50","alt":67.751,"az":139.75},{"time":"11:55","alt":68.339,"az":142.383},{"time":"12:00","alt":68.892,"az":145.139},{"time":"12:05","alt":69.407,"az":148.017},{"time":"12:10","alt":69.882,"az":151.018},{"time":"12:15","alt":70.312,"az":154.14},{"time":"12:20","alt":70.696,"az":157.378},{"time":"12:25","alt":71.031,"az":160.724},{"time":"12:30","alt":71.313,"az":164.168},{"time":"12:35","alt":71.54,"az":167.697},{"time":"12:40","alt":71.711,"az":171.294},{"time":"12:45","alt":71.823,"az":174.941},{"time":"12:50","alt":71.875,"az":178.619},{"time":"12:55","alt":71.868,"az":182.304},{"time":"13:00","alt":71.8,"az":185.976},{"time":"13:05","alt":71.673,"az":189.613},{"time":"13:10","alt":71.489,"az":193.195},{"time":"13:15","alt":71.247,"az":196.703},{"time":"13:20","alt":70.952,"az":200.124},{"time":"13:25","alt":70.605,"az":203.444},{"time":"13:30","alt":70.209,"az":206.653},{"time":"13:35","alt":69.767,"az":209.745},{"time":"13:40","alt":69.282,"az":212.716},{"time":"13:45","alt":68.757,"az":215.564},{"time":"13:50","alt":68.196,"az":218.288},{"time":"13:55","alt":67.6,"az":220.892},{"time":"14:00","alt":66.972,"az":223.378},{"time":"14:05","alt":66.316,"az":225.75},{"time":"14:10","alt":65.634,"az":228.013},{"time":"14:15","alt":64.927,"az":230.173},{"time":"14:20","alt":64.198,"az":232.234},{"time":"14:25","alt":63.449,"az":234.202},{"time":"14:30","alt":62.682,"az":236.083},{"time":"14:35","alt":61.898,"az":237.883},{"time":"14:40","alt":61.099,"az":239.606},{"time":"14:45","alt":60.286,"az":241.257},{"time":"14:50","alt":59.46,"az":242.841},{"time":"14:55","alt":58.622,"az":244.364},{"time":"15:00","alt":57.774,"az":245.828},{"time":"15:05","alt":56.916,"az":247.239},{"time":"15:10","alt":56.05,"az":248.599},{"time":"15:15","alt":55.176,"az":249.912},{"time":"15:20","alt":54.294,"az":251.182},{"time":"15:25","alt":53.406,"az":252.411},{"time":"15:30","alt":52.512,"az":253.602},{"time":"15:35","alt":51.612,"az":254.759},{"time":"15:40","alt":50.708,"az":255.882},{"time":"15:45","alt":49.799,"az":256.976},{"time":"15:50","alt":48.886,"az":258.04},{"time":"15:55","alt":47.97,"az":259.079},{"time":"16:00","alt":47.05,"az":260.093},{"time":"16:05","alt":46.128,"az":261.084},{"time":"16:10","alt":45.203,"az":262.054},{"time":"16:15","alt":44.276,"az":263.003},{"time":"16:20","alt":43.347,"az":263.935},{"time":"16:25","alt":42.416,"az":264.849},{"time":"16:30","alt":41.484,"az":265.747},{"time":"16:35","alt":40.551,"az":266.631},{"time":"16:40","alt":39.618,"az":267.5},{"time":"16:45","alt":38.683,"az":268.357},{"time":"16:50","alt":37.749,"az":269.202},{"time":"16:55","alt":36.814,"az":270.036},{"time":"17:00","alt":35.879,"az":270.86},{"time":"17:05","alt":34.944,"az":271.675},{"time":"17:10","alt":34.01,"az":272.481},{"time":"17:15","alt":33.076,"az":273.279},{"time":"17:20","alt":32.143,"az":274.07},{"time":"17:25","alt":31.211,"az":274.855},{"time":"17:30","alt":30.279,"az":275.633},{"time":"17:35","alt":29.35,"az":276.407},{"time":"17:40","alt":28.421,"az":277.175},{"time":"17:45","alt":27.494,"az":277.939},{"time":"17:50","alt":26.569,"az":278.699},{"time":"17:55","alt":25.646,"az":279.457},{"time":"18:00","alt":24.725,"az":280.211},{"time":"18:05","alt":23.806,"az":280.963},{"time":"18:10","alt":22.889,"az":281.713},{"time":"18:15","alt":21.975,"az":282.461},{"time":"18:20","alt":21.063,"az":283.209},{"time":"18:25","alt":20.154,"az":283.956},{"time":"18:30","alt":19.248,"az":284.702},{"time":"18:35","alt":18.346,"az":285.449},{"time":"18:40","alt":17.446,"az":286.196},{"time":"18:45","alt":16.55,"az":286.944},{"time":"18:50","alt":15.657,"az":287.693},{"time":"18:55","alt":14.768,"az":288.443},{"time":"19:00","alt":13.883,"az":289.196},{"time":"19:05","alt":13.002,"az":289.95},{"time":"19:10","alt":12.126,"az":290.707},{"time":"19:15","alt":11.253,"az":291.467},{"time":"19:20","alt":10.385,"az":292.23},{"time":"19:25","alt":9.522,"az":292.996},{"time":"19:30","alt":8.664,"az":293.766},{"time":"19:35","alt":7.811,"az":294.54},{"time":"19:40","alt":6.963,"az":295.318},{"time":"19:45","alt":6.121,"az":296.101},{"time":"19:50","alt":5.284,"az":296.889},{"time":"19:55","alt":4.453,"az":297.682},{"time":"20:00","alt":3.628,"az":298.48},{"time":"20:05","alt":2.809,"az":299.284},{"time":"20:10","alt":1.997,"az":300.094},{"time":"20:15","alt":1.192,"az":300.91},{"time":"20:20","alt":0.393,"az":301.733}],"sunrise":{"time":"05:25","alt":0.589,"az":58.477},"sunset":{"time":"20:20","alt":0.393,"az":301.733},"solar_noon":{"time":"12:50","alt":71.875,"az":178.619},"tz":"EDT"},"2026-09-22":{"label":"Fall Equinox","points":[{"time":"06:40","alt":-0.146,"az":88.903},{"time":"06:45","alt":0.789,"az":89.734},{"time":"06:50","alt":1.723,"az":90.564},{"time":"06:55","alt":2.658,"az":91.396},{"time":"07:00","alt":3.592,"az":92.228},{"time":"07:05","alt":4.525,"az":93.062},{"time":"07:10","alt":5.458,"az":93.898},{"time":"07:15","alt":6.39,"az":94.736},{"time":"07:20","alt":7.32,"az":95.576},{"time":"07:25","alt":8.25,"az":96.42},{"time":"07:30","alt":9.178,"az":97.268},{"time":"07:35","alt":10.104,"az":98.12},{"time":"07:40","alt":11.028,"az":98.977},{"time":"07:45","alt":11.95,"az":99.839},{"time":"07:50","alt":12.869,"az":100.706},{"time":"07:55","alt":13.786,"az":101.58},{"time":"08:00","alt":14.7,"az":102.46},{"time":"08:05","alt":15.611,"az":103.347},{"time":"08:10","alt":16.518,"az":104.242},{"time":"08:15","alt":17.422,"az":105.145},{"time":"08:20","alt":18.322,"az":106.057},{"time":"08:25","alt":19.218,"az":106.978},{"time":"08:30","alt":20.109,"az":107.909},{"time":"08:35","alt":20.996,"az":108.85},{"time":"08:40","alt":21.878,"az":109.803},{"time":"08:45","alt":22.754,"az":110.766},{"time":"08:50","alt":23.625,"az":111.742},{"time":"08:55","alt":24.49,"az":112.731},{"time":"09:00","alt":25.348,"az":113.733},{"time":"09:05","alt":26.2,"az":114.749},{"time":"09:10","alt":27.045,"az":115.78},{"time":"09:15","alt":27.883,"az":116.826},{"time":"09:20","alt":28.712,"az":117.888},{"time":"09:25","alt":29.534,"az":118.967},{"time":"09:30","alt":30.347,"az":120.063},{"time":"09:35","alt":31.151,"az":121.178},{"time":"09:40","alt":31.945,"az":122.31},{"time":"09:45","alt":32.73,"az":123.463},{"time":"09:50","alt":33.504,"az":124.635},{"time":"09:55","alt":34.267,"az":125.828},{"time":"10:00","alt":35.018,"az":127.043},{"time":"10:05","alt":35.757,"az":128.279},{"time":"10:10","alt":36.484,"az":129.539},{"time":"10:15","alt":37.198,"az":130.821},{"time":"10:20","alt":37.897,"az":132.128},{"time":"10:25","alt":38.583,"az":133.46},{"time":"10:30","alt":39.253,"az":134.816},{"time":"10:35","alt":39.907,"az":136.199},{"time":"10:40","alt":40.545,"az":137.607},{"time":"10:45","alt":41.166,"az":139.042},{"time":"10:50","alt":41.769,"az":140.503},{"time":"10:55","alt":42.353,"az":141.992},{"time":"11:00","alt":42.918,"az":143.508},{"time":"11:05","alt":43.463,"az":145.052},{"time":"11:10","alt":43.987,"az":146.622},{"time":"11:15","alt":44.49,"az":148.22},{"time":"11:20","alt":44.97,"az":149.845},{"time":"11:25","alt":45.427,"az":151.497},{"time":"11:30","alt":45.86,"az":153.175},{"time":"11:35","alt":46.268,"az":154.878},{"time":"11:40","alt":46.651,"az":156.605},{"time":"11:45","alt":47.008,"az":158.357},{"time":"11:50","alt":47.338,"az":160.131},{"time":"11:55","alt":47.641,"az":161.926},{"time":"12:00","alt":47.916,"az":163.741},{"time":"12:05","alt":48.162,"az":165.574},{"time":"12:10","alt":48.379,"az":167.424},{"time":"12:15","alt":48.567,"az":169.289},{"time":"12:20","alt":48.724,"az":171.166},{"time":"12:25","alt":48.851,"az":173.054},{"time":"12:30","alt":48.947,"az":174.95},{"time":"12:35","alt":49.013,"az":176.852},{"time":"12:40","alt":49.047,"az":178.759},{"time":"12:45","alt":49.051,"az":180.666},{"time":"12:50","alt":49.023,"az":182.573},{"time":"12:55","alt":48.964,"az":184.476},{"time":"13:00","alt":48.874,"az":186.374},{"time":"13:05","alt":48.754,"az":188.264},{"time":"13:10","alt":48.603,"az":190.144},{"time":"13:15","alt":48.422,"az":192.011},{"time":"13:20","alt":48.211,"az":193.864},{"time":"13:25","alt":47.971,"az":195.701},{"time":"13:30","alt":47.702,"az":197.52},{"time":"13:35","alt":47.405,"az":199.32},{"time":"13:40","alt":47.081,"az":201.098},{"time":"13:45","alt":46.73,"az":202.855},{"time":"13:50","alt":46.352,"az":204.587},{"time":"13:55","alt":45.949,"az":206.296},{"time":"14:00","alt":45.521,"az":207.979},{"time":"14:05","alt":45.069,"az":209.636},{"time":"14:10","alt":44.594,"az":211.267},{"time":"14:15","alt":44.096,"az":212.87},{"time":"14:20","alt":43.576,"az":214.447},{"time":"14:25","alt":43.035,"az":215.996},{"time":"14:30","alt":42.474,"az":217.518},{"time":"14:35","alt":41.894,"az":219.012},{"time":"14:40","alt":41.295,"az":220.479},{"time":"14:45","alt":40.677,"az":221.92},{"time":"14:50","alt":40.043,"az":223.334},{"time":"14:55","alt":39.391,"az":224.721},{"time":"15:00","alt":38.724,"az":226.083},{"time":"15:05","alt":38.042,"az":227.419},{"time":"15:10","alt":37.345,"az":228.731},{"time":"15:15","alt":36.634,"az":230.018},{"time":"15:20","alt":35.909,"az":231.282},{"time":"15:25","alt":35.172,"az":232.523},{"time":"15:30","alt":34.423,"az":233.742},{"time":"15:35","alt":33.662,"az":234.939},{"time":"15:40","alt":32.889,"az":236.115},{"time":"15:45","alt":32.107,"az":237.271},{"time":"15:50","alt":31.314,"az":238.407},{"time":"15:55","alt":30.511,"az":239.525},{"time":"16:00","alt":29.699,"az":240.624},{"time":"16:05","alt":28.879,"az":241.706},{"time":"16:10","alt":28.05,"az":242.771},{"time":"16:15","alt":27.214,"az":243.82},{"time":"16:20","alt":26.37,"az":244.853},{"time":"16:25","alt":25.518,"az":245.871},{"time":"16:30","alt":24.66,"az":246.875},{"time":"16:35","alt":23.796,"az":247.866},{"time":"16:40","alt":22.926,"az":248.844},{"time":"16:45","alt":22.05,"az":249.809},{"time":"16:50","alt":21.168,"az":250.763},{"time":"16:55","alt":20.282,"az":251.705},{"time":"17:00","alt":19.39,"az":252.637},{"time":"17:05","alt":18.494,"az":253.559},{"time":"17:10","alt":17.594,"az":254.472},{"time":"17:15","alt":16.69,"az":255.376},{"time":"17:20","alt":15.782,"az":256.271},{"time":"17:25","alt":14.871,"az":257.159},{"time":"17:30","alt":13.956,"az":258.039},{"time":"17:35","alt":13.039,"az":258.912},{"time":"17:40","alt":12.119,"az":259.78},{"time":"17:45","alt":11.196,"az":260.641},{"time":"17:50","alt":10.271,"az":261.497},{"time":"17:55","alt":9.344,"az":262.349},{"time":"18:00","alt":8.415,"az":263.196},{"time":"18:05","alt":7.485,"az":264.039},{"time":"18:10","alt":6.553,"az":264.879},{"time":"18:15","alt":5.62,"az":265.716},{"time":"18:20","alt":4.686,"az":266.55},{"time":"18:25","alt":3.751,"az":267.382},{"time":"18:30","alt":2.815,"az":268.213},{"time":"18:35","alt":1.879,"az":269.043},{"time":"18:40","alt":0.943,"az":269.872},{"time":"18:45","alt":0.007,"az":270.7}],"sunrise":{"time":"06:45","alt":0.789,"az":89.734},"sunset":{"time":"18:45","alt":0.007,"az":270.7},"solar_noon":{"time":"12:45","alt":49.051,"az":180.666},"tz":"EDT"}}
+;
+
+const PANELS = [
+  { key: "2026-12-21", color: "var(--spc-series-winter)", dateLabel: "December 21, 2026" },
+  { key: "2026-03-20", color: "var(--spc-series-spring)", dateLabel: "March 20, 2026" },
+  { key: "2026-06-21", color: "var(--spc-series-summer)", dateLabel: "June 21, 2026" },
+  { key: "2026-09-22", color: "var(--spc-series-fall)", dateLabel: "September 22, 2026" },
+];
+
+// Shared scale across all four panels so they're directly comparable.
+const X_MIN = 45, X_MAX = 315;
+const Y_MIN = 0, Y_MAX = 80;
+const X_TICKS = [
+  [45,"NE"],[90,"E"],[135,"SE"],[180,"S"],[225,"SW"],[270,"W"],[315,"NW"]
+];
+const Y_TICKS = [0,20,40,60,80];
+
+const VB_W = 480, VB_H = 300;
+const PAD = { top: 14, right: 14, bottom: 26, left: 30 };
+const plotW = VB_W - PAD.left - PAD.right;
+const plotH = VB_H - PAD.top - PAD.bottom;
+
+function xPix(az) { return PAD.left + (az - X_MIN) / (X_MAX - X_MIN) * plotW; }
+function yPix(alt) { return PAD.top + (1 - (alt - Y_MIN) / (Y_MAX - Y_MIN)) * plotH; }
+
+function fmtTime(t) {
+  const [h, m] = t.split(":").map(Number);
+  const period = h < 12 ? "am" : "pm";
+  let h12 = h % 12; if (h12 === 0) h12 = 12;
+  return m === 0 ? `${h12}${period}` : `${h12}:${String(m).padStart(2,"0")}${period}`;
+}
+
+function svgEl(tag, attrs) {
+  const el = document.createElementNS("http://www.w3.org/2000/svg", tag);
+  for (const k in attrs) el.setAttribute(k, attrs[k]);
+  return el;
+}
+
+function buildChart(panel) {
+  const d = SUN_DATA[panel.key];
+  const pts = d.points.filter(p => p.alt >= -0.5);
+
+  const svg = svgEl("svg", { class: "chart", viewBox: `0 0 ${VB_W} ${VB_H}` });
+
+  // gridlines
+  Y_TICKS.forEach(alt => {
+    const y = yPix(alt);
+    svg.appendChild(svgEl("line", { class: alt === 0 ? "spc-baseline" : "spc-grid-line", x1: PAD.left, x2: VB_W - PAD.right, y1: y, y2: y }));
+    const lbl = svgEl("text", { class: "spc-axis-label", x: PAD.left - 6, y: y + 3, "text-anchor": "end" });
+    lbl.textContent = alt + "°";
+    svg.appendChild(lbl);
+  });
+  X_TICKS.forEach(([az, dir]) => {
+    const x = xPix(az);
+    svg.appendChild(svgEl("line", { class: "spc-grid-line", x1: x, x2: x, y1: PAD.top, y2: VB_H - PAD.bottom }));
+    const lbl = svgEl("text", { class: "spc-axis-label", x: x, y: VB_H - PAD.bottom + 13, "text-anchor": "middle" });
+    lbl.textContent = dir;
+    svg.appendChild(lbl);
+  });
+
+  // sun path line
+  const pathD = pts.map((p, i) => `${i === 0 ? "M" : "L"} ${xPix(p.az).toFixed(2)} ${yPix(p.alt).toFixed(2)}`).join(" ");
+  svg.appendChild(svgEl("path", { class: "spc-sun-path", d: pathD, stroke: panel.color }));
+
+  // hour dots (on the hour only)
+  const hourPts = pts.filter(p => p.time.endsWith(":00"));
+  hourPts.forEach(p => {
+    svg.appendChild(svgEl("circle", {
+      class: "spc-hour-dot", cx: xPix(p.az), cy: yPix(p.alt), r: 4,
+      fill: panel.color, stroke: "var(--surface-1)"
+    }));
+  });
+
+  // solar noon peak label
+  const noon = d.solar_noon;
+  const noonLbl = svgEl("text", {
+    class: "spc-direct-label-strong", x: xPix(noon.az), y: yPix(noon.alt) - 10, "text-anchor": "middle"
+  });
+  noonLbl.textContent = `${noon.alt.toFixed(1)}° @ ${fmtTime(noon.time)}`;
+  svg.appendChild(noonLbl);
+
+  // sunrise / sunset direct labels
+  if (d.sunrise) {
+    const t = svgEl("text", { class: "spc-direct-label", x: xPix(d.sunrise.az), y: VB_H - PAD.bottom - 8, "text-anchor": "start" });
+    t.textContent = `↑ ${fmtTime(d.sunrise.time)}`;
+    svg.appendChild(t);
+  }
+  if (d.sunset) {
+    const t = svgEl("text", { class: "spc-direct-label", x: xPix(d.sunset.az), y: VB_H - PAD.bottom - 8, "text-anchor": "end" });
+    t.textContent = `${fmtTime(d.sunset.time)} ↓`;
+    svg.appendChild(t);
+  }
+
+  // hover interaction
+  const crosshair = svgEl("line", { class: "spc-crosshair-line", y1: PAD.top, y2: VB_H - PAD.bottom });
+  svg.appendChild(crosshair);
+  const hoverDot = svgEl("circle", { class: "spc-hover-dot", r: 5, fill: panel.color, stroke: "var(--surface-1)", "stroke-width": 2 });
+  svg.appendChild(hoverDot);
+
+  const hit = svgEl("rect", { class: "spc-hit-layer", x: PAD.left, y: PAD.top, width: plotW, height: plotH });
+  svg.appendChild(hit);
+
+  return { svg, pts, crosshair, hoverDot, hit };
+}
+
+function attachTooltip(container, chart, tooltipEl) {
+  const { svg, pts, crosshair, hoverDot, hit } = chart;
+
+  function pointerToSvgX(evt) {
+    const rect = svg.getBoundingClientRect();
+    const relX = (evt.clientX - rect.left) / rect.width * VB_W;
+    return relX;
+  }
+
+  function onMove(evt) {
+    const svgX = pointerToSvgX(evt);
+    let nearest = pts[0], best = Infinity;
+    for (const p of pts) {
+      const dx = Math.abs(xPix(p.az) - svgX);
+      if (dx < best) { best = dx; nearest = p; }
+    }
+    const cx = xPix(nearest.az), cy = yPix(nearest.alt);
+    crosshair.setAttribute("x1", cx); crosshair.setAttribute("x2", cx);
+    crosshair.style.opacity = 1;
+    hoverDot.setAttribute("cx", cx); hoverDot.setAttribute("cy", cy);
+    hoverDot.style.opacity = 1;
+
+    const rect = svg.getBoundingClientRect();
+    const scale = rect.width / VB_W;
+    tooltipEl.style.left = (rect.left - container.getBoundingClientRect().left + cx * scale) + "px";
+    tooltipEl.style.top = (rect.top - container.getBoundingClientRect().top + cy * scale - 8) + "px";
+    tooltipEl.innerHTML = `${fmtTime(nearest.time)}<br>alt ${nearest.alt.toFixed(1)}° · az ${nearest.az.toFixed(0)}°`;
+    tooltipEl.style.opacity = 1;
+  }
+  function onLeave() {
+    crosshair.style.opacity = 0;
+    hoverDot.style.opacity = 0;
+    tooltipEl.style.opacity = 0;
+  }
+  hit.addEventListener("mousemove", onMove);
+  hit.addEventListener("mouseleave", onLeave);
+  hit.addEventListener("touchmove", (e) => { onMove(e.touches[0]); }, { passive: true });
+  hit.addEventListener("touchend", onLeave);
+}
+
+const grid = document.getElementById("spc-chart-grid");
+PANELS.forEach(panel => {
+  const d = SUN_DATA[panel.key];
+  const daylightMin = (() => {
+    const [sh, sm] = d.sunrise.time.split(":").map(Number);
+    const [eh, em] = d.sunset.time.split(":").map(Number);
+    return (eh * 60 + em) - (sh * 60 + sm);
+  })();
+  const hrs = Math.floor(daylightMin / 60), mins = daylightMin % 60;
+
+  const panelEl = document.createElement("div");
+  panelEl.className = "panel";
+  panelEl.style.position = "relative";
+  panelEl.innerHTML = `
+    <div class="panel-title">${d.label} — ${panel.dateLabel}</div>
+    <div class="spc-panel-stats">
+      <span>Sunrise <b>${fmtTime(d.sunrise.time)}</b></span>
+      <span>Solar noon <b>${fmtTime(d.solar_noon.time)}</b></span>
+      <span>Sunset <b>${fmtTime(d.sunset.time)}</b></span>
+      <span>Daylight <b>${hrs}h ${mins}m</b></span>
+    </div>
+  `;
+  const chart = buildChart(panel);
+  panelEl.appendChild(chart.svg);
+  const tooltip = document.createElement("div");
+  tooltip.className = "tooltip";
+  panelEl.appendChild(tooltip);
+  grid.appendChild(panelEl);
+  attachTooltip(panelEl, chart, tooltip);
+});
+
+const tableGrid = document.getElementById("spc-table-grid");
+PANELS.forEach(panel => {
+  const d = SUN_DATA[panel.key];
+  const hourRows = d.points.filter(p => p.time.endsWith(":00") && p.alt >= -0.5);
+  const table = document.createElement("table");
+  table.className = "data-table";
+  table.innerHTML = `
+    <caption>${d.label} — ${panel.dateLabel}</caption>
+    <thead><tr><th>Time</th><th>Altitude</th><th>Azimuth</th></tr></thead>
+    <tbody>
+      ${hourRows.map(p => `<tr><td>${fmtTime(p.time)}</td><td>${p.alt.toFixed(1)}°</td><td>${p.az.toFixed(0)}°</td></tr>`).join("")}
+    </tbody>
+  `;
+  tableGrid.appendChild(table);
+});
+})();
+(function(){
+const SEASON_DATA = {"2026-12-21":{"label":"Winter Solstice","points":[{"time":"07:20","alt":0.215,"az":122.315},{"time":"07:25","alt":1.001,"az":123.15},{"time":"07:30","alt":1.78,"az":123.991},{"time":"07:35","alt":2.551,"az":124.841},{"time":"07:40","alt":3.314,"az":125.697},{"time":"07:45","alt":4.069,"az":126.562},{"time":"07:50","alt":4.816,"az":127.435},{"time":"07:55","alt":5.554,"az":128.317},{"time":"08:00","alt":6.283,"az":129.206},{"time":"08:05","alt":7.002,"az":130.105},{"time":"08:10","alt":7.713,"az":131.013},{"time":"08:15","alt":8.413,"az":131.93},{"time":"08:20","alt":9.103,"az":132.856},{"time":"08:25","alt":9.783,"az":133.792},{"time":"08:30","alt":10.453,"az":134.738},{"time":"08:35","alt":11.111,"az":135.693},{"time":"08:40","alt":11.759,"az":136.659},{"time":"08:45","alt":12.394,"az":137.635},{"time":"08:50","alt":13.018,"az":138.621},{"time":"08:55","alt":13.63,"az":139.618},{"time":"09:00","alt":14.23,"az":140.625},{"time":"09:05","alt":14.816,"az":141.643},{"time":"09:10","alt":15.39,"az":142.671},{"time":"09:15","alt":15.95,"az":143.71},{"time":"09:20","alt":16.496,"az":144.76},{"time":"09:25","alt":17.028,"az":145.821},{"time":"09:30","alt":17.546,"az":146.892},{"time":"09:35","alt":18.049,"az":147.975},{"time":"09:40","alt":18.538,"az":149.067},{"time":"09:45","alt":19.01,"az":150.171},{"time":"09:50","alt":19.467,"az":151.285},{"time":"09:55","alt":19.908,"az":152.409},{"time":"10:00","alt":20.333,"az":153.543},{"time":"10:05","alt":20.741,"az":154.687},{"time":"10:10","alt":21.132,"az":155.842},{"time":"10:15","alt":21.506,"az":157.005},{"time":"10:20","alt":21.863,"az":158.178},{"time":"10:25","alt":22.201,"az":159.36},{"time":"10:30","alt":22.521,"az":160.55},{"time":"10:35","alt":22.823,"az":161.749},{"time":"10:40","alt":23.107,"az":162.956},{"time":"10:45","alt":23.371,"az":164.17},{"time":"10:50","alt":23.617,"az":165.392},{"time":"10:55","alt":23.843,"az":166.619},{"time":"11:00","alt":24.049,"az":167.854},{"time":"11:05","alt":24.236,"az":169.093},{"time":"11:10","alt":24.403,"az":170.338},{"time":"11:15","alt":24.55,"az":171.588},{"time":"11:20","alt":24.676,"az":172.841},{"time":"11:25","alt":24.783,"az":174.098},{"time":"11:30","alt":24.868,"az":175.358},{"time":"11:35","alt":24.934,"az":176.62},{"time":"11:40","alt":24.979,"az":177.884},{"time":"11:45","alt":25.003,"az":179.149},{"time":"11:50","alt":25.006,"az":180.414},{"time":"11:55","alt":24.989,"az":181.679},{"time":"12:00","alt":24.951,"az":182.943},{"time":"12:05","alt":24.893,"az":184.206},{"time":"12:10","alt":24.814,"az":185.467},{"time":"12:15","alt":24.715,"az":186.725},{"time":"12:20","alt":24.595,"az":187.98},{"time":"12:25","alt":24.455,"az":189.231},{"time":"12:30","alt":24.295,"az":190.477},{"time":"12:35","alt":24.115,"az":191.719},{"time":"12:40","alt":23.916,"az":192.955},{"time":"12:45","alt":23.696,"az":194.185},{"time":"12:50","alt":23.457,"az":195.409},{"time":"12:55","alt":23.199,"az":196.625},{"time":"13:00","alt":22.922,"az":197.835},{"time":"13:05","alt":22.627,"az":199.036},{"time":"13:10","alt":22.313,"az":200.23},{"time":"13:15","alt":21.98,"az":201.414},{"time":"13:20","alt":21.63,"az":202.59},{"time":"13:25","alt":21.262,"az":203.757},{"time":"13:30","alt":20.877,"az":204.915},{"time":"13:35","alt":20.475,"az":206.062},{"time":"13:40","alt":20.055,"az":207.2},{"time":"13:45","alt":19.62,"az":208.328},{"time":"13:50","alt":19.168,"az":209.445},{"time":"13:55","alt":18.701,"az":210.552},{"time":"14:00","alt":18.218,"az":211.648},{"time":"14:05","alt":17.72,"az":212.734},{"time":"14:10","alt":17.207,"az":213.809},{"time":"14:15","alt":16.68,"az":214.874},{"time":"14:20","alt":16.138,"az":215.927},{"time":"14:25","alt":15.583,"az":216.97},{"time":"14:30","alt":15.014,"az":218.002},{"time":"14:35","alt":14.432,"az":219.024},{"time":"14:40","alt":13.837,"az":220.034},{"time":"14:45","alt":13.229,"az":221.035},{"time":"14:50","alt":12.609,"az":222.024},{"time":"14:55","alt":11.977,"az":223.004},{"time":"15:00","alt":11.334,"az":223.973},{"time":"15:05","alt":10.679,"az":224.932},{"time":"15:10","alt":10.014,"az":225.881},{"time":"15:15","alt":9.337,"az":226.82},{"time":"15:20","alt":8.65,"az":227.75},{"time":"15:25","alt":7.953,"az":228.67},{"time":"15:30","alt":7.246,"az":229.58},{"time":"15:35","alt":6.53,"az":230.482},{"time":"15:40","alt":5.804,"az":231.375},{"time":"15:45","alt":5.069,"az":232.259},{"time":"15:50","alt":4.325,"az":233.135},{"time":"15:55","alt":3.573,"az":234.002},{"time":"16:00","alt":2.813,"az":234.862},{"time":"16:05","alt":2.044,"az":235.714},{"time":"16:10","alt":1.268,"az":236.558},{"time":"16:15","alt":0.484,"az":237.395}],"sunrise":{"time":"07:20","alt":0.215,"az":122.315},"sunset":{"time":"16:15","alt":0.484,"az":237.395},"solar_noon":{"time":"11:50","alt":25.006,"az":180.414},"tz":"EST"},"2026-03-20":{"label":"Spring Equinox","points":[{"time":"07:00","alt":-0.13,"az":90.611},{"time":"07:05","alt":0.806,"az":91.44},{"time":"07:10","alt":1.742,"az":92.269},{"time":"07:15","alt":2.677,"az":93.1},{"time":"07:20","alt":3.612,"az":93.932},{"time":"07:25","alt":4.545,"az":94.765},{"time":"07:30","alt":5.478,"az":95.601},{"time":"07:35","alt":6.409,"az":96.44},{"time":"07:40","alt":7.339,"az":97.282},{"time":"07:45","alt":8.266,"az":98.128},{"time":"07:50","alt":9.192,"az":98.978},{"time":"07:55","alt":10.116,"az":99.833},{"time":"08:00","alt":11.037,"az":100.692},{"time":"08:05","alt":11.956,"az":101.558},{"time":"08:10","alt":12.872,"az":102.429},{"time":"08:15","alt":13.785,"az":103.307},{"time":"08:20","alt":14.694,"az":104.192},{"time":"08:25","alt":15.6,"az":105.085},{"time":"08:30","alt":16.502,"az":105.985},{"time":"08:35","alt":17.4,"az":106.895},{"time":"08:40","alt":18.294,"az":107.813},{"time":"08:45","alt":19.183,"az":108.741},{"time":"08:50","alt":20.067,"az":109.68},{"time":"08:55","alt":20.946,"az":110.629},{"time":"09:00","alt":21.82,"az":111.589},{"time":"09:05","alt":22.687,"az":112.562},{"time":"09:10","alt":23.549,"az":113.547},{"time":"09:15","alt":24.404,"az":114.545},{"time":"09:20","alt":25.253,"az":115.557},{"time":"09:25","alt":26.094,"az":116.583},{"time":"09:30","alt":26.927,"az":117.624},{"time":"09:35","alt":27.753,"az":118.681},{"time":"09:40","alt":28.571,"az":119.754},{"time":"09:45","alt":29.379,"az":120.844},{"time":"09:50","alt":30.179,"az":121.952},{"time":"09:55","alt":30.968,"az":123.077},{"time":"10:00","alt":31.748,"az":124.222},{"time":"10:05","alt":32.517,"az":125.386},{"time":"10:10","alt":33.275,"az":126.57},{"time":"10:15","alt":34.022,"az":127.775},{"time":"10:20","alt":34.756,"az":129.001},{"time":"10:25","alt":35.477,"az":130.249},{"time":"10:30","alt":36.186,"az":131.52},{"time":"10:35","alt":36.88,"az":132.814},{"time":"10:40","alt":37.56,"az":134.131},{"time":"10:45","alt":38.225,"az":135.473},{"time":"10:50","alt":38.874,"az":136.839},{"time":"10:55","alt":39.507,"az":138.231},{"time":"11:00","alt":40.122,"az":139.647},{"time":"11:05","alt":40.72,"az":141.09},{"time":"11:10","alt":41.299,"az":142.558},{"time":"11:15","alt":41.86,"az":144.052},{"time":"11:20","alt":42.4,"az":145.572},{"time":"11:25","alt":42.919,"az":147.119},{"time":"11:30","alt":43.418,"az":148.691},{"time":"11:35","alt":43.894,"az":150.289},{"time":"11:40","alt":44.347,"az":151.912},{"time":"11:45","alt":44.777,"az":153.56},{"time":"11:50","alt":45.182,"az":155.232},{"time":"11:55","alt":45.563,"az":156.927},{"time":"12:00","alt":45.918,"az":158.645},{"time":"12:05","alt":46.247,"az":160.384},{"time":"12:10","alt":46.548,"az":162.143},{"time":"12:15","alt":46.823,"az":163.921},{"time":"12:20","alt":47.069,"az":165.717},{"time":"12:25","alt":47.287,"az":167.528},{"time":"12:30","alt":47.476,"az":169.353},{"time":"12:35","alt":47.635,"az":171.191},{"time":"12:40","alt":47.765,"az":173.038},{"time":"12:45","alt":47.864,"az":174.894},{"time":"12:50","alt":47.934,"az":176.756},{"time":"12:55","alt":47.973,"az":178.622},{"time":"13:00","alt":47.982,"az":180.49},{"time":"13:05","alt":47.96,"az":182.357},{"time":"13:10","alt":47.907,"az":184.221},{"time":"13:15","alt":47.825,"az":186.081},{"time":"13:20","alt":47.712,"az":187.933},{"time":"13:25","alt":47.569,"az":189.777},{"time":"13:30","alt":47.397,"az":191.609},{"time":"13:35","alt":47.196,"az":193.429},{"time":"13:40","alt":46.966,"az":195.233},{"time":"13:45","alt":46.707,"az":197.021},{"time":"13:50","alt":46.421,"az":198.792},{"time":"13:55","alt":46.107,"az":200.542},{"time":"14:00","alt":45.767,"az":202.272},{"time":"14:05","alt":45.401,"az":203.98},{"time":"14:10","alt":45.01,"az":205.666},{"time":"14:15","alt":44.594,"az":207.327},{"time":"14:20","alt":44.154,"az":208.965},{"time":"14:25","alt":43.691,"az":210.577},{"time":"14:30","alt":43.205,"az":212.164},{"time":"14:35","alt":42.698,"az":213.725},{"time":"14:40","alt":42.169,"az":215.26},{"time":"14:45","alt":41.62,"az":216.769},{"time":"14:50","alt":41.052,"az":218.253},{"time":"14:55","alt":40.465,"az":219.71},{"time":"15:00","alt":39.86,"az":221.141},{"time":"15:05","alt":39.237,"az":222.547},{"time":"15:10","alt":38.597,"az":223.928},{"time":"15:15","alt":37.942,"az":225.284},{"time":"15:20","alt":37.271,"az":226.615},{"time":"15:25","alt":36.585,"az":227.923},{"time":"15:30","alt":35.884,"az":229.207},{"time":"15:35","alt":35.171,"az":230.469},{"time":"15:40","alt":34.444,"az":231.708},{"time":"15:45","alt":33.705,"az":232.925},{"time":"15:50","alt":32.954,"az":234.121},{"time":"15:55","alt":32.192,"az":235.297},{"time":"16:00","alt":31.418,"az":236.453},{"time":"16:05","alt":30.635,"az":237.59},{"time":"16:10","alt":29.841,"az":238.709},{"time":"16:15","alt":29.039,"az":239.809},{"time":"16:20","alt":28.227,"az":240.892},{"time":"16:25","alt":27.406,"az":241.959},{"time":"16:30","alt":26.578,"az":243.01},{"time":"16:35","alt":25.742,"az":244.045},{"time":"16:40","alt":24.898,"az":245.066},{"time":"16:45","alt":24.047,"az":246.073},{"time":"16:50","alt":23.19,"az":247.066},{"time":"16:55","alt":22.327,"az":248.047},{"time":"17:00","alt":21.457,"az":249.015},{"time":"17:05","alt":20.582,"az":249.972},{"time":"17:10","alt":19.702,"az":250.917},{"time":"17:15","alt":18.816,"az":251.852},{"time":"17:20","alt":17.926,"az":252.777},{"time":"17:25","alt":17.032,"az":253.693},{"time":"17:30","alt":16.133,"az":254.6},{"time":"17:35","alt":15.23,"az":255.498},{"time":"17:40","alt":14.324,"az":256.389},{"time":"17:45","alt":13.414,"az":257.272},{"time":"17:50","alt":12.501,"az":258.148},{"time":"17:55","alt":11.585,"az":259.019},{"time":"18:00","alt":10.666,"az":259.883},{"time":"18:05","alt":9.745,"az":260.742},{"time":"18:10","alt":8.822,"az":261.596},{"time":"18:15","alt":7.897,"az":262.446},{"time":"18:20","alt":6.969,"az":263.292},{"time":"18:25","alt":6.041,"az":264.134},{"time":"18:30","alt":5.11,"az":264.973},{"time":"18:35","alt":4.179,"az":265.81},{"time":"18:40","alt":3.247,"az":266.645},{"time":"18:45","alt":2.313,"az":267.478},{"time":"18:50","alt":1.38,"az":268.31},{"time":"18:55","alt":0.446,"az":269.141}],"sunrise":{"time":"07:05","alt":0.806,"az":91.44},"sunset":{"time":"18:55","alt":0.446,"az":269.141},"solar_noon":{"time":"13:00","alt":47.982,"az":180.49},"tz":"EDT"},"2026-06-21":{"label":"Summer Solstice","points":[{"time":"05:20","alt":-0.204,"az":57.649},{"time":"05:25","alt":0.589,"az":58.477},{"time":"05:30","alt":1.39,"az":59.298},{"time":"05:35","alt":2.197,"az":60.113},{"time":"05:40","alt":3.011,"az":60.921},{"time":"05:45","alt":3.831,"az":61.724},{"time":"05:50","alt":4.658,"az":62.52},{"time":"05:55","alt":5.49,"az":63.312},{"time":"06:00","alt":6.329,"az":64.098},{"time":"06:05","alt":7.172,"az":64.88},{"time":"06:10","alt":8.022,"az":65.657},{"time":"06:15","alt":8.876,"az":66.43},{"time":"06:20","alt":9.736,"az":67.199},{"time":"06:25","alt":10.6,"az":67.965},{"time":"06:30","alt":11.469,"az":68.727},{"time":"06:35","alt":12.343,"az":69.486},{"time":"06:40","alt":13.22,"az":70.242},{"time":"06:45","alt":14.102,"az":70.996},{"time":"06:50","alt":14.988,"az":71.748},{"time":"06:55","alt":15.878,"az":72.498},{"time":"07:00","alt":16.772,"az":73.246},{"time":"07:05","alt":17.669,"az":73.994},{"time":"07:10","alt":18.569,"az":74.741},{"time":"07:15","alt":19.473,"az":75.488},{"time":"07:20","alt":20.38,"az":76.234},{"time":"07:25","alt":21.289,"az":76.981},{"time":"07:30","alt":22.202,"az":77.729},{"time":"07:35","alt":23.117,"az":78.478},{"time":"07:40","alt":24.034,"az":79.228},{"time":"07:45","alt":24.954,"az":79.98},{"time":"07:50","alt":25.875,"az":80.735},{"time":"07:55","alt":26.799,"az":81.493},{"time":"08:00","alt":27.725,"az":82.254},{"time":"08:05","alt":28.652,"az":83.02},{"time":"08:10","alt":29.581,"az":83.789},{"time":"08:15","alt":30.511,"az":84.563},{"time":"08:20","alt":31.442,"az":85.343},{"time":"08:25","alt":32.375,"az":86.129},{"time":"08:30","alt":33.308,"az":86.922},{"time":"08:35","alt":34.242,"az":87.722},{"time":"08:40","alt":35.177,"az":88.53},{"time":"08:45","alt":36.112,"az":89.347},{"time":"08:50","alt":37.047,"az":90.174},{"time":"08:55","alt":37.981,"az":91.011},{"time":"09:00","alt":38.916,"az":91.858},{"time":"09:05","alt":39.85,"az":92.718},{"time":"09:10","alt":40.784,"az":93.591},{"time":"09:15","alt":41.717,"az":94.478},{"time":"09:20","alt":42.648,"az":95.381},{"time":"09:25","alt":43.578,"az":96.299},{"time":"09:30","alt":44.507,"az":97.235},{"time":"09:35","alt":45.433,"az":98.19},{"time":"09:40","alt":46.358,"az":99.164},{"time":"09:45","alt":47.28,"az":100.161},{"time":"09:50","alt":48.198,"az":101.181},{"time":"09:55","alt":49.114,"az":102.226},{"time":"10:00","alt":50.026,"az":103.297},{"time":"10:05","alt":50.934,"az":104.398},{"time":"10:10","alt":51.837,"az":105.53},{"time":"10:15","alt":52.735,"az":106.695},{"time":"10:20","alt":53.628,"az":107.895},{"time":"10:25","alt":54.515,"az":109.134},{"time":"10:30","alt":55.395,"az":110.415},{"time":"10:35","alt":56.267,"az":111.739},{"time":"10:40","alt":57.131,"az":113.112},{"time":"10:45","alt":57.987,"az":114.535},{"time":"10:50","alt":58.832,"az":116.014},{"time":"10:55","alt":59.667,"az":117.551},{"time":"11:00","alt":60.49,"az":119.152},{"time":"11:05","alt":61.3,"az":120.821},{"time":"11:10","alt":62.095,"az":122.562},{"time":"11:15","alt":62.875,"az":124.381},{"time":"11:20","alt":63.638,"az":126.284},{"time":"11:25","alt":64.382,"az":128.275},{"time":"11:30","alt":65.106,"az":130.36},{"time":"11:35","alt":65.806,"az":132.545},{"time":"11:40","alt":66.483,"az":134.835},{"time":"11:45","alt":67.132,"az":137.235},{"time":"11:50","alt":67.751,"az":139.75},{"time":"11:55","alt":68.339,"az":142.383},{"time":"12:00","alt":68.892,"az":145.139},{"time":"12:05","alt":69.407,"az":148.017},{"time":"12:10","alt":69.882,"az":151.018},{"time":"12:15","alt":70.312,"az":154.14},{"time":"12:20","alt":70.696,"az":157.378},{"time":"12:25","alt":71.031,"az":160.724},{"time":"12:30","alt":71.313,"az":164.168},{"time":"12:35","alt":71.54,"az":167.697},{"time":"12:40","alt":71.711,"az":171.294},{"time":"12:45","alt":71.823,"az":174.941},{"time":"12:50","alt":71.875,"az":178.619},{"time":"12:55","alt":71.868,"az":182.304},{"time":"13:00","alt":71.8,"az":185.976},{"time":"13:05","alt":71.673,"az":189.613},{"time":"13:10","alt":71.489,"az":193.195},{"time":"13:15","alt":71.247,"az":196.703},{"time":"13:20","alt":70.952,"az":200.124},{"time":"13:25","alt":70.605,"az":203.444},{"time":"13:30","alt":70.209,"az":206.653},{"time":"13:35","alt":69.767,"az":209.745},{"time":"13:40","alt":69.282,"az":212.716},{"time":"13:45","alt":68.757,"az":215.564},{"time":"13:50","alt":68.196,"az":218.288},{"time":"13:55","alt":67.6,"az":220.892},{"time":"14:00","alt":66.972,"az":223.378},{"time":"14:05","alt":66.316,"az":225.75},{"time":"14:10","alt":65.634,"az":228.013},{"time":"14:15","alt":64.927,"az":230.173},{"time":"14:20","alt":64.198,"az":232.234},{"time":"14:25","alt":63.449,"az":234.202},{"time":"14:30","alt":62.682,"az":236.083},{"time":"14:35","alt":61.898,"az":237.883},{"time":"14:40","alt":61.099,"az":239.606},{"time":"14:45","alt":60.286,"az":241.257},{"time":"14:50","alt":59.46,"az":242.841},{"time":"14:55","alt":58.622,"az":244.364},{"time":"15:00","alt":57.774,"az":245.828},{"time":"15:05","alt":56.916,"az":247.239},{"time":"15:10","alt":56.05,"az":248.599},{"time":"15:15","alt":55.176,"az":249.912},{"time":"15:20","alt":54.294,"az":251.182},{"time":"15:25","alt":53.406,"az":252.411},{"time":"15:30","alt":52.512,"az":253.602},{"time":"15:35","alt":51.612,"az":254.759},{"time":"15:40","alt":50.708,"az":255.882},{"time":"15:45","alt":49.799,"az":256.976},{"time":"15:50","alt":48.886,"az":258.04},{"time":"15:55","alt":47.97,"az":259.079},{"time":"16:00","alt":47.05,"az":260.093},{"time":"16:05","alt":46.128,"az":261.084},{"time":"16:10","alt":45.203,"az":262.054},{"time":"16:15","alt":44.276,"az":263.003},{"time":"16:20","alt":43.347,"az":263.935},{"time":"16:25","alt":42.416,"az":264.849},{"time":"16:30","alt":41.484,"az":265.747},{"time":"16:35","alt":40.551,"az":266.631},{"time":"16:40","alt":39.618,"az":267.5},{"time":"16:45","alt":38.683,"az":268.357},{"time":"16:50","alt":37.749,"az":269.202},{"time":"16:55","alt":36.814,"az":270.036},{"time":"17:00","alt":35.879,"az":270.86},{"time":"17:05","alt":34.944,"az":271.675},{"time":"17:10","alt":34.01,"az":272.481},{"time":"17:15","alt":33.076,"az":273.279},{"time":"17:20","alt":32.143,"az":274.07},{"time":"17:25","alt":31.211,"az":274.855},{"time":"17:30","alt":30.279,"az":275.633},{"time":"17:35","alt":29.35,"az":276.407},{"time":"17:40","alt":28.421,"az":277.175},{"time":"17:45","alt":27.494,"az":277.939},{"time":"17:50","alt":26.569,"az":278.699},{"time":"17:55","alt":25.646,"az":279.457},{"time":"18:00","alt":24.725,"az":280.211},{"time":"18:05","alt":23.806,"az":280.963},{"time":"18:10","alt":22.889,"az":281.713},{"time":"18:15","alt":21.975,"az":282.461},{"time":"18:20","alt":21.063,"az":283.209},{"time":"18:25","alt":20.154,"az":283.956},{"time":"18:30","alt":19.248,"az":284.702},{"time":"18:35","alt":18.346,"az":285.449},{"time":"18:40","alt":17.446,"az":286.196},{"time":"18:45","alt":16.55,"az":286.944},{"time":"18:50","alt":15.657,"az":287.693},{"time":"18:55","alt":14.768,"az":288.443},{"time":"19:00","alt":13.883,"az":289.196},{"time":"19:05","alt":13.002,"az":289.95},{"time":"19:10","alt":12.126,"az":290.707},{"time":"19:15","alt":11.253,"az":291.467},{"time":"19:20","alt":10.385,"az":292.23},{"time":"19:25","alt":9.522,"az":292.996},{"time":"19:30","alt":8.664,"az":293.766},{"time":"19:35","alt":7.811,"az":294.54},{"time":"19:40","alt":6.963,"az":295.318},{"time":"19:45","alt":6.121,"az":296.101},{"time":"19:50","alt":5.284,"az":296.889},{"time":"19:55","alt":4.453,"az":297.682},{"time":"20:00","alt":3.628,"az":298.48},{"time":"20:05","alt":2.809,"az":299.284},{"time":"20:10","alt":1.997,"az":300.094},{"time":"20:15","alt":1.192,"az":300.91},{"time":"20:20","alt":0.393,"az":301.733}],"sunrise":{"time":"05:25","alt":0.589,"az":58.477},"sunset":{"time":"20:20","alt":0.393,"az":301.733},"solar_noon":{"time":"12:50","alt":71.875,"az":178.619},"tz":"EDT"},"2026-09-22":{"label":"Fall Equinox","points":[{"time":"06:40","alt":-0.146,"az":88.903},{"time":"06:45","alt":0.789,"az":89.734},{"time":"06:50","alt":1.723,"az":90.564},{"time":"06:55","alt":2.658,"az":91.396},{"time":"07:00","alt":3.592,"az":92.228},{"time":"07:05","alt":4.525,"az":93.062},{"time":"07:10","alt":5.458,"az":93.898},{"time":"07:15","alt":6.39,"az":94.736},{"time":"07:20","alt":7.32,"az":95.576},{"time":"07:25","alt":8.25,"az":96.42},{"time":"07:30","alt":9.178,"az":97.268},{"time":"07:35","alt":10.104,"az":98.12},{"time":"07:40","alt":11.028,"az":98.977},{"time":"07:45","alt":11.95,"az":99.839},{"time":"07:50","alt":12.869,"az":100.706},{"time":"07:55","alt":13.786,"az":101.58},{"time":"08:00","alt":14.7,"az":102.46},{"time":"08:05","alt":15.611,"az":103.347},{"time":"08:10","alt":16.518,"az":104.242},{"time":"08:15","alt":17.422,"az":105.145},{"time":"08:20","alt":18.322,"az":106.057},{"time":"08:25","alt":19.218,"az":106.978},{"time":"08:30","alt":20.109,"az":107.909},{"time":"08:35","alt":20.996,"az":108.85},{"time":"08:40","alt":21.878,"az":109.803},{"time":"08:45","alt":22.754,"az":110.766},{"time":"08:50","alt":23.625,"az":111.742},{"time":"08:55","alt":24.49,"az":112.731},{"time":"09:00","alt":25.348,"az":113.733},{"time":"09:05","alt":26.2,"az":114.749},{"time":"09:10","alt":27.045,"az":115.78},{"time":"09:15","alt":27.883,"az":116.826},{"time":"09:20","alt":28.712,"az":117.888},{"time":"09:25","alt":29.534,"az":118.967},{"time":"09:30","alt":30.347,"az":120.063},{"time":"09:35","alt":31.151,"az":121.178},{"time":"09:40","alt":31.945,"az":122.31},{"time":"09:45","alt":32.73,"az":123.463},{"time":"09:50","alt":33.504,"az":124.635},{"time":"09:55","alt":34.267,"az":125.828},{"time":"10:00","alt":35.018,"az":127.043},{"time":"10:05","alt":35.757,"az":128.279},{"time":"10:10","alt":36.484,"az":129.539},{"time":"10:15","alt":37.198,"az":130.821},{"time":"10:20","alt":37.897,"az":132.128},{"time":"10:25","alt":38.583,"az":133.46},{"time":"10:30","alt":39.253,"az":134.816},{"time":"10:35","alt":39.907,"az":136.199},{"time":"10:40","alt":40.545,"az":137.607},{"time":"10:45","alt":41.166,"az":139.042},{"time":"10:50","alt":41.769,"az":140.503},{"time":"10:55","alt":42.353,"az":141.992},{"time":"11:00","alt":42.918,"az":143.508},{"time":"11:05","alt":43.463,"az":145.052},{"time":"11:10","alt":43.987,"az":146.622},{"time":"11:15","alt":44.49,"az":148.22},{"time":"11:20","alt":44.97,"az":149.845},{"time":"11:25","alt":45.427,"az":151.497},{"time":"11:30","alt":45.86,"az":153.175},{"time":"11:35","alt":46.268,"az":154.878},{"time":"11:40","alt":46.651,"az":156.605},{"time":"11:45","alt":47.008,"az":158.357},{"time":"11:50","alt":47.338,"az":160.131},{"time":"11:55","alt":47.641,"az":161.926},{"time":"12:00","alt":47.916,"az":163.741},{"time":"12:05","alt":48.162,"az":165.574},{"time":"12:10","alt":48.379,"az":167.424},{"time":"12:15","alt":48.567,"az":169.289},{"time":"12:20","alt":48.724,"az":171.166},{"time":"12:25","alt":48.851,"az":173.054},{"time":"12:30","alt":48.947,"az":174.95},{"time":"12:35","alt":49.013,"az":176.852},{"time":"12:40","alt":49.047,"az":178.759},{"time":"12:45","alt":49.051,"az":180.666},{"time":"12:50","alt":49.023,"az":182.573},{"time":"12:55","alt":48.964,"az":184.476},{"time":"13:00","alt":48.874,"az":186.374},{"time":"13:05","alt":48.754,"az":188.264},{"time":"13:10","alt":48.603,"az":190.144},{"time":"13:15","alt":48.422,"az":192.011},{"time":"13:20","alt":48.211,"az":193.864},{"time":"13:25","alt":47.971,"az":195.701},{"time":"13:30","alt":47.702,"az":197.52},{"time":"13:35","alt":47.405,"az":199.32},{"time":"13:40","alt":47.081,"az":201.098},{"time":"13:45","alt":46.73,"az":202.855},{"time":"13:50","alt":46.352,"az":204.587},{"time":"13:55","alt":45.949,"az":206.296},{"time":"14:00","alt":45.521,"az":207.979},{"time":"14:05","alt":45.069,"az":209.636},{"time":"14:10","alt":44.594,"az":211.267},{"time":"14:15","alt":44.096,"az":212.87},{"time":"14:20","alt":43.576,"az":214.447},{"time":"14:25","alt":43.035,"az":215.996},{"time":"14:30","alt":42.474,"az":217.518},{"time":"14:35","alt":41.894,"az":219.012},{"time":"14:40","alt":41.295,"az":220.479},{"time":"14:45","alt":40.677,"az":221.92},{"time":"14:50","alt":40.043,"az":223.334},{"time":"14:55","alt":39.391,"az":224.721},{"time":"15:00","alt":38.724,"az":226.083},{"time":"15:05","alt":38.042,"az":227.419},{"time":"15:10","alt":37.345,"az":228.731},{"time":"15:15","alt":36.634,"az":230.018},{"time":"15:20","alt":35.909,"az":231.282},{"time":"15:25","alt":35.172,"az":232.523},{"time":"15:30","alt":34.423,"az":233.742},{"time":"15:35","alt":33.662,"az":234.939},{"time":"15:40","alt":32.889,"az":236.115},{"time":"15:45","alt":32.107,"az":237.271},{"time":"15:50","alt":31.314,"az":238.407},{"time":"15:55","alt":30.511,"az":239.525},{"time":"16:00","alt":29.699,"az":240.624},{"time":"16:05","alt":28.879,"az":241.706},{"time":"16:10","alt":28.05,"az":242.771},{"time":"16:15","alt":27.214,"az":243.82},{"time":"16:20","alt":26.37,"az":244.853},{"time":"16:25","alt":25.518,"az":245.871},{"time":"16:30","alt":24.66,"az":246.875},{"time":"16:35","alt":23.796,"az":247.866},{"time":"16:40","alt":22.926,"az":248.844},{"time":"16:45","alt":22.05,"az":249.809},{"time":"16:50","alt":21.168,"az":250.763},{"time":"16:55","alt":20.282,"az":251.705},{"time":"17:00","alt":19.39,"az":252.637},{"time":"17:05","alt":18.494,"az":253.559},{"time":"17:10","alt":17.594,"az":254.472},{"time":"17:15","alt":16.69,"az":255.376},{"time":"17:20","alt":15.782,"az":256.271},{"time":"17:25","alt":14.871,"az":257.159},{"time":"17:30","alt":13.956,"az":258.039},{"time":"17:35","alt":13.039,"az":258.912},{"time":"17:40","alt":12.119,"az":259.78},{"time":"17:45","alt":11.196,"az":260.641},{"time":"17:50","alt":10.271,"az":261.497},{"time":"17:55","alt":9.344,"az":262.349},{"time":"18:00","alt":8.415,"az":263.196},{"time":"18:05","alt":7.485,"az":264.039},{"time":"18:10","alt":6.553,"az":264.879},{"time":"18:15","alt":5.62,"az":265.716},{"time":"18:20","alt":4.686,"az":266.55},{"time":"18:25","alt":3.751,"az":267.382},{"time":"18:30","alt":2.815,"az":268.213},{"time":"18:35","alt":1.879,"az":269.043},{"time":"18:40","alt":0.943,"az":269.872},{"time":"18:45","alt":0.007,"az":270.7}],"sunrise":{"time":"06:45","alt":0.789,"az":89.734},"sunset":{"time":"18:45","alt":0.007,"az":270.7},"solar_noon":{"time":"12:45","alt":49.051,"az":180.666},"tz":"EDT"}}
+;
+
+const MASSING = {
+  house:  { x: -15.7, y: -43.7, w: 53.9, d: 28.7, h: 22, color: "#c9c2b0" },
+  camper: { x: 37.0,  y: 114.5, w: 30.9, d: 11.6, h: 9,  color: "#b7c4d1" },
+  coop:   { x: 62.4,  y: 62.5,  w: 10.2, d: 12.1, h: 6,  color: "#a98f6e" },
+};
+const POOL = { x: 0, y: 0, w: 22.2, d: 22.2, color: "#2a78d6" };
+const TREES = [
+  { type: "hedgerow", x: 0.8, y: -57.0, diameter: 40, isHedge: true, len: 95.4 },
+  { type: "hedgerow", x: -43.5, y: -39.4, diameter: 30, isHedge: true, len: 88.4 },
+  { type: "coniferous", x: -31.9, y: 22.1, diameter: 33.1 },
+  { type: "coniferous", x: -75.6, y: -60.1, diameter: 33.1 },
+  { type: "deciduous", x: 36.9, y: 74.1, diameter: 21.9 },
+  { type: "deciduous", x: 16.5, y: 15.7, diameter: 16.6 },
+  { type: "coniferous", x: 103.0, y: 111.1, diameter: 15.9 },
+  { type: "coniferous", x: 83.1, y: 120.2, diameter: 15.9 },
+  { type: "coniferous", x: 38.1, y: 165.0, diameter: 33.3 },
+  { type: "coniferous", x: 40.1, y: 139.8, diameter: 15.9 },
+  { type: "deciduous", x: 114.0, y: 139.6, diameter: 45.9 },
+  { type: "deciduous", x: 74.3, y: 157.8, diameter: 45.9 },
+  { type: "deciduous", x: -33.6, y: -86.8, diameter: 19.5 },
+  { type: "deciduous", x: 41.2, y: 29.0, diameter: 20.0 },
+  { type: "deciduous", x: 49.3, y: 47.9, diameter: 20.0 },
+  { type: "coniferous", x: 31.2, y: 42.4, diameter: 15.7 },
+  { type: "coniferous", x: 32.1, y: 56.4, diameter: 15.7 },
+];
+
+// ---- isometric projection ----
+const COS30 = Math.cos(Math.PI / 6), SIN30 = Math.sin(Math.PI / 6);
+const SCALE = 3.1; // px per foot (ground/massing)
+const ORIGIN = { x: 560, y: 660 }; // screen origin for ground-plane (0,0)
+
+function project(x, y, z) {
+  const sx = (x - y) * COS30 * SCALE;
+  const sy = (x + y) * SIN30 * SCALE - z * SCALE;
+  return { x: ORIGIN.x + sx, y: ORIGIN.y + sy };
+}
+
+// Sky dome uses its own (smaller) scale, decoupled from the ground's feet-based scale — the
+// sun's true distance is effectively infinite, so its "radius" here is a stylized dome size,
+// not a to-scale measurement like the massing below it.
+const SKY_SCALE = 0.85;
+function projectSky(x, y, z) {
+  const sx = (x - y) * COS30 * SKY_SCALE;
+  const sy = (x + y) * SIN30 * SKY_SCALE - z * SKY_SCALE;
+  return { x: ORIGIN.x + sx, y: ORIGIN.y + sy };
+}
+
+function svgEl(tag, attrs) {
+  const el = document.createElementNS("http://www.w3.org/2000/svg", tag);
+  for (const k in attrs) el.setAttribute(k, attrs[k]);
+  return el;
+}
+function poly(pts, fill, opacity = 1) {
+  const d = pts.map(p => `${p.x.toFixed(1)},${p.y.toFixed(1)}`).join(" ");
+  return svgEl("polygon", { points: d, fill, opacity, stroke: "rgba(0,0,0,0.15)", "stroke-width": 0.5 });
+}
+
+function shade(hex, factor) {
+  const c = hex.replace("#", "");
+  const r = parseInt(c.slice(0, 2), 16), g = parseInt(c.slice(2, 4), 16), b = parseInt(c.slice(4, 6), 16);
+  const f = (v) => Math.max(0, Math.min(255, Math.round(v * factor)));
+  return `rgb(${f(r)},${f(g)},${f(b)})`;
+}
+
+// draws a simple box: footprint centered at (cx,cy), width w (east-west), depth d (north-south), height h
+function drawBox(svg, cx, cy, w, d, h, color) {
+  const hw = w / 2, hd = d / 2;
+  const corners2D = [
+    [cx - hw, cy - hd], [cx + hw, cy - hd], [cx + hw, cy + hd], [cx - hw, cy + hd],
+  ];
+  const bottom = corners2D.map(([x, y]) => project(x, y, 0));
+  const top = corners2D.map(([x, y]) => project(x, y, h));
+
+  // top face
+  svg.appendChild(poly(top, shade(color, 1.12)));
+  // right face (corners 1,2 = +x side)
+  svg.appendChild(poly([bottom[1], bottom[2], top[2], top[1]], shade(color, 0.92)));
+  // front face (corners 2,3 = +y side)
+  svg.appendChild(poly([bottom[2], bottom[3], top[3], top[2]], shade(color, 0.78)));
+}
+
+function drawTree(svg, x, y, diameter) {
+  const r = diameter / 2;
+  const canopyH = diameter * 1.15;
+  const trunkH = 3;
+  const base = project(x, y, trunkH);
+  const apex = project(x, y, trunkH + canopyH);
+  const canopyR = (r) => Math.abs(project(x + r, y, trunkH + canopyH * 0.55).x - base.x);
+  // simple layered "cloud" canopy: 3 overlapping circles for a soft tree silhouette
+  const mid = project(x, y, trunkH + canopyH * 0.55);
+  const rr = r * SCALE * 0.72;
+  [{ pt: base, s: 0.55 }, { pt: mid, s: 1 }, { pt: apex, s: 0.5 }].forEach(({ pt, s }) => {
+    const c = svgEl("circle", { cx: pt.x, cy: pt.y, r: rr * s, fill: "#6f8f52", opacity: 0.88, stroke: "rgba(0,0,0,0.12)", "stroke-width": 0.5 });
+    svg.appendChild(c);
+  });
+}
+
+function drawHedge(svg, x, y, len, h) {
+  // simple elongated low box, oriented east-west
+  drawBox(svg, x, y, len, 6, h, "#5b7a45");
+}
+
+// ---- build scene ----
+const svg = document.getElementById("sp3d-scene-svg");
+
+// ground disc + compass ring
+const GROUND_R = 175;
+const ringPts = [];
+for (let a = 0; a <= 360; a += 4) {
+  const rad = a * Math.PI / 180;
+  ringPts.push(project(GROUND_R * Math.sin(rad), GROUND_R * Math.cos(rad), 0));
+}
+svg.appendChild(poly(ringPts, "var(--sp3d-ground)"));
+
+// compass tick marks every 15 degrees + degree labels
+for (let a = 0; a < 360; a += 15) {
+  const rad = a * Math.PI / 180;
+  const inner = project((GROUND_R - 8) * Math.sin(rad), (GROUND_R - 8) * Math.cos(rad), 0);
+  const outer = project(GROUND_R * Math.sin(rad), GROUND_R * Math.cos(rad), 0);
+  svg.appendChild(svgEl("line", { x1: inner.x, y1: inner.y, x2: outer.x, y2: outer.y, stroke: "var(--sp3d-ground-ring)", "stroke-width": 1.5 }));
+  const labelPt = project((GROUND_R + 14) * Math.sin(rad), (GROUND_R + 14) * Math.cos(rad), 0);
+  const lbl = svgEl("text", { x: labelPt.x, y: labelPt.y + 3, "text-anchor": "middle", "font-size": 9, fill: "var(--text-muted)" });
+  lbl.textContent = a === 0 ? "N" : a === 90 ? "E" : a === 180 ? "S" : a === 270 ? "W" : String(a) + "°";
+  svg.appendChild(lbl);
+}
+
+// hedgerows first (low, background)
+TREES.filter(t => t.isHedge).forEach(t => drawHedge(svg, t.x, t.y, t.len, 4));
+
+// pool (flat colored quad on the ground)
+{
+  const hw = POOL.w / 2, hd = POOL.d / 2;
+  const pts = [
+    project(POOL.x - hw, POOL.y - hd, 0.3), project(POOL.x + hw, POOL.y - hd, 0.3),
+    project(POOL.x + hw, POOL.y + hd, 0.3), project(POOL.x - hw, POOL.y + hd, 0.3),
+  ];
+  svg.appendChild(poly(pts, POOL.color, 0.9));
+}
+
+// buildings
+for (const [key, m] of Object.entries(MASSING)) {
+  drawBox(svg, m.x, m.y, m.w, m.d, m.h, m.color);
+}
+
+// trees (non-hedge)
+TREES.filter(t => !t.isHedge).forEach(t => drawTree(svg, t.x, t.y, t.diameter));
+
+// ---- sun arcs ----
+const SEASONS = [
+  { key: "2026-12-21", color: "var(--sp3d-series-winter)", label: "Winter Solstice" },
+  { key: "2026-03-20", color: "var(--sp3d-series-spring)", label: "Spring Equinox" },
+  { key: "2026-06-21", color: "var(--sp3d-series-summer)", label: "Summer Solstice" },
+  { key: "2026-09-22", color: "var(--sp3d-series-fall)",   label: "Fall Equinox" },
+];
+const SKY_R = 500;
+const hitPoints = [];
+
+SEASONS.forEach(season => {
+  const d = SEASON_DATA[season.key];
+  const pts = d.points.filter(p => p.alt >= 0);
+  const proj3 = (az, alt) => {
+    const altRad = alt * Math.PI / 180, azRad = az * Math.PI / 180;
+    const east = SKY_R * Math.cos(altRad) * Math.sin(azRad);
+    const north = SKY_R * Math.cos(altRad) * Math.cos(azRad);
+    const up = SKY_R * Math.sin(altRad);
+    return projectSky(east, north, up);
+  };
+  const pathD = pts.map((p, i) => {
+    const sp = proj3(p.az, p.alt);
+    return `${i === 0 ? "M" : "L"} ${sp.x.toFixed(1)} ${sp.y.toFixed(1)}`;
+  }).join(" ");
+  const pathEl = svgEl("path", { d: pathD, fill: "none", stroke: season.color, "stroke-width": 2, "stroke-dasharray": "5 4", opacity: 0.9 });
+  svg.appendChild(pathEl);
+
+  // sun position markers at 2-hour on-the-hour intervals
+  pts.filter(p => p.time.endsWith(":00") && Number(p.time.split(":")[0]) % 2 === 0).forEach(p => {
+    const sp = proj3(p.az, p.alt);
+    const glow = svgEl("circle", { cx: sp.x, cy: sp.y, r: 9, fill: season.color, opacity: 0.18 });
+    svg.appendChild(glow);
+    const dot = svgEl("circle", { cx: sp.x, cy: sp.y, r: 4, fill: season.color, stroke: "#fff", "stroke-width": 1 });
+    svg.appendChild(dot);
+    hitPoints.push({ x: sp.x, y: sp.y, label: `${season.label} · ${p.time} · alt ${p.alt.toFixed(0)}° az ${p.az.toFixed(0)}°` });
+  });
+
+  // solar noon "sun" icon
+  const noon = d.solar_noon;
+  const noonPt = proj3(noon.az, noon.alt);
+  const sunGlow = svgEl("circle", { cx: noonPt.x, cy: noonPt.y, r: 13, fill: season.color, opacity: 0.35 });
+  svg.appendChild(sunGlow);
+  const sun = svgEl("circle", { cx: noonPt.x, cy: noonPt.y, r: 7, fill: season.color, stroke: "#fff", "stroke-width": 1.5 });
+  svg.appendChild(sun);
+  hitPoints.push({ x: noonPt.x, y: noonPt.y, label: `${season.label} · solar noon ${noon.time} · alt ${noon.alt.toFixed(1)}°` });
+
+  // vertical dashed line dropping to ground at solar noon azimuth (visual anchor, matches reference image)
+  const groundPt = project(0, 0, 0);
+  const dropTop = project(noonPt.x === noonPt.x ? 0 : 0, 0, 0); // placeholder unused
+});
+
+// hover interaction
+const tooltip = document.getElementById("sp3d-tooltip");
+const hit = svgEl("rect", { x: 0, y: 0, width: 1160, height: 1000, fill: "transparent" });
+svg.insertBefore(hit, svg.firstChild.nextSibling);
+svg.addEventListener("mousemove", (evt) => {
+  const rect = svg.getBoundingClientRect();
+  const svgX = (evt.clientX - rect.left) / rect.width * 1160;
+  const svgY = (evt.clientY - rect.top) / rect.height * 1000;
+  let nearest = null, best = Infinity;
+  for (const p of hitPoints) {
+    const dist = Math.hypot(p.x - svgX, p.y - svgY);
+    if (dist < best) { best = dist; nearest = p; }
+  }
+  if (nearest && best < 16) {
+    tooltip.style.left = (nearest.x / 1160 * rect.width) + "px";
+    tooltip.style.top = (nearest.y / 1000 * rect.height - 10) + "px";
+    tooltip.textContent = nearest.label;
+    tooltip.style.opacity = 1;
+  } else {
+    tooltip.style.opacity = 0;
+  }
+});
+svg.addEventListener("mouseleave", () => { tooltip.style.opacity = 0; });
+
+const legend = document.getElementById("sp3d-legend");
+SEASONS.forEach(s => {
+  const item = document.createElement("div");
+  item.className = "item";
+  item.innerHTML = `<span class="swatch" style="background:${s.color}"></span>${s.label}`;
+  legend.appendChild(item);
+});
+})();
+(function(){
+const SEASON_DATA = {"2026-12-21":{"label":"Winter Solstice","points":[{"time":"07:20","alt":0.215,"az":122.315},{"time":"07:25","alt":1.001,"az":123.15},{"time":"07:30","alt":1.78,"az":123.991},{"time":"07:35","alt":2.551,"az":124.841},{"time":"07:40","alt":3.314,"az":125.697},{"time":"07:45","alt":4.069,"az":126.562},{"time":"07:50","alt":4.816,"az":127.435},{"time":"07:55","alt":5.554,"az":128.317},{"time":"08:00","alt":6.283,"az":129.206},{"time":"08:05","alt":7.002,"az":130.105},{"time":"08:10","alt":7.713,"az":131.013},{"time":"08:15","alt":8.413,"az":131.93},{"time":"08:20","alt":9.103,"az":132.856},{"time":"08:25","alt":9.783,"az":133.792},{"time":"08:30","alt":10.453,"az":134.738},{"time":"08:35","alt":11.111,"az":135.693},{"time":"08:40","alt":11.759,"az":136.659},{"time":"08:45","alt":12.394,"az":137.635},{"time":"08:50","alt":13.018,"az":138.621},{"time":"08:55","alt":13.63,"az":139.618},{"time":"09:00","alt":14.23,"az":140.625},{"time":"09:05","alt":14.816,"az":141.643},{"time":"09:10","alt":15.39,"az":142.671},{"time":"09:15","alt":15.95,"az":143.71},{"time":"09:20","alt":16.496,"az":144.76},{"time":"09:25","alt":17.028,"az":145.821},{"time":"09:30","alt":17.546,"az":146.892},{"time":"09:35","alt":18.049,"az":147.975},{"time":"09:40","alt":18.538,"az":149.067},{"time":"09:45","alt":19.01,"az":150.171},{"time":"09:50","alt":19.467,"az":151.285},{"time":"09:55","alt":19.908,"az":152.409},{"time":"10:00","alt":20.333,"az":153.543},{"time":"10:05","alt":20.741,"az":154.687},{"time":"10:10","alt":21.132,"az":155.842},{"time":"10:15","alt":21.506,"az":157.005},{"time":"10:20","alt":21.863,"az":158.178},{"time":"10:25","alt":22.201,"az":159.36},{"time":"10:30","alt":22.521,"az":160.55},{"time":"10:35","alt":22.823,"az":161.749},{"time":"10:40","alt":23.107,"az":162.956},{"time":"10:45","alt":23.371,"az":164.17},{"time":"10:50","alt":23.617,"az":165.392},{"time":"10:55","alt":23.843,"az":166.619},{"time":"11:00","alt":24.049,"az":167.854},{"time":"11:05","alt":24.236,"az":169.093},{"time":"11:10","alt":24.403,"az":170.338},{"time":"11:15","alt":24.55,"az":171.588},{"time":"11:20","alt":24.676,"az":172.841},{"time":"11:25","alt":24.783,"az":174.098},{"time":"11:30","alt":24.868,"az":175.358},{"time":"11:35","alt":24.934,"az":176.62},{"time":"11:40","alt":24.979,"az":177.884},{"time":"11:45","alt":25.003,"az":179.149},{"time":"11:50","alt":25.006,"az":180.414},{"time":"11:55","alt":24.989,"az":181.679},{"time":"12:00","alt":24.951,"az":182.943},{"time":"12:05","alt":24.893,"az":184.206},{"time":"12:10","alt":24.814,"az":185.467},{"time":"12:15","alt":24.715,"az":186.725},{"time":"12:20","alt":24.595,"az":187.98},{"time":"12:25","alt":24.455,"az":189.231},{"time":"12:30","alt":24.295,"az":190.477},{"time":"12:35","alt":24.115,"az":191.719},{"time":"12:40","alt":23.916,"az":192.955},{"time":"12:45","alt":23.696,"az":194.185},{"time":"12:50","alt":23.457,"az":195.409},{"time":"12:55","alt":23.199,"az":196.625},{"time":"13:00","alt":22.922,"az":197.835},{"time":"13:05","alt":22.627,"az":199.036},{"time":"13:10","alt":22.313,"az":200.23},{"time":"13:15","alt":21.98,"az":201.414},{"time":"13:20","alt":21.63,"az":202.59},{"time":"13:25","alt":21.262,"az":203.757},{"time":"13:30","alt":20.877,"az":204.915},{"time":"13:35","alt":20.475,"az":206.062},{"time":"13:40","alt":20.055,"az":207.2},{"time":"13:45","alt":19.62,"az":208.328},{"time":"13:50","alt":19.168,"az":209.445},{"time":"13:55","alt":18.701,"az":210.552},{"time":"14:00","alt":18.218,"az":211.648},{"time":"14:05","alt":17.72,"az":212.734},{"time":"14:10","alt":17.207,"az":213.809},{"time":"14:15","alt":16.68,"az":214.874},{"time":"14:20","alt":16.138,"az":215.927},{"time":"14:25","alt":15.583,"az":216.97},{"time":"14:30","alt":15.014,"az":218.002},{"time":"14:35","alt":14.432,"az":219.024},{"time":"14:40","alt":13.837,"az":220.034},{"time":"14:45","alt":13.229,"az":221.035},{"time":"14:50","alt":12.609,"az":222.024},{"time":"14:55","alt":11.977,"az":223.004},{"time":"15:00","alt":11.334,"az":223.973},{"time":"15:05","alt":10.679,"az":224.932},{"time":"15:10","alt":10.014,"az":225.881},{"time":"15:15","alt":9.337,"az":226.82},{"time":"15:20","alt":8.65,"az":227.75},{"time":"15:25","alt":7.953,"az":228.67},{"time":"15:30","alt":7.246,"az":229.58},{"time":"15:35","alt":6.53,"az":230.482},{"time":"15:40","alt":5.804,"az":231.375},{"time":"15:45","alt":5.069,"az":232.259},{"time":"15:50","alt":4.325,"az":233.135},{"time":"15:55","alt":3.573,"az":234.002},{"time":"16:00","alt":2.813,"az":234.862},{"time":"16:05","alt":2.044,"az":235.714},{"time":"16:10","alt":1.268,"az":236.558},{"time":"16:15","alt":0.484,"az":237.395}],"sunrise":{"time":"07:20","alt":0.215,"az":122.315},"sunset":{"time":"16:15","alt":0.484,"az":237.395},"solar_noon":{"time":"11:50","alt":25.006,"az":180.414},"tz":"EST"},"2026-03-20":{"label":"Spring Equinox","points":[{"time":"07:00","alt":-0.13,"az":90.611},{"time":"07:05","alt":0.806,"az":91.44},{"time":"07:10","alt":1.742,"az":92.269},{"time":"07:15","alt":2.677,"az":93.1},{"time":"07:20","alt":3.612,"az":93.932},{"time":"07:25","alt":4.545,"az":94.765},{"time":"07:30","alt":5.478,"az":95.601},{"time":"07:35","alt":6.409,"az":96.44},{"time":"07:40","alt":7.339,"az":97.282},{"time":"07:45","alt":8.266,"az":98.128},{"time":"07:50","alt":9.192,"az":98.978},{"time":"07:55","alt":10.116,"az":99.833},{"time":"08:00","alt":11.037,"az":100.692},{"time":"08:05","alt":11.956,"az":101.558},{"time":"08:10","alt":12.872,"az":102.429},{"time":"08:15","alt":13.785,"az":103.307},{"time":"08:20","alt":14.694,"az":104.192},{"time":"08:25","alt":15.6,"az":105.085},{"time":"08:30","alt":16.502,"az":105.985},{"time":"08:35","alt":17.4,"az":106.895},{"time":"08:40","alt":18.294,"az":107.813},{"time":"08:45","alt":19.183,"az":108.741},{"time":"08:50","alt":20.067,"az":109.68},{"time":"08:55","alt":20.946,"az":110.629},{"time":"09:00","alt":21.82,"az":111.589},{"time":"09:05","alt":22.687,"az":112.562},{"time":"09:10","alt":23.549,"az":113.547},{"time":"09:15","alt":24.404,"az":114.545},{"time":"09:20","alt":25.253,"az":115.557},{"time":"09:25","alt":26.094,"az":116.583},{"time":"09:30","alt":26.927,"az":117.624},{"time":"09:35","alt":27.753,"az":118.681},{"time":"09:40","alt":28.571,"az":119.754},{"time":"09:45","alt":29.379,"az":120.844},{"time":"09:50","alt":30.179,"az":121.952},{"time":"09:55","alt":30.968,"az":123.077},{"time":"10:00","alt":31.748,"az":124.222},{"time":"10:05","alt":32.517,"az":125.386},{"time":"10:10","alt":33.275,"az":126.57},{"time":"10:15","alt":34.022,"az":127.775},{"time":"10:20","alt":34.756,"az":129.001},{"time":"10:25","alt":35.477,"az":130.249},{"time":"10:30","alt":36.186,"az":131.52},{"time":"10:35","alt":36.88,"az":132.814},{"time":"10:40","alt":37.56,"az":134.131},{"time":"10:45","alt":38.225,"az":135.473},{"time":"10:50","alt":38.874,"az":136.839},{"time":"10:55","alt":39.507,"az":138.231},{"time":"11:00","alt":40.122,"az":139.647},{"time":"11:05","alt":40.72,"az":141.09},{"time":"11:10","alt":41.299,"az":142.558},{"time":"11:15","alt":41.86,"az":144.052},{"time":"11:20","alt":42.4,"az":145.572},{"time":"11:25","alt":42.919,"az":147.119},{"time":"11:30","alt":43.418,"az":148.691},{"time":"11:35","alt":43.894,"az":150.289},{"time":"11:40","alt":44.347,"az":151.912},{"time":"11:45","alt":44.777,"az":153.56},{"time":"11:50","alt":45.182,"az":155.232},{"time":"11:55","alt":45.563,"az":156.927},{"time":"12:00","alt":45.918,"az":158.645},{"time":"12:05","alt":46.247,"az":160.384},{"time":"12:10","alt":46.548,"az":162.143},{"time":"12:15","alt":46.823,"az":163.921},{"time":"12:20","alt":47.069,"az":165.717},{"time":"12:25","alt":47.287,"az":167.528},{"time":"12:30","alt":47.476,"az":169.353},{"time":"12:35","alt":47.635,"az":171.191},{"time":"12:40","alt":47.765,"az":173.038},{"time":"12:45","alt":47.864,"az":174.894},{"time":"12:50","alt":47.934,"az":176.756},{"time":"12:55","alt":47.973,"az":178.622},{"time":"13:00","alt":47.982,"az":180.49},{"time":"13:05","alt":47.96,"az":182.357},{"time":"13:10","alt":47.907,"az":184.221},{"time":"13:15","alt":47.825,"az":186.081},{"time":"13:20","alt":47.712,"az":187.933},{"time":"13:25","alt":47.569,"az":189.777},{"time":"13:30","alt":47.397,"az":191.609},{"time":"13:35","alt":47.196,"az":193.429},{"time":"13:40","alt":46.966,"az":195.233},{"time":"13:45","alt":46.707,"az":197.021},{"time":"13:50","alt":46.421,"az":198.792},{"time":"13:55","alt":46.107,"az":200.542},{"time":"14:00","alt":45.767,"az":202.272},{"time":"14:05","alt":45.401,"az":203.98},{"time":"14:10","alt":45.01,"az":205.666},{"time":"14:15","alt":44.594,"az":207.327},{"time":"14:20","alt":44.154,"az":208.965},{"time":"14:25","alt":43.691,"az":210.577},{"time":"14:30","alt":43.205,"az":212.164},{"time":"14:35","alt":42.698,"az":213.725},{"time":"14:40","alt":42.169,"az":215.26},{"time":"14:45","alt":41.62,"az":216.769},{"time":"14:50","alt":41.052,"az":218.253},{"time":"14:55","alt":40.465,"az":219.71},{"time":"15:00","alt":39.86,"az":221.141},{"time":"15:05","alt":39.237,"az":222.547},{"time":"15:10","alt":38.597,"az":223.928},{"time":"15:15","alt":37.942,"az":225.284},{"time":"15:20","alt":37.271,"az":226.615},{"time":"15:25","alt":36.585,"az":227.923},{"time":"15:30","alt":35.884,"az":229.207},{"time":"15:35","alt":35.171,"az":230.469},{"time":"15:40","alt":34.444,"az":231.708},{"time":"15:45","alt":33.705,"az":232.925},{"time":"15:50","alt":32.954,"az":234.121},{"time":"15:55","alt":32.192,"az":235.297},{"time":"16:00","alt":31.418,"az":236.453},{"time":"16:05","alt":30.635,"az":237.59},{"time":"16:10","alt":29.841,"az":238.709},{"time":"16:15","alt":29.039,"az":239.809},{"time":"16:20","alt":28.227,"az":240.892},{"time":"16:25","alt":27.406,"az":241.959},{"time":"16:30","alt":26.578,"az":243.01},{"time":"16:35","alt":25.742,"az":244.045},{"time":"16:40","alt":24.898,"az":245.066},{"time":"16:45","alt":24.047,"az":246.073},{"time":"16:50","alt":23.19,"az":247.066},{"time":"16:55","alt":22.327,"az":248.047},{"time":"17:00","alt":21.457,"az":249.015},{"time":"17:05","alt":20.582,"az":249.972},{"time":"17:10","alt":19.702,"az":250.917},{"time":"17:15","alt":18.816,"az":251.852},{"time":"17:20","alt":17.926,"az":252.777},{"time":"17:25","alt":17.032,"az":253.693},{"time":"17:30","alt":16.133,"az":254.6},{"time":"17:35","alt":15.23,"az":255.498},{"time":"17:40","alt":14.324,"az":256.389},{"time":"17:45","alt":13.414,"az":257.272},{"time":"17:50","alt":12.501,"az":258.148},{"time":"17:55","alt":11.585,"az":259.019},{"time":"18:00","alt":10.666,"az":259.883},{"time":"18:05","alt":9.745,"az":260.742},{"time":"18:10","alt":8.822,"az":261.596},{"time":"18:15","alt":7.897,"az":262.446},{"time":"18:20","alt":6.969,"az":263.292},{"time":"18:25","alt":6.041,"az":264.134},{"time":"18:30","alt":5.11,"az":264.973},{"time":"18:35","alt":4.179,"az":265.81},{"time":"18:40","alt":3.247,"az":266.645},{"time":"18:45","alt":2.313,"az":267.478},{"time":"18:50","alt":1.38,"az":268.31},{"time":"18:55","alt":0.446,"az":269.141}],"sunrise":{"time":"07:05","alt":0.806,"az":91.44},"sunset":{"time":"18:55","alt":0.446,"az":269.141},"solar_noon":{"time":"13:00","alt":47.982,"az":180.49},"tz":"EDT"},"2026-06-21":{"label":"Summer Solstice","points":[{"time":"05:20","alt":-0.204,"az":57.649},{"time":"05:25","alt":0.589,"az":58.477},{"time":"05:30","alt":1.39,"az":59.298},{"time":"05:35","alt":2.197,"az":60.113},{"time":"05:40","alt":3.011,"az":60.921},{"time":"05:45","alt":3.831,"az":61.724},{"time":"05:50","alt":4.658,"az":62.52},{"time":"05:55","alt":5.49,"az":63.312},{"time":"06:00","alt":6.329,"az":64.098},{"time":"06:05","alt":7.172,"az":64.88},{"time":"06:10","alt":8.022,"az":65.657},{"time":"06:15","alt":8.876,"az":66.43},{"time":"06:20","alt":9.736,"az":67.199},{"time":"06:25","alt":10.6,"az":67.965},{"time":"06:30","alt":11.469,"az":68.727},{"time":"06:35","alt":12.343,"az":69.486},{"time":"06:40","alt":13.22,"az":70.242},{"time":"06:45","alt":14.102,"az":70.996},{"time":"06:50","alt":14.988,"az":71.748},{"time":"06:55","alt":15.878,"az":72.498},{"time":"07:00","alt":16.772,"az":73.246},{"time":"07:05","alt":17.669,"az":73.994},{"time":"07:10","alt":18.569,"az":74.741},{"time":"07:15","alt":19.473,"az":75.488},{"time":"07:20","alt":20.38,"az":76.234},{"time":"07:25","alt":21.289,"az":76.981},{"time":"07:30","alt":22.202,"az":77.729},{"time":"07:35","alt":23.117,"az":78.478},{"time":"07:40","alt":24.034,"az":79.228},{"time":"07:45","alt":24.954,"az":79.98},{"time":"07:50","alt":25.875,"az":80.735},{"time":"07:55","alt":26.799,"az":81.493},{"time":"08:00","alt":27.725,"az":82.254},{"time":"08:05","alt":28.652,"az":83.02},{"time":"08:10","alt":29.581,"az":83.789},{"time":"08:15","alt":30.511,"az":84.563},{"time":"08:20","alt":31.442,"az":85.343},{"time":"08:25","alt":32.375,"az":86.129},{"time":"08:30","alt":33.308,"az":86.922},{"time":"08:35","alt":34.242,"az":87.722},{"time":"08:40","alt":35.177,"az":88.53},{"time":"08:45","alt":36.112,"az":89.347},{"time":"08:50","alt":37.047,"az":90.174},{"time":"08:55","alt":37.981,"az":91.011},{"time":"09:00","alt":38.916,"az":91.858},{"time":"09:05","alt":39.85,"az":92.718},{"time":"09:10","alt":40.784,"az":93.591},{"time":"09:15","alt":41.717,"az":94.478},{"time":"09:20","alt":42.648,"az":95.381},{"time":"09:25","alt":43.578,"az":96.299},{"time":"09:30","alt":44.507,"az":97.235},{"time":"09:35","alt":45.433,"az":98.19},{"time":"09:40","alt":46.358,"az":99.164},{"time":"09:45","alt":47.28,"az":100.161},{"time":"09:50","alt":48.198,"az":101.181},{"time":"09:55","alt":49.114,"az":102.226},{"time":"10:00","alt":50.026,"az":103.297},{"time":"10:05","alt":50.934,"az":104.398},{"time":"10:10","alt":51.837,"az":105.53},{"time":"10:15","alt":52.735,"az":106.695},{"time":"10:20","alt":53.628,"az":107.895},{"time":"10:25","alt":54.515,"az":109.134},{"time":"10:30","alt":55.395,"az":110.415},{"time":"10:35","alt":56.267,"az":111.739},{"time":"10:40","alt":57.131,"az":113.112},{"time":"10:45","alt":57.987,"az":114.535},{"time":"10:50","alt":58.832,"az":116.014},{"time":"10:55","alt":59.667,"az":117.551},{"time":"11:00","alt":60.49,"az":119.152},{"time":"11:05","alt":61.3,"az":120.821},{"time":"11:10","alt":62.095,"az":122.562},{"time":"11:15","alt":62.875,"az":124.381},{"time":"11:20","alt":63.638,"az":126.284},{"time":"11:25","alt":64.382,"az":128.275},{"time":"11:30","alt":65.106,"az":130.36},{"time":"11:35","alt":65.806,"az":132.545},{"time":"11:40","alt":66.483,"az":134.835},{"time":"11:45","alt":67.132,"az":137.235},{"time":"11:50","alt":67.751,"az":139.75},{"time":"11:55","alt":68.339,"az":142.383},{"time":"12:00","alt":68.892,"az":145.139},{"time":"12:05","alt":69.407,"az":148.017},{"time":"12:10","alt":69.882,"az":151.018},{"time":"12:15","alt":70.312,"az":154.14},{"time":"12:20","alt":70.696,"az":157.378},{"time":"12:25","alt":71.031,"az":160.724},{"time":"12:30","alt":71.313,"az":164.168},{"time":"12:35","alt":71.54,"az":167.697},{"time":"12:40","alt":71.711,"az":171.294},{"time":"12:45","alt":71.823,"az":174.941},{"time":"12:50","alt":71.875,"az":178.619},{"time":"12:55","alt":71.868,"az":182.304},{"time":"13:00","alt":71.8,"az":185.976},{"time":"13:05","alt":71.673,"az":189.613},{"time":"13:10","alt":71.489,"az":193.195},{"time":"13:15","alt":71.247,"az":196.703},{"time":"13:20","alt":70.952,"az":200.124},{"time":"13:25","alt":70.605,"az":203.444},{"time":"13:30","alt":70.209,"az":206.653},{"time":"13:35","alt":69.767,"az":209.745},{"time":"13:40","alt":69.282,"az":212.716},{"time":"13:45","alt":68.757,"az":215.564},{"time":"13:50","alt":68.196,"az":218.288},{"time":"13:55","alt":67.6,"az":220.892},{"time":"14:00","alt":66.972,"az":223.378},{"time":"14:05","alt":66.316,"az":225.75},{"time":"14:10","alt":65.634,"az":228.013},{"time":"14:15","alt":64.927,"az":230.173},{"time":"14:20","alt":64.198,"az":232.234},{"time":"14:25","alt":63.449,"az":234.202},{"time":"14:30","alt":62.682,"az":236.083},{"time":"14:35","alt":61.898,"az":237.883},{"time":"14:40","alt":61.099,"az":239.606},{"time":"14:45","alt":60.286,"az":241.257},{"time":"14:50","alt":59.46,"az":242.841},{"time":"14:55","alt":58.622,"az":244.364},{"time":"15:00","alt":57.774,"az":245.828},{"time":"15:05","alt":56.916,"az":247.239},{"time":"15:10","alt":56.05,"az":248.599},{"time":"15:15","alt":55.176,"az":249.912},{"time":"15:20","alt":54.294,"az":251.182},{"time":"15:25","alt":53.406,"az":252.411},{"time":"15:30","alt":52.512,"az":253.602},{"time":"15:35","alt":51.612,"az":254.759},{"time":"15:40","alt":50.708,"az":255.882},{"time":"15:45","alt":49.799,"az":256.976},{"time":"15:50","alt":48.886,"az":258.04},{"time":"15:55","alt":47.97,"az":259.079},{"time":"16:00","alt":47.05,"az":260.093},{"time":"16:05","alt":46.128,"az":261.084},{"time":"16:10","alt":45.203,"az":262.054},{"time":"16:15","alt":44.276,"az":263.003},{"time":"16:20","alt":43.347,"az":263.935},{"time":"16:25","alt":42.416,"az":264.849},{"time":"16:30","alt":41.484,"az":265.747},{"time":"16:35","alt":40.551,"az":266.631},{"time":"16:40","alt":39.618,"az":267.5},{"time":"16:45","alt":38.683,"az":268.357},{"time":"16:50","alt":37.749,"az":269.202},{"time":"16:55","alt":36.814,"az":270.036},{"time":"17:00","alt":35.879,"az":270.86},{"time":"17:05","alt":34.944,"az":271.675},{"time":"17:10","alt":34.01,"az":272.481},{"time":"17:15","alt":33.076,"az":273.279},{"time":"17:20","alt":32.143,"az":274.07},{"time":"17:25","alt":31.211,"az":274.855},{"time":"17:30","alt":30.279,"az":275.633},{"time":"17:35","alt":29.35,"az":276.407},{"time":"17:40","alt":28.421,"az":277.175},{"time":"17:45","alt":27.494,"az":277.939},{"time":"17:50","alt":26.569,"az":278.699},{"time":"17:55","alt":25.646,"az":279.457},{"time":"18:00","alt":24.725,"az":280.211},{"time":"18:05","alt":23.806,"az":280.963},{"time":"18:10","alt":22.889,"az":281.713},{"time":"18:15","alt":21.975,"az":282.461},{"time":"18:20","alt":21.063,"az":283.209},{"time":"18:25","alt":20.154,"az":283.956},{"time":"18:30","alt":19.248,"az":284.702},{"time":"18:35","alt":18.346,"az":285.449},{"time":"18:40","alt":17.446,"az":286.196},{"time":"18:45","alt":16.55,"az":286.944},{"time":"18:50","alt":15.657,"az":287.693},{"time":"18:55","alt":14.768,"az":288.443},{"time":"19:00","alt":13.883,"az":289.196},{"time":"19:05","alt":13.002,"az":289.95},{"time":"19:10","alt":12.126,"az":290.707},{"time":"19:15","alt":11.253,"az":291.467},{"time":"19:20","alt":10.385,"az":292.23},{"time":"19:25","alt":9.522,"az":292.996},{"time":"19:30","alt":8.664,"az":293.766},{"time":"19:35","alt":7.811,"az":294.54},{"time":"19:40","alt":6.963,"az":295.318},{"time":"19:45","alt":6.121,"az":296.101},{"time":"19:50","alt":5.284,"az":296.889},{"time":"19:55","alt":4.453,"az":297.682},{"time":"20:00","alt":3.628,"az":298.48},{"time":"20:05","alt":2.809,"az":299.284},{"time":"20:10","alt":1.997,"az":300.094},{"time":"20:15","alt":1.192,"az":300.91},{"time":"20:20","alt":0.393,"az":301.733}],"sunrise":{"time":"05:25","alt":0.589,"az":58.477},"sunset":{"time":"20:20","alt":0.393,"az":301.733},"solar_noon":{"time":"12:50","alt":71.875,"az":178.619},"tz":"EDT"},"2026-09-22":{"label":"Fall Equinox","points":[{"time":"06:40","alt":-0.146,"az":88.903},{"time":"06:45","alt":0.789,"az":89.734},{"time":"06:50","alt":1.723,"az":90.564},{"time":"06:55","alt":2.658,"az":91.396},{"time":"07:00","alt":3.592,"az":92.228},{"time":"07:05","alt":4.525,"az":93.062},{"time":"07:10","alt":5.458,"az":93.898},{"time":"07:15","alt":6.39,"az":94.736},{"time":"07:20","alt":7.32,"az":95.576},{"time":"07:25","alt":8.25,"az":96.42},{"time":"07:30","alt":9.178,"az":97.268},{"time":"07:35","alt":10.104,"az":98.12},{"time":"07:40","alt":11.028,"az":98.977},{"time":"07:45","alt":11.95,"az":99.839},{"time":"07:50","alt":12.869,"az":100.706},{"time":"07:55","alt":13.786,"az":101.58},{"time":"08:00","alt":14.7,"az":102.46},{"time":"08:05","alt":15.611,"az":103.347},{"time":"08:10","alt":16.518,"az":104.242},{"time":"08:15","alt":17.422,"az":105.145},{"time":"08:20","alt":18.322,"az":106.057},{"time":"08:25","alt":19.218,"az":106.978},{"time":"08:30","alt":20.109,"az":107.909},{"time":"08:35","alt":20.996,"az":108.85},{"time":"08:40","alt":21.878,"az":109.803},{"time":"08:45","alt":22.754,"az":110.766},{"time":"08:50","alt":23.625,"az":111.742},{"time":"08:55","alt":24.49,"az":112.731},{"time":"09:00","alt":25.348,"az":113.733},{"time":"09:05","alt":26.2,"az":114.749},{"time":"09:10","alt":27.045,"az":115.78},{"time":"09:15","alt":27.883,"az":116.826},{"time":"09:20","alt":28.712,"az":117.888},{"time":"09:25","alt":29.534,"az":118.967},{"time":"09:30","alt":30.347,"az":120.063},{"time":"09:35","alt":31.151,"az":121.178},{"time":"09:40","alt":31.945,"az":122.31},{"time":"09:45","alt":32.73,"az":123.463},{"time":"09:50","alt":33.504,"az":124.635},{"time":"09:55","alt":34.267,"az":125.828},{"time":"10:00","alt":35.018,"az":127.043},{"time":"10:05","alt":35.757,"az":128.279},{"time":"10:10","alt":36.484,"az":129.539},{"time":"10:15","alt":37.198,"az":130.821},{"time":"10:20","alt":37.897,"az":132.128},{"time":"10:25","alt":38.583,"az":133.46},{"time":"10:30","alt":39.253,"az":134.816},{"time":"10:35","alt":39.907,"az":136.199},{"time":"10:40","alt":40.545,"az":137.607},{"time":"10:45","alt":41.166,"az":139.042},{"time":"10:50","alt":41.769,"az":140.503},{"time":"10:55","alt":42.353,"az":141.992},{"time":"11:00","alt":42.918,"az":143.508},{"time":"11:05","alt":43.463,"az":145.052},{"time":"11:10","alt":43.987,"az":146.622},{"time":"11:15","alt":44.49,"az":148.22},{"time":"11:20","alt":44.97,"az":149.845},{"time":"11:25","alt":45.427,"az":151.497},{"time":"11:30","alt":45.86,"az":153.175},{"time":"11:35","alt":46.268,"az":154.878},{"time":"11:40","alt":46.651,"az":156.605},{"time":"11:45","alt":47.008,"az":158.357},{"time":"11:50","alt":47.338,"az":160.131},{"time":"11:55","alt":47.641,"az":161.926},{"time":"12:00","alt":47.916,"az":163.741},{"time":"12:05","alt":48.162,"az":165.574},{"time":"12:10","alt":48.379,"az":167.424},{"time":"12:15","alt":48.567,"az":169.289},{"time":"12:20","alt":48.724,"az":171.166},{"time":"12:25","alt":48.851,"az":173.054},{"time":"12:30","alt":48.947,"az":174.95},{"time":"12:35","alt":49.013,"az":176.852},{"time":"12:40","alt":49.047,"az":178.759},{"time":"12:45","alt":49.051,"az":180.666},{"time":"12:50","alt":49.023,"az":182.573},{"time":"12:55","alt":48.964,"az":184.476},{"time":"13:00","alt":48.874,"az":186.374},{"time":"13:05","alt":48.754,"az":188.264},{"time":"13:10","alt":48.603,"az":190.144},{"time":"13:15","alt":48.422,"az":192.011},{"time":"13:20","alt":48.211,"az":193.864},{"time":"13:25","alt":47.971,"az":195.701},{"time":"13:30","alt":47.702,"az":197.52},{"time":"13:35","alt":47.405,"az":199.32},{"time":"13:40","alt":47.081,"az":201.098},{"time":"13:45","alt":46.73,"az":202.855},{"time":"13:50","alt":46.352,"az":204.587},{"time":"13:55","alt":45.949,"az":206.296},{"time":"14:00","alt":45.521,"az":207.979},{"time":"14:05","alt":45.069,"az":209.636},{"time":"14:10","alt":44.594,"az":211.267},{"time":"14:15","alt":44.096,"az":212.87},{"time":"14:20","alt":43.576,"az":214.447},{"time":"14:25","alt":43.035,"az":215.996},{"time":"14:30","alt":42.474,"az":217.518},{"time":"14:35","alt":41.894,"az":219.012},{"time":"14:40","alt":41.295,"az":220.479},{"time":"14:45","alt":40.677,"az":221.92},{"time":"14:50","alt":40.043,"az":223.334},{"time":"14:55","alt":39.391,"az":224.721},{"time":"15:00","alt":38.724,"az":226.083},{"time":"15:05","alt":38.042,"az":227.419},{"time":"15:10","alt":37.345,"az":228.731},{"time":"15:15","alt":36.634,"az":230.018},{"time":"15:20","alt":35.909,"az":231.282},{"time":"15:25","alt":35.172,"az":232.523},{"time":"15:30","alt":34.423,"az":233.742},{"time":"15:35","alt":33.662,"az":234.939},{"time":"15:40","alt":32.889,"az":236.115},{"time":"15:45","alt":32.107,"az":237.271},{"time":"15:50","alt":31.314,"az":238.407},{"time":"15:55","alt":30.511,"az":239.525},{"time":"16:00","alt":29.699,"az":240.624},{"time":"16:05","alt":28.879,"az":241.706},{"time":"16:10","alt":28.05,"az":242.771},{"time":"16:15","alt":27.214,"az":243.82},{"time":"16:20","alt":26.37,"az":244.853},{"time":"16:25","alt":25.518,"az":245.871},{"time":"16:30","alt":24.66,"az":246.875},{"time":"16:35","alt":23.796,"az":247.866},{"time":"16:40","alt":22.926,"az":248.844},{"time":"16:45","alt":22.05,"az":249.809},{"time":"16:50","alt":21.168,"az":250.763},{"time":"16:55","alt":20.282,"az":251.705},{"time":"17:00","alt":19.39,"az":252.637},{"time":"17:05","alt":18.494,"az":253.559},{"time":"17:10","alt":17.594,"az":254.472},{"time":"17:15","alt":16.69,"az":255.376},{"time":"17:20","alt":15.782,"az":256.271},{"time":"17:25","alt":14.871,"az":257.159},{"time":"17:30","alt":13.956,"az":258.039},{"time":"17:35","alt":13.039,"az":258.912},{"time":"17:40","alt":12.119,"az":259.78},{"time":"17:45","alt":11.196,"az":260.641},{"time":"17:50","alt":10.271,"az":261.497},{"time":"17:55","alt":9.344,"az":262.349},{"time":"18:00","alt":8.415,"az":263.196},{"time":"18:05","alt":7.485,"az":264.039},{"time":"18:10","alt":6.553,"az":264.879},{"time":"18:15","alt":5.62,"az":265.716},{"time":"18:20","alt":4.686,"az":266.55},{"time":"18:25","alt":3.751,"az":267.382},{"time":"18:30","alt":2.815,"az":268.213},{"time":"18:35","alt":1.879,"az":269.043},{"time":"18:40","alt":0.943,"az":269.872},{"time":"18:45","alt":0.007,"az":270.7}],"sunrise":{"time":"06:45","alt":0.789,"az":89.734},"sunset":{"time":"18:45","alt":0.007,"az":270.7},"solar_noon":{"time":"12:45","alt":49.051,"az":180.666},"tz":"EDT"}}
+;
+const ANNUAL_DATA = {"2026-01-21":{"month":"Jan","pts":[["07:20:00",117.5,1.0],["07:30:00",119.2,2.5],["07:40:00",120.9,4.0],["07:50:00",122.7,5.6],["08:00:00",124.4,7.1],["08:10:00",126.2,8.6],["08:20:00",128.1,10.1],["08:30:00",130.0,11.5],["08:40:00",131.9,12.9],["08:50:00",133.9,14.3],["09:00:00",135.9,15.6],["09:10:00",137.9,16.9],["09:20:00",140.0,18.1],["09:30:00",142.2,19.3],["09:40:00",144.4,20.4],["09:50:00",146.6,21.5],["10:00:00",148.9,22.5],["10:10:00",151.3,23.4],["10:20:00",153.6,24.3],["10:30:00",156.1,25.1],["10:40:00",158.6,25.8],["10:50:00",161.1,26.4],["11:00:00",163.6,27.0],["11:10:00",166.2,27.5],["11:20:00",168.8,27.9],["11:30:00",171.5,28.2],["11:40:00",174.1,28.5],["11:50:00",176.8,28.6],["12:00:00",179.5,28.7],["12:10:00",182.2,28.6],["12:20:00",184.8,28.5],["12:30:00",187.5,28.3],["12:40:00",190.1,28.0],["12:50:00",192.8,27.7],["13:00:00",195.4,27.2],["13:10:00",197.9,26.7],["13:20:00",200.5,26.1],["13:30:00",203.0,25.4],["13:40:00",205.4,24.6],["13:50:00",207.8,23.8],["14:00:00",210.2,22.9],["14:10:00",212.5,21.9],["14:20:00",214.8,20.9],["14:30:00",217.0,19.8],["14:40:00",219.2,18.6],["14:50:00",221.3,17.4],["15:00:00",223.4,16.2],["15:10:00",225.4,14.9],["15:20:00",227.4,13.5],["15:30:00",229.3,12.1],["15:40:00",231.2,10.7],["15:50:00",233.1,9.3],["16:00:00",234.9,7.8],["16:10:00",236.7,6.2],["16:20:00",238.4,4.7],["16:30:00",240.2,3.1],["16:40:00",241.9,1.6],["16:50:00",243.5,0.2]]},"2026-02-21":{"month":"Feb","pts":[["06:40:00",103.7,0.2],["06:50:00",105.4,1.8],["07:00:00",107.1,3.5],["07:10:00",108.8,5.2],["07:20:00",110.5,6.9],["07:30:00",112.2,8.7],["07:40:00",114.0,10.4],["07:50:00",115.8,12.1],["08:00:00",117.7,13.7],["08:10:00",119.6,15.4],["08:20:00",121.5,17.0],["08:30:00",123.5,18.5],["08:40:00",125.5,20.1],["08:50:00",127.6,21.6],["09:00:00",129.7,23.0],["09:10:00",131.9,24.5],["09:20:00",134.2,25.8],["09:30:00",136.5,27.1],["09:40:00",138.9,28.4],["09:50:00",141.3,29.6],["10:00:00",143.9,30.7],["10:10:00",146.4,31.8],["10:20:00",149.1,32.8],["10:30:00",151.8,33.7],["10:40:00",154.6,34.6],["10:50:00",157.5,35.3],["11:00:00",160.4,36.0],["11:10:00",163.3,36.6],["11:20:00",166.4,37.1],["11:30:00",169.4,37.5],["11:40:00",172.5,37.8],["11:50:00",175.6,38.0],["12:00:00",178.7,38.1],["12:10:00",181.8,38.1],["12:20:00",184.9,37.9],["12:30:00",188.1,37.7],["12:40:00",191.1,37.4],["12:50:00",194.2,37.0],["13:00:00",197.2,36.5],["13:10:00",200.1,35.9],["13:20:00",203.0,35.2],["13:30:00",205.9,34.5],["13:40:00",208.7,33.6],["13:50:00",211.4,32.7],["14:00:00",214.0,31.7],["14:10:00",216.6,30.6],["14:20:00",219.1,29.5],["14:30:00",221.6,28.2],["14:40:00",224.0,27.0],["14:50:00",226.3,25.7],["15:00:00",228.5,24.3],["15:10:00",230.7,22.9],["15:20:00",232.8,21.4],["15:30:00",234.9,19.9],["15:40:00",236.9,18.4],["15:50:00",238.9,16.8],["16:00:00",240.8,15.2],["16:10:00",242.7,13.5],["16:20:00",244.6,11.9],["16:30:00",246.4,10.2],["16:40:00",248.2,8.5],["16:50:00",249.9,6.7],["17:00:00",251.6,5.0],["17:10:00",253.3,3.3],["17:20:00",255.0,1.6],["17:30:00",256.7,0.0]]},"2026-03-21":{"month":"Mar","pts":[["06:00:00",90.1,1.0],["06:10:00",91.8,2.8],["06:20:00",93.4,4.6],["06:30:00",95.1,6.4],["06:40:00",96.8,8.2],["06:50:00",98.5,10.1],["07:00:00",100.2,11.9],["07:10:00",101.9,13.7],["07:20:00",103.7,15.5],["07:30:00",105.5,17.3],["07:40:00",107.3,19.1],["07:50:00",109.2,20.9],["08:00:00",111.1,22.7],["08:10:00",113.1,24.4],["08:20:00",115.1,26.1],["08:30:00",117.2,27.8],["08:40:00",119.3,29.4],["08:50:00",121.5,31.0],["09:00:00",123.8,32.6],["09:10:00",126.2,34.2],["09:20:00",128.6,35.6],["09:30:00",131.2,37.1],["09:40:00",133.8,38.5],["09:50:00",136.5,39.8],["10:00:00",139.4,41.0],["10:10:00",142.3,42.2],["10:20:00",145.4,43.3],["10:30:00",148.5,44.3],["10:40:00",151.8,45.3],["10:50:00",155.2,46.1],["11:00:00",158.7,46.8],["11:10:00",162.2,47.5],["11:20:00",165.8,48.0],["11:30:00",169.5,48.4],["11:40:00",173.3,48.7],["11:50:00",177.1,48.8],["12:00:00",180.9,48.9],["12:10:00",184.7,48.8],["12:20:00",188.4,48.6],["12:30:00",192.2,48.2],["12:40:00",195.9,47.8],["12:50:00",199.5,47.2],["13:00:00",203.0,46.6],["13:10:00",206.4,45.8],["13:20:00",209.7,44.9],["13:30:00",213.0,43.9],["13:40:00",216.1,42.9],["13:50:00",219.1,41.7],["14:00:00",222.0,40.5],["14:10:00",224.8,39.2],["14:20:00",227.5,37.9],["14:30:00",230.1,36.5],["14:40:00",232.6,35.0],["14:50:00",235.0,33.5],["15:00:00",237.3,32.0],["15:10:00",239.6,30.4],["15:20:00",241.8,28.8],["15:30:00",243.9,27.1],["15:40:00",245.9,25.4],["15:50:00",247.9,23.7],["16:00:00",249.9,21.9],["16:10:00",251.8,20.2],["16:20:00",253.6,18.4],["16:30:00",255.4,16.6],["16:40:00",257.2,14.8],["16:50:00",259.0,13.0],["17:00:00",260.7,11.2],["17:10:00",262.4,9.3],["17:20:00",264.1,7.5],["17:30:00",265.8,5.7],["17:40:00",267.5,3.8],["17:50:00",269.1,2.1],["18:00:00",270.8,0.4]]},"2026-04-21":{"month":"Apr","pts":[["05:10:00",74.6,1.1],["05:20:00",76.2,2.8],["05:30:00",77.9,4.5],["05:40:00",79.5,6.3],["05:50:00",81.1,8.1],["06:00:00",82.7,10.0],["06:10:00",84.4,11.8],["06:20:00",86.0,13.7],["06:30:00",87.6,15.5],["06:40:00",89.2,17.4],["06:50:00",90.9,19.3],["07:00:00",92.6,21.1],["07:10:00",94.3,23.0],["07:20:00",96.0,24.9],["07:30:00",97.8,26.7],["07:40:00",99.6,28.6],["07:50:00",101.4,30.4],["08:00:00",103.3,32.2],["08:10:00",105.3,34.0],["08:20:00",107.3,35.8],["08:30:00",109.4,37.6],["08:40:00",111.6,39.4],["08:50:00",113.9,41.1],["09:00:00",116.2,42.8],["09:10:00",118.7,44.4],["09:20:00",121.3,46.1],["09:30:00",124.0,47.6],["09:40:00",126.9,49.2],["09:50:00",130.0,50.6],["10:00:00",133.2,52.0],["10:10:00",136.6,53.4],["10:20:00",140.1,54.6],["10:30:00",143.9,55.8],["10:40:00",147.9,56.8],["10:50:00",152.1,57.7],["11:00:00",156.4,58.6],["11:10:00",161.0,59.2],["11:20:00",165.7,59.8],["11:30:00",170.5,60.2],["11:40:00",175.4,60.4],["11:50:00",180.4,60.5],["12:00:00",185.3,60.4],["12:10:00",190.2,60.1],["12:20:00",195.0,59.7],["12:30:00",199.7,59.2],["12:40:00",204.2,58.5],["12:50:00",208.6,57.6],["13:00:00",212.7,56.7],["13:10:00",216.7,55.6],["13:20:00",220.4,54.5],["13:30:00",224.0,53.2],["13:40:00",227.4,51.9],["13:50:00",230.6,50.5],["14:00:00",233.6,49.0],["14:10:00",236.4,47.5],["14:20:00",239.2,45.9],["14:30:00",241.7,44.2],["14:40:00",244.2,42.6],["14:50:00",246.6,40.9],["15:00:00",248.8,39.2],["15:10:00",251.0,37.4],["15:20:00",253.1,35.6],["15:30:00",255.1,33.8],["15:40:00",257.0,32.0],["15:50:00",258.9,30.2],["16:00:00",260.8,28.4],["16:10:00",262.6,26.5],["16:20:00",264.3,24.7],["16:30:00",266.1,22.8],["16:40:00",267.8,20.9],["16:50:00",269.5,19.1],["17:00:00",271.1,17.2],["17:10:00",272.8,15.3],["17:20:00",274.4,13.5],["17:30:00",276.0,11.6],["17:40:00",277.6,9.8],["17:50:00",279.3,8.0],["18:00:00",280.9,6.2],["18:10:00",282.5,4.4],["18:20:00",284.1,2.6],["18:30:00",285.8,1.0]]},"2026-05-21":{"month":"May","pts":[["04:30:00",62.3,0.4],["04:40:00",64.0,1.8],["04:50:00",65.6,3.4],["05:00:00",67.2,5.1],["05:10:00",68.8,6.8],["05:20:00",70.4,8.5],["05:30:00",71.9,10.3],["05:40:00",73.5,12.0],["05:50:00",75.0,13.8],["06:00:00",76.6,15.6],["06:10:00",78.1,17.5],["06:20:00",79.6,19.3],["06:30:00",81.2,21.1],["06:40:00",82.7,23.0],["06:50:00",84.3,24.8],["07:00:00",85.9,26.7],["07:10:00",87.5,28.6],["07:20:00",89.1,30.4],["07:30:00",90.7,32.3],["07:40:00",92.4,34.2],["07:50:00",94.2,36.0],["08:00:00",96.0,37.9],["08:10:00",97.8,39.8],["08:20:00",99.7,41.6],["08:30:00",101.7,43.4],["08:40:00",103.7,45.3],["08:50:00",105.9,47.1],["09:00:00",108.1,48.9],["09:10:00",110.5,50.6],["09:20:00",113.1,52.4],["09:30:00",115.8,54.1],["09:40:00",118.6,55.7],["09:50:00",121.7,57.4],["10:00:00",125.0,58.9],["10:10:00",128.6,60.4],["10:20:00",132.5,61.8],["10:30:00",136.6,63.2],["10:40:00",141.1,64.4],["10:50:00",146.0,65.5],["11:00:00",151.3,66.5],["11:10:00",156.9,67.3],["11:20:00",162.8,68.0],["11:30:00",169.0,68.4],["11:40:00",175.4,68.7],["11:50:00",181.8,68.7],["12:00:00",188.2,68.6],["12:10:00",194.5,68.2],["12:20:00",200.6,67.6],["12:30:00",206.3,66.9],["12:40:00",211.7,66.0],["12:50:00",216.8,64.9],["13:00:00",221.4,63.7],["13:10:00",225.8,62.5],["13:20:00",229.8,61.1],["13:30:00",233.5,59.6],["13:40:00",236.9,58.1],["13:50:00",240.1,56.5],["14:00:00",243.0,54.8],["14:10:00",245.8,53.1],["14:20:00",248.4,51.4],["14:30:00",250.9,49.7],["14:40:00",253.2,47.9],["14:50:00",255.4,46.1],["15:00:00",257.5,44.3],["15:10:00",259.5,42.5],["15:20:00",261.4,40.6],["15:30:00",263.3,38.8],["15:40:00",265.1,36.9],["15:50:00",266.9,35.0],["16:00:00",268.6,33.2],["16:10:00",270.2,31.3],["16:20:00",271.9,29.4],["16:30:00",273.5,27.6],["16:40:00",275.1,25.7],["16:50:00",276.7,23.9],["17:00:00",278.2,22.0],["17:10:00",279.8,20.2],["17:20:00",281.3,18.3],["17:30:00",282.8,16.5],["17:40:00",284.4,14.7],["17:50:00",285.9,12.9],["18:00:00",287.5,11.1],["18:10:00",289.0,9.4],["18:20:00",290.6,7.6],["18:30:00",292.2,5.9],["18:40:00",293.8,4.2],["18:50:00",295.4,2.6],["19:00:00",297.0,1.1]]},"2026-06-21":{"month":"Jun","pts":[["04:20:00",57.6,0.2],["04:30:00",59.2,1.6],["04:40:00",60.8,3.1],["04:50:00",62.4,4.7],["05:00:00",64.0,6.4],["05:10:00",65.6,8.0],["05:20:00",67.1,9.7],["05:30:00",68.6,11.4],["05:40:00",70.2,13.2],["05:50:00",71.7,14.9],["06:00:00",73.2,16.7],["06:10:00",74.7,18.5],["06:20:00",76.2,20.3],["06:30:00",77.7,22.1],["06:40:00",79.2,24.0],["06:50:00",80.7,25.8],["07:00:00",82.2,27.6],["07:10:00",83.7,29.5],["07:20:00",85.3,31.4],["07:30:00",86.8,33.2],["07:40:00",88.4,35.1],["07:50:00",90.1,36.9],["08:00:00",91.8,38.8],["08:10:00",93.5,40.7],["08:20:00",95.3,42.5],["08:30:00",97.1,44.4],["08:40:00",99.1,46.3],["08:50:00",101.1,48.1],["09:00:00",103.2,49.9],["09:10:00",105.4,51.7],["09:20:00",107.8,53.5],["09:30:00",110.3,55.3],["09:40:00",113.0,57.0],["09:50:00",115.9,58.7],["10:00:00",119.0,60.4],["10:10:00",122.4,62.0],["10:20:00",126.1,63.5],["10:30:00",130.1,65.0],["10:40:00",134.6,66.4],["10:50:00",139.5,67.7],["11:00:00",144.8,68.8],["11:10:00",150.7,69.8],["11:20:00",157.0,70.6],["11:30:00",163.8,71.3],["11:40:00",170.9,71.7],["11:50:00",178.2,71.9],["12:00:00",185.5,71.8],["12:10:00",192.8,71.5],["12:20:00",199.7,71.0],["12:30:00",206.3,70.3],["12:40:00",212.4,69.3],["12:50:00",218.0,68.3],["13:00:00",223.1,67.0],["13:10:00",227.7,65.7],["13:20:00",232.0,64.3],["13:30:00",235.8,62.8],["13:40:00",239.4,61.2],["13:50:00",242.6,59.6],["14:00:00",245.6,57.9],["14:10:00",248.4,56.2],["14:20:00",251.0,54.4],["14:30:00",253.4,52.6],["14:40:00",255.7,50.8],["14:50:00",257.9,49.0],["15:00:00",260.0,47.2],["15:10:00",261.9,45.3],["15:20:00",263.8,43.5],["15:30:00",265.6,41.6],["15:40:00",267.4,39.7],["15:50:00",269.1,37.9],["16:00:00",270.8,36.0],["16:10:00",272.4,34.1],["16:20:00",274.0,32.3],["16:30:00",275.5,30.4],["16:40:00",277.1,28.5],["16:50:00",278.6,26.7],["17:00:00",280.1,24.9],["17:10:00",281.6,23.0],["17:20:00",283.1,21.2],["17:30:00",284.6,19.4],["17:40:00",286.1,17.6],["17:50:00",287.6,15.8],["18:00:00",289.1,14.0],["18:10:00",290.6,12.3],["18:20:00",292.1,10.6],["18:30:00",293.7,8.9],["18:40:00",295.2,7.2],["18:50:00",296.8,5.5],["19:00:00",298.4,3.9],["19:10:00",300.0,2.4],["19:20:00",301.6,0.9]]},"2026-07-21":{"month":"Jul","pts":[["04:40:00",62.2,0.5],["04:50:00",63.9,2.0],["05:00:00",65.5,3.6],["05:10:00",67.1,5.2],["05:20:00",68.7,6.9],["05:30:00",70.2,8.7],["05:40:00",71.8,10.4],["05:50:00",73.3,12.2],["06:00:00",74.9,14.0],["06:10:00",76.4,15.8],["06:20:00",78.0,17.6],["06:30:00",79.5,19.4],["06:40:00",81.0,21.3],["06:50:00",82.6,23.1],["07:00:00",84.2,25.0],["07:10:00",85.7,26.8],["07:20:00",87.3,28.7],["07:30:00",89.0,30.6],["07:40:00",90.6,32.4],["07:50:00",92.3,34.3],["08:00:00",94.1,36.2],["08:10:00",95.8,38.0],["08:20:00",97.7,39.9],["08:30:00",99.6,41.7],["08:40:00",101.5,43.6],["08:50:00",103.6,45.4],["09:00:00",105.8,47.2],["09:10:00",108.0,49.0],["09:20:00",110.4,50.7],["09:30:00",113.0,52.5],["09:40:00",115.6,54.2],["09:50:00",118.5,55.8],["10:00:00",121.6,57.5],["10:10:00",124.9,59.0],["10:20:00",128.5,60.5],["10:30:00",132.4,61.9],["10:40:00",136.6,63.3],["10:50:00",141.1,64.5],["11:00:00",146.0,65.6],["11:10:00",151.3,66.6],["11:20:00",156.9,67.4],["11:30:00",162.8,68.0],["11:40:00",169.0,68.5],["11:50:00",175.4,68.8],["12:00:00",181.9,68.8],["12:10:00",188.3,68.6],["12:20:00",194.6,68.3],["12:30:00",200.7,67.7],["12:40:00",206.5,66.9],["12:50:00",211.9,66.0],["13:00:00",216.9,65.0],["13:10:00",221.6,63.8],["13:20:00",225.9,62.5],["13:30:00",229.9,61.1],["13:40:00",233.6,59.6],["13:50:00",237.0,58.1],["14:00:00",240.2,56.5],["14:10:00",243.1,54.8],["14:20:00",245.9,53.2],["14:30:00",248.5,51.4],["14:40:00",250.9,49.7],["14:50:00",253.3,47.9],["15:00:00",255.5,46.1],["15:10:00",257.6,44.3],["15:20:00",259.6,42.4],["15:30:00",261.5,40.6],["15:40:00",263.4,38.7],["15:50:00",265.2,36.9],["16:00:00",266.9,35.0],["16:10:00",268.6,33.2],["16:20:00",270.3,31.3],["16:30:00",271.9,29.4],["16:40:00",273.5,27.5],["16:50:00",275.1,25.7],["17:00:00",276.7,23.8],["17:10:00",278.2,22.0],["17:20:00",279.8,20.1],["17:30:00",281.3,18.3],["17:40:00",282.9,16.5],["17:50:00",284.4,14.7],["18:00:00",285.9,12.9],["18:10:00",287.5,11.1],["18:20:00",289.0,9.3],["18:30:00",290.6,7.6],["18:40:00",292.2,5.9],["18:50:00",293.8,4.2],["19:00:00",295.4,2.6],["19:10:00",297.0,1.0]]},"2026-08-21":{"month":"Aug","pts":[["05:10:00",73.8,0.5],["05:20:00",75.4,2.1],["05:30:00",77.1,3.8],["05:40:00",78.7,5.6],["05:50:00",80.3,7.4],["06:00:00",82.0,9.2],["06:10:00",83.6,11.0],["06:20:00",85.2,12.9],["06:30:00",86.8,14.7],["06:40:00",88.5,16.6],["06:50:00",90.1,18.5],["07:00:00",91.8,20.3],["07:10:00",93.5,22.2],["07:20:00",95.2,24.0],["07:30:00",97.0,25.9],["07:40:00",98.8,27.8],["07:50:00",100.6,29.6],["08:00:00",102.5,31.4],["08:10:00",104.4,33.2],["08:20:00",106.4,35.0],["08:30:00",108.5,36.8],["08:40:00",110.6,38.6],["08:50:00",112.8,40.3],["09:00:00",115.2,42.0],["09:10:00",117.6,43.7],["09:20:00",120.2,45.3],["09:30:00",122.8,46.9],["09:40:00",125.6,48.5],["09:50:00",128.6,50.0],["10:00:00",131.7,51.4],["10:10:00",135.1,52.7],["10:20:00",138.6,54.0],["10:30:00",142.2,55.2],["10:40:00",146.1,56.3],["10:50:00",150.2,57.3],["11:00:00",154.5,58.1],["11:10:00",159.0,58.9],["11:20:00",163.6,59.5],["11:30:00",168.4,59.9],["11:40:00",173.2,60.2],["11:50:00",178.2,60.4],["12:00:00",183.1,60.3],["12:10:00",188.0,60.2],["12:20:00",192.9,59.8],["12:30:00",197.6,59.3],["12:40:00",202.2,58.7],["12:50:00",206.6,57.9],["13:00:00",210.8,57.0],["13:10:00",214.9,56.0],["13:20:00",218.7,54.9],["13:30:00",222.3,53.7],["13:40:00",225.8,52.4],["13:50:00",229.0,51.0],["14:00:00",232.1,49.5],["14:10:00",235.0,48.0],["14:20:00",237.8,46.5],["14:30:00",240.4,44.9],["14:40:00",243.0,43.2],["14:50:00",245.4,41.5],["15:00:00",247.7,39.8],["15:10:00",249.9,38.1],["15:20:00",252.0,36.3],["15:30:00",254.0,34.5],["15:40:00",256.0,32.7],["15:50:00",257.9,30.9],["16:00:00",259.8,29.0],["16:10:00",261.6,27.2],["16:20:00",263.4,25.3],["16:30:00",265.1,23.5],["16:40:00",266.8,21.6],["16:50:00",268.5,19.8],["17:00:00",270.2,17.9],["17:10:00",271.8,16.0],["17:20:00",273.5,14.2],["17:30:00",275.1,12.3],["17:40:00",276.7,10.5],["17:50:00",278.3,8.6],["18:00:00",280.0,6.8],["18:10:00",281.6,5.0],["18:20:00",283.2,3.2],["18:30:00",284.8,1.5]]},"2026-09-21":{"month":"Sep","pts":[["05:40:00",88.9,0.2],["05:50:00",90.6,1.9],["06:00:00",92.3,3.7],["06:10:00",93.9,5.5],["06:20:00",95.6,7.3],["06:30:00",97.3,9.1],["06:40:00",99.0,11.0],["06:50:00",100.7,12.8],["07:00:00",102.5,14.6],["07:10:00",104.3,16.4],["07:20:00",106.1,18.2],["07:30:00",107.9,20.0],["07:40:00",109.8,21.8],["07:50:00",111.8,23.5],["08:00:00",113.8,25.2],["08:10:00",115.8,26.9],["08:20:00",117.9,28.6],["08:30:00",120.1,30.2],["08:40:00",122.3,31.8],["08:50:00",124.6,33.4],["09:00:00",127.0,34.9],["09:10:00",129.5,36.4],["09:20:00",132.1,37.8],["09:30:00",134.8,39.1],["09:40:00",137.6,40.4],["09:50:00",140.5,41.6],["10:00:00",143.5,42.8],["10:10:00",146.6,43.9],["10:20:00",149.8,44.8],["10:30:00",153.1,45.7],["10:40:00",156.5,46.5],["10:50:00",160.0,47.2],["11:00:00",163.6,47.8],["11:10:00",167.3,48.3],["11:20:00",171.1,48.6],["11:30:00",174.8,48.8],["11:40:00",178.6,48.9],["11:50:00",182.4,48.9],["12:00:00",186.2,48.8],["12:10:00",190.0,48.5],["12:20:00",193.7,48.1],["12:30:00",197.4,47.6],["12:40:00",200.9,47.0],["12:50:00",204.4,46.3],["13:00:00",207.8,45.5],["13:10:00",211.1,44.5],["13:20:00",214.3,43.5],["13:30:00",217.3,42.4],["13:40:00",220.3,41.3],["13:50:00",223.2,40.0],["14:00:00",225.9,38.7],["14:10:00",228.6,37.3],["14:20:00",231.1,35.9],["14:30:00",233.6,34.4],["14:40:00",235.9,32.9],["14:50:00",238.2,31.3],["15:00:00",240.5,29.7],["15:10:00",242.6,28.1],["15:20:00",244.7,26.4],["15:30:00",246.7,24.7],["15:40:00",248.7,22.9],["15:50:00",250.6,21.2],["16:00:00",252.5,19.4],["16:10:00",254.3,17.6],["16:20:00",256.1,15.8],["16:30:00",257.9,14.0],["16:40:00",259.6,12.2],["16:50:00",261.3,10.3],["17:00:00",263.0,8.5],["17:10:00",264.7,6.7],["17:20:00",266.4,4.8],["17:30:00",268.1,3.0],["17:40:00",269.7,1.3]]},"2026-10-21":{"month":"Oct","pts":[["06:20:00",105.5,1.4],["06:30:00",107.1,3.1],["06:40:00",108.8,4.8],["06:50:00",110.6,6.5],["07:00:00",112.3,8.2],["07:10:00",114.1,9.9],["07:20:00",115.9,11.6],["07:30:00",117.7,13.3],["07:40:00",119.6,14.9],["07:50:00",121.6,16.5],["08:00:00",123.5,18.1],["08:10:00",125.6,19.6],["08:20:00",127.6,21.1],["08:30:00",129.8,22.6],["08:40:00",131.9,24.0],["08:50:00",134.2,25.3],["09:00:00",136.5,26.6],["09:10:00",138.9,27.9],["09:20:00",141.3,29.1],["09:30:00",143.8,30.2],["09:40:00",146.4,31.3],["09:50:00",149.0,32.3],["10:00:00",151.7,33.2],["10:10:00",154.5,34.1],["10:20:00",157.3,34.8],["10:30:00",160.2,35.5],["10:40:00",163.2,36.1],["10:50:00",166.1,36.6],["11:00:00",169.2,37.0],["11:10:00",172.2,37.3],["11:20:00",175.3,37.5],["11:30:00",178.4,37.6],["11:40:00",181.5,37.6],["11:50:00",184.6,37.5],["12:00:00",187.7,37.3],["12:10:00",190.7,37.0],["12:20:00",193.7,36.6],["12:30:00",196.7,36.1],["12:40:00",199.7,35.5],["12:50:00",202.5,34.8],["13:00:00",205.4,34.0],["13:10:00",208.1,33.2],["13:20:00",210.8,32.3],["13:30:00",213.5,31.3],["13:40:00",216.1,30.2],["13:50:00",218.6,29.1],["14:00:00",221.0,27.9],["14:10:00",223.4,26.6],["14:20:00",225.7,25.3],["14:30:00",227.9,24.0],["14:40:00",230.1,22.5],["14:50:00",232.2,21.1],["15:00:00",234.3,19.6],["15:10:00",236.3,18.1],["15:20:00",238.3,16.5],["15:30:00",240.2,14.9],["15:40:00",242.1,13.2],["15:50:00",243.9,11.6],["16:00:00",245.7,9.9],["16:10:00",247.5,8.2],["16:20:00",249.3,6.5],["16:30:00",251.0,4.8],["16:40:00",252.7,3.0],["16:50:00",254.4,1.4]]},"2026-11-21":{"month":"Nov","pts":[["06:50:00",116.9,0.2],["07:00:00",118.6,1.7],["07:10:00",120.3,3.2],["07:20:00",122.0,4.8],["07:30:00",123.7,6.3],["07:40:00",125.5,7.8],["07:50:00",127.3,9.3],["08:00:00",129.2,10.8],["08:10:00",131.1,12.2],["08:20:00",133.1,13.6],["08:30:00",135.0,14.9],["08:40:00",137.1,16.2],["08:50:00",139.2,17.4],["09:00:00",141.3,18.6],["09:10:00",143.5,19.8],["09:20:00",145.7,20.8],["09:30:00",147.9,21.9],["09:40:00",150.3,22.8],["09:50:00",152.6,23.7],["10:00:00",155.0,24.5],["10:10:00",157.5,25.3],["10:20:00",160.0,26.0],["10:30:00",162.5,26.6],["10:40:00",165.1,27.1],["10:50:00",167.7,27.5],["11:00:00",170.3,27.9],["11:10:00",172.9,28.1],["11:20:00",175.6,28.3],["11:30:00",178.3,28.4],["11:40:00",180.9,28.4],["11:50:00",183.6,28.4],["12:00:00",186.3,28.2],["12:10:00",188.9,28.0],["12:20:00",191.5,27.6],["12:30:00",194.1,27.2],["12:40:00",196.7,26.7],["12:50:00",199.2,26.1],["13:00:00",201.8,25.5],["13:10:00",204.2,24.7],["13:20:00",206.6,23.9],["13:30:00",209.0,23.1],["13:40:00",211.3,22.1],["13:50:00",213.6,21.1],["14:00:00",215.9,20.1],["14:10:00",218.0,18.9],["14:20:00",220.2,17.8],["14:30:00",222.3,16.5],["14:40:00",224.3,15.2],["14:50:00",226.3,13.9],["15:00:00",228.3,12.6],["15:10:00",230.2,11.1],["15:20:00",232.1,9.7],["15:30:00",233.9,8.2],["15:40:00",235.7,6.7],["15:50:00",237.4,5.2],["16:00:00",239.2,3.6],["16:10:00",240.9,2.1],["16:20:00",242.6,0.6]]},"2026-12-21":{"month":"Dec","pts":[["07:20:00",122.3,0.6],["07:30:00",123.9,2.0],["07:40:00",125.6,3.5],["07:50:00",127.4,4.9],["08:00:00",129.1,6.3],["08:10:00",131.0,7.8],["08:20:00",132.8,9.1],["08:30:00",134.7,10.5],["08:40:00",136.6,11.8],["08:50:00",138.6,13.0],["09:00:00",140.6,14.2],["09:10:00",142.6,15.4],["09:20:00",144.7,16.5],["09:30:00",146.8,17.5],["09:40:00",149.0,18.5],["09:50:00",151.2,19.5],["10:00:00",153.5,20.3],["10:10:00",155.8,21.1],["10:20:00",158.1,21.9],["10:30:00",160.5,22.5],["10:40:00",162.9,23.1],["10:50:00",165.3,23.6],["11:00:00",167.8,24.1],["11:10:00",170.2,24.4],["11:20:00",172.7,24.7],["11:30:00",175.3,24.9],["11:40:00",177.8,25.0],["11:50:00",180.3,25.0],["12:00:00",182.8,25.0],["12:10:00",185.4,24.8],["12:20:00",187.9,24.6],["12:30:00",190.4,24.3],["12:40:00",192.9,24.0],["12:50:00",195.3,23.5],["13:00:00",197.7,23.0],["13:10:00",200.1,22.4],["13:20:00",202.5,21.7],["13:30:00",204.8,20.9],["13:40:00",207.1,20.1],["13:50:00",209.3,19.2],["14:00:00",211.6,18.3],["14:10:00",213.7,17.3],["14:20:00",215.8,16.2],["14:30:00",217.9,15.1],["14:40:00",219.9,13.9],["14:50:00",221.9,12.7],["15:00:00",223.9,11.5],["15:10:00",225.8,10.1],["15:20:00",227.7,8.8],["15:30:00",229.5,7.4],["15:40:00",231.3,6.0],["15:50:00",233.1,4.5],["16:00:00",234.8,3.1],["16:10:00",236.5,1.7],["16:20:00",238.1,0.3]]}}
+;
+
+const SEASON_ORDER = [
+  { key: "2026-12-21", color: "var(--spo-series-winter)", label: "Winter Solstice", radius: 340 },
+  { key: "2026-09-22", color: "var(--spo-series-fall)",   label: "Fall Equinox",    radius: 300 },
+  { key: "2026-03-20", color: "var(--spo-series-spring)", label: "Spring Equinox",  radius: 268 },
+  { key: "2026-06-21", color: "var(--spo-series-summer)", label: "Summer Solstice", radius: 222 },
+];
+
+const ANCHOR = { x: 660, y: 300 };
+
+function svgEl(tag, attrs) {
+  const el = document.createElementNS("http://www.w3.org/2000/svg", tag);
+  for (const k in attrs) el.setAttribute(k, attrs[k]);
+  return el;
+}
+function azToXY(az, r, cx, cy) {
+  const rad = az * Math.PI / 180;
+  return { x: cx + r * Math.sin(rad), y: cy - r * Math.cos(rad) };
+}
+function fmtTime(t) {
+  const [h, m] = t.split(":").map(Number);
+  const period = h < 12 ? "am" : "pm";
+  let h12 = h % 12; if (h12 === 0) h12 = 12;
+  return m === 0 ? `${h12}${period}` : `${h12}:${String(m).padStart(2,"0")}${period}`;
+}
+
+// ---------- Aerial overlay ----------
+(function buildOverlay() {
+  const svg = document.getElementById("spo-overlay-svg");
+  const tooltip = document.getElementById("spo-overlay-tooltip");
+  const frame = document.getElementById("spo-aerial-frame");
+
+  // compass ticks (N/E/S/W) at a radius beyond the furthest arc
+  const compassR = 375;
+  [[0,"N"],[90,"E"],[180,"S"],[270,"W"]].forEach(([az, dir]) => {
+    const p = azToXY(az, compassR, ANCHOR.x, ANCHOR.y);
+    const t = svgEl("text", { class: "spo-compass-label", x: p.x, y: p.y, "text-anchor": "middle" });
+    t.textContent = dir;
+    svg.appendChild(t);
+  });
+
+  const allHitPoints = [];
+
+  SEASON_ORDER.forEach(season => {
+    const d = SEASON_DATA[season.key];
+    const pts = d.points.filter(p => p.alt >= -0.5);
+    const maxAlt = Math.max(...pts.map(p => p.alt));
+
+    const pathD = pts.map((p, i) => {
+      const xy = azToXY(p.az, season.radius, ANCHOR.x, ANCHOR.y);
+      return `${i === 0 ? "M" : "L"} ${xy.x.toFixed(1)} ${xy.y.toFixed(1)}`;
+    }).join(" ");
+    svg.appendChild(svgEl("path", { class: "spo-season-path", d: pathD, stroke: season.color }));
+
+    pts.filter(p => p.time.endsWith(":00")).forEach(p => {
+      const xy = azToXY(p.az, season.radius, ANCHOR.x, ANCHOR.y);
+      const rr = 2.2 + (p.alt / maxAlt) * 3.2;
+      const dot = svgEl("circle", { class: "spo-hour-dot", cx: xy.x, cy: xy.y, r: rr.toFixed(2), fill: season.color, stroke: "#fff" });
+      svg.appendChild(dot);
+      allHitPoints.push({ x: xy.x, y: xy.y, label: `${season.label} · ${fmtTime(p.time)} · alt ${p.alt.toFixed(1)}°` });
+    });
+
+    // solar noon label
+    const noon = d.solar_noon;
+    const noonXY = azToXY(noon.az, season.radius, ANCHOR.x, ANCHOR.y);
+    const noonLabelY = season.key === "2026-06-21" ? noonXY.y + 18 : noonXY.y - 10;
+    const lbl = svgEl("text", { class: "spo-direct-label", x: noonXY.x, y: noonLabelY, "text-anchor": "middle", fill: season.color });
+    lbl.textContent = `${noon.alt.toFixed(0)}°`;
+    svg.appendChild(lbl);
+  });
+
+  svg.appendChild(svgEl("circle", { class: "spo-anchor-dot", cx: ANCHOR.x, cy: ANCHOR.y, r: 5 }));
+
+  // hover
+  let hoverDot = svgEl("circle", { r: 6, fill: "none", stroke: "var(--text-primary)", "stroke-width": 2, opacity: 0 });
+  svg.appendChild(hoverDot);
+  svg.addEventListener("mousemove", (evt) => {
+    const rect = svg.getBoundingClientRect();
+    const svgX = (evt.clientX - rect.left) / rect.width * 1400;
+    const svgY = (evt.clientY - rect.top) / rect.height * 799;
+    let nearest = null, best = Infinity;
+    for (const p of allHitPoints) {
+      const dist = Math.hypot(p.x - svgX, p.y - svgY);
+      if (dist < best) { best = dist; nearest = p; }
+    }
+    if (nearest && best < 40) {
+      hoverDot.setAttribute("cx", nearest.x); hoverDot.setAttribute("cy", nearest.y);
+      hoverDot.setAttribute("opacity", 1);
+      tooltip.style.left = (nearest.x / 1400 * rect.width) + "px";
+      tooltip.style.top = (nearest.y / 799 * rect.height - 10) + "px";
+      tooltip.textContent = nearest.label;
+      tooltip.style.opacity = 1;
+    } else {
+      hoverDot.setAttribute("opacity", 0);
+      tooltip.style.opacity = 0;
+    }
+  });
+  svg.addEventListener("mouseleave", () => { hoverDot.setAttribute("opacity", 0); tooltip.style.opacity = 0; });
+
+  const legend = document.getElementById("spo-overlay-legend");
+  SEASON_ORDER.forEach(s => {
+    const item = document.createElement("div");
+    item.className = "item";
+    item.innerHTML = `<span class="swatch" style="background:${s.color}"></span>${s.label}`;
+    legend.appendChild(item);
+  });
+})();
+
+// ---------- Annual polar chart ----------
+(function buildPolar() {
+  const svg = document.getElementById("spo-polar-svg");
+  const tooltip = document.getElementById("spo-polar-tooltip");
+  const CX = 260, CY = 260, R = 210;
+  const elToR = (el) => R * (1 - Math.max(el, 0) / 90);
+  const polarXY = (az, el) => {
+    const r = elToR(el);
+    const rad = az * Math.PI / 180;
+    return { x: CX + r * Math.sin(rad), y: CY - r * Math.cos(rad) };
+  };
+
+  // elevation rings
+  [0, 20, 40, 60, 80].forEach(el => {
+    const r = elToR(el);
+    svg.appendChild(svgEl("circle", { class: "spo-ring-line", cx: CX, cy: CY, r }));
+    const lbl = svgEl("text", { class: "spo-polar-axis-label", x: CX + 4, y: CY - r + 10 });
+    lbl.textContent = el + "°";
+    svg.appendChild(lbl);
+  });
+  // compass labels
+  [[0,"N"],[90,"E"],[180,"S"],[270,"W"]].forEach(([az, dir]) => {
+    const p = polarXY(az, -8);
+    const t = svgEl("text", { class: "spo-polar-compass-label", x: p.x, y: p.y, "text-anchor": "middle" });
+    t.textContent = dir;
+    svg.appendChild(t);
+  });
+
+  // hour-of-day reference: radial lines at the equinox's on-the-hour azimuths (representative day),
+  // labeled at the horizon end — connecting the same clock hour across all 12 months instead produced
+  // tangled, looping paths (each month's azimuth for a fixed hour swings too differently), so this
+  // uses one clean representative date rather than a cross-month blend.
+  const equinox = ANNUAL_DATA["2026-03-21"];
+  if (equinox) {
+    equinox.pts.filter(([t, , el]) => t.split(":")[1] === "00" && el >= 0 && Number(t.split(":")[0]) % 2 === 0)
+      .forEach(([t, az]) => {
+        const edge = polarXY(az, 0);
+        svg.appendChild(svgEl("line", { class: "spo-hour-line", x1: CX, y1: CY, x2: edge.x, y2: edge.y }));
+        const labelPos = polarXY(az, -6);
+        const lbl = svgEl("text", { class: "spo-hour-line-label", x: labelPos.x, y: labelPos.y, "text-anchor": "middle" });
+        lbl.textContent = fmtTime(t);
+        svg.appendChild(lbl);
+      });
+  }
+
+  // month curves
+  const monthColors = {
+    Jan: "#8d93a9", Feb: "#72788e", Mar: "var(--spo-series-spring)", Apr: "#4a9e4a",
+    May: "#e8c400", Jun: "var(--spo-series-summer)", Jul: "#e0517a", Aug: "#c98500",
+    Sep: "var(--spo-series-fall)", Oct: "#b06a2e", Nov: "#595e72", Dec: "var(--spo-series-winter)",
+  };
+  const hitPoints = [];
+  Object.entries(ANNUAL_DATA).forEach(([date, d]) => {
+    const pts = d.pts.filter(([, , el]) => el >= 0);
+    if (!pts.length) return;
+    const color = monthColors[d.month] || "#999";
+    const pathD = pts.map(([, az, el], i) => {
+      const xy = polarXY(az, el);
+      return `${i === 0 ? "M" : "L"} ${xy.x.toFixed(1)} ${xy.y.toFixed(1)}`;
+    }).join(" ");
+    svg.appendChild(svgEl("path", { class: "spo-month-line", d: pathD, stroke: color }));
+    pts.forEach(([t, az, el]) => {
+      const xy = polarXY(az, el);
+      hitPoints.push({ x: xy.x, y: xy.y, label: `${d.month} 21 · ${fmtTime(t)} · alt ${el.toFixed(1)}° az ${az.toFixed(0)}°` });
+    });
+  });
+
+  let hoverDot = svgEl("circle", { r: 5, fill: "none", stroke: "var(--text-primary)", "stroke-width": 2, opacity: 0 });
+  svg.appendChild(hoverDot);
+  svg.addEventListener("mousemove", (evt) => {
+    const rect = svg.getBoundingClientRect();
+    const svgX = (evt.clientX - rect.left) / rect.width * 520;
+    const svgY = (evt.clientY - rect.top) / rect.height * 520;
+    let nearest = null, best = Infinity;
+    for (const p of hitPoints) {
+      const dist = Math.hypot(p.x - svgX, p.y - svgY);
+      if (dist < best) { best = dist; nearest = p; }
+    }
+    if (nearest && best < 14) {
+      hoverDot.setAttribute("cx", nearest.x); hoverDot.setAttribute("cy", nearest.y); hoverDot.setAttribute("opacity", 1);
+      tooltip.style.left = (nearest.x / 520 * rect.width) + "px";
+      tooltip.style.top = (nearest.y / 520 * rect.height - 10) + "px";
+      tooltip.textContent = nearest.label;
+      tooltip.style.opacity = 1;
+    } else {
+      hoverDot.setAttribute("opacity", 0);
+      tooltip.style.opacity = 0;
+    }
+  });
+  svg.addEventListener("mouseleave", () => { hoverDot.setAttribute("opacity", 0); tooltip.style.opacity = 0; });
+
+  const legend = document.getElementById("spo-month-legend");
+  Object.entries(monthColors).forEach(([month, color]) => {
+    const item = document.createElement("div");
+    item.className = "item";
+    item.innerHTML = `<span class="dot" style="background:${color}"></span>${month}`;
+    legend.appendChild(item);
+  });
+})();
+})();
+</script>
+<!-- FOOTER:START -->
+<style>
+  .site-footer {
+    font-family: system-ui, -apple-system, "Segoe UI", sans-serif;
+    padding: 20px; text-align: center;
+    font-size: 12px; color: #898781;
+    background: #fcfcfb; border-top: 1px solid rgba(11,11,11,0.10);
+  }
+  .site-footer a { color: #52514e; }
+  @media (prefers-color-scheme: dark) {
+    :root:not([data-theme="light"]) .site-footer { background: #1a1a19; border-top-color: rgba(255,255,255,0.10); }
+    :root:not([data-theme="light"]) .site-footer a { color: #c3c2b7; }
+  }
+  :root[data-theme="dark"] .site-footer { background: #1a1a19; border-top-color: rgba(255,255,255,0.10); }
+  :root[data-theme="dark"] .site-footer a { color: #c3c2b7; }
+</style>
+<footer class="site-footer">
+  <p>Demo site for <a href="https://github.com/keser/site-toolkit">site-toolkit</a>.
+    Example data: Lot #86, 58 Freestone Avenue, Portland, CT 06480.</p>
+</footer>
+<!-- FOOTER:END -->
+</body>
+</html>

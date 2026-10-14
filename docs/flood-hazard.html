@@ -1,0 +1,351 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Flood Risk</title>
+<style>
+  .viz-root {
+    color-scheme: light;
+    --surface-1:      #fcfcfb;
+    --page:           #f9f9f7;
+    --text-primary:   #0b0b0b;
+    --text-secondary: #52514e;
+    --text-muted:     #898781;
+    --grid:           #e1e0d9;
+    --baseline:       #c3c2b7;
+    --border:         rgba(11,11,11,0.10);
+    --scale-100: #cde2fb;
+    --scale-450: #2a78d6;
+    --scale-700: #0d366b;
+    --status-good:     #0ca30c;
+    --status-good-bg:  rgba(12,163,12,0.10);
+    --status-serious:     #ec835a;
+    --status-serious-bg:  rgba(236,131,90,0.14);
+  }
+  @media (prefers-color-scheme: dark) {
+    :root:where(:not([data-theme="light"])) .viz-root {
+      color-scheme: dark;
+      --surface-1:      #1a1a19;
+      --page:           #0d0d0d;
+      --text-primary:   #ffffff;
+      --text-secondary: #c3c2b7;
+      --text-muted:     #898781;
+      --grid:           #2c2c2a;
+      --baseline:       #383835;
+      --border:         rgba(255,255,255,0.10);
+      --scale-100: #9ec5f4;
+      --scale-450: #3987e5;
+      --scale-700: #104281;
+      --status-good:     #0ca30c;
+      --status-good-bg:  rgba(12,163,12,0.16);
+      --status-serious:     #ec835a;
+      --status-serious-bg:  rgba(236,131,90,0.18);
+    }
+  }
+  :root[data-theme="dark"] .viz-root {
+    color-scheme: dark;
+    --surface-1:      #1a1a19;
+    --page:           #0d0d0d;
+    --text-primary:   #ffffff;
+    --text-secondary: #c3c2b7;
+    --text-muted:     #898781;
+    --grid:           #2c2c2a;
+    --baseline:       #383835;
+    --border:         rgba(255,255,255,0.10);
+    --scale-100: #9ec5f4;
+    --scale-450: #3987e5;
+    --scale-700: #104281;
+    --status-good:     #0ca30c;
+    --status-good-bg:  rgba(12,163,12,0.16);
+    --status-serious:     #ec835a;
+    --status-serious-bg:  rgba(236,131,90,0.18);
+  }
+
+  * { box-sizing: border-box; }
+  body { margin: 0; }
+  .viz-root {
+    font-family: system-ui, -apple-system, "Segoe UI", sans-serif;
+    background: var(--page);
+    color: var(--text-primary);
+    min-height: 100vh;
+    padding: 32px 20px 60px;
+  }
+  .wrap { max-width: 1280px; margin: 0 auto; }
+  header.page-head { margin-bottom: 20px; }
+  h1 { font-size: 22px; font-weight: 600; margin: 0 0 6px; }
+  .subhead { color: var(--text-secondary); font-size: 14px; line-height: 1.5; margin: 0 0 4px; }
+  .subhead-muted { color: var(--text-muted); font-size: 12px; margin: 0; }
+
+  .stat-row {
+    display: grid;
+    grid-template-columns: 1.3fr 1fr;
+    gap: 20px;
+    margin-bottom: 20px;
+    align-items: stretch;
+  }
+  @media (max-width: 720px) {
+    .stat-row { grid-template-columns: 1fr; }
+  }
+
+  .panel {
+    background: var(--surface-1);
+    border: 1px solid var(--border);
+    border-radius: 12px;
+    padding: 20px 22px;
+  }
+  .panel-eyebrow {
+    font-size: 11px;
+    font-weight: 600;
+    letter-spacing: 0.04em;
+    text-transform: uppercase;
+    color: var(--text-muted);
+    margin: 0 0 10px;
+  }
+
+  .status-chip {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    font-size: 12.5px;
+    font-weight: 600;
+    padding: 4px 10px 4px 8px;
+    border-radius: 999px;
+  }
+  .status-chip.good { color: var(--status-good); background: var(--status-good-bg); }
+  .status-chip.serious { color: var(--status-serious); background: var(--status-serious-bg); }
+  .status-chip .icon { font-size: 13px; line-height: 1; }
+
+  .hero-figure {
+    font-size: 44px;
+    font-weight: 600;
+    line-height: 1;
+    margin: 14px 0 2px;
+    color: var(--text-primary);
+  }
+  .hero-figure sup { font-size: 18px; font-weight: 500; color: var(--text-muted); margin-left: 2px; }
+  .hero-caption { font-size: 13px; color: var(--text-secondary); margin: 0 0 18px; }
+
+  .scale-track-wrap { margin-top: 22px; }
+  .scale-track {
+    position: relative;
+    height: 10px;
+    border-radius: 6px;
+    background: linear-gradient(to right, var(--scale-100), var(--scale-450) 55%, var(--scale-700));
+  }
+  .scale-marker {
+    position: absolute;
+    top: -6px;
+    width: 2px;
+    height: 22px;
+    background: var(--text-primary);
+    border-radius: 1px;
+  }
+  .scale-marker::after {
+    content: attr(data-label);
+    position: absolute;
+    top: -20px;
+    left: 50%;
+    transform: translateX(-50%);
+    font-size: 11px;
+    font-weight: 600;
+    color: var(--text-primary);
+    white-space: nowrap;
+  }
+  .scale-ticks {
+    display: flex;
+    justify-content: space-between;
+    margin-top: 8px;
+    font-size: 10.5px;
+    color: var(--text-muted);
+    font-variant-numeric: tabular-nums;
+  }
+  .scale-endcaps {
+    display: flex;
+    justify-content: space-between;
+    margin-top: 2px;
+    font-size: 11px;
+    color: var(--text-secondary);
+  }
+
+  .city-figure {
+    font-size: 30px;
+    font-weight: 600;
+    line-height: 1.15;
+    margin: 14px 0 4px;
+  }
+  .city-figure .unit { font-size: 15px; font-weight: 500; color: var(--text-secondary); }
+  .city-sub { font-size: 13px; color: var(--text-secondary); line-height: 1.5; margin: 0; }
+  .city-sub b { color: var(--text-primary); font-weight: 600; }
+
+  .divider { height: 1px; background: var(--grid); margin: 16px 0; border: none; }
+
+  table.data-table {
+    width: 100%;
+    border-collapse: collapse;
+    font-size: 12.5px;
+    font-variant-numeric: tabular-nums;
+  }
+  table.data-table caption {
+    text-align: left;
+    font-size: 14px;
+    font-weight: 600;
+    color: var(--text-primary);
+    margin-bottom: 10px;
+    font-variant-numeric: normal;
+  }
+  table.data-table th, table.data-table td {
+    text-align: left;
+    padding: 7px 10px;
+    color: var(--text-secondary);
+    border-bottom: 1px solid var(--grid);
+  }
+  table.data-table td:first-child { color: var(--text-muted); width: 220px; }
+  table.data-table td:last-child, table.data-table th { color: var(--text-primary); font-weight: 500; }
+
+  .table-card {
+    background: var(--surface-1);
+    border: 1px solid var(--border);
+    border-radius: 12px;
+    padding: 18px 20px;
+    margin-bottom: 20px;
+  }
+  .table-card p.callout {
+    font-size: 13px;
+    color: var(--text-secondary);
+    line-height: 1.6;
+    margin: 12px 0 0;
+    padding-top: 12px;
+    border-top: 1px solid var(--grid);
+  }
+  .table-card p.callout b { color: var(--text-primary); }
+
+  footer.notes { margin-top: 8px; font-size: 12px; color: var(--text-muted); line-height: 1.7; }
+  footer.notes a { color: var(--text-secondary); }
+</style>
+</head>
+<body>
+<!-- NAV:START -->
+<style>
+  .site-nav {
+    font-family: system-ui, -apple-system, "Segoe UI", sans-serif;
+    display: flex; flex-wrap: wrap; align-items: center; justify-content: space-between;
+    gap: 12px; padding: 14px 20px;
+    background: #fcfcfb; border-bottom: 1px solid rgba(11,11,11,0.10);
+  }
+  .site-nav__brand { font-weight: 600; font-size: 14px; color: #0b0b0b; text-decoration: none; }
+  .site-nav__links { display: flex; gap: 18px; flex-wrap: wrap; }
+  .site-nav__links a { font-size: 13px; color: #52514e; text-decoration: none; }
+  .site-nav__links a:hover { color: #0b0b0b; }
+  @media (prefers-color-scheme: dark) {
+    :root:not([data-theme="light"]) .site-nav { background: #1a1a19; border-bottom-color: rgba(255,255,255,0.10); }
+    :root:not([data-theme="light"]) .site-nav__brand { color: #ffffff; }
+    :root:not([data-theme="light"]) .site-nav__links a { color: #c3c2b7; }
+    :root:not([data-theme="light"]) .site-nav__links a:hover { color: #ffffff; }
+  }
+  :root[data-theme="dark"] .site-nav { background: #1a1a19; border-bottom-color: rgba(255,255,255,0.10); }
+  :root[data-theme="dark"] .site-nav__brand { color: #ffffff; }
+  :root[data-theme="dark"] .site-nav__links a { color: #c3c2b7; }
+  :root[data-theme="dark"] .site-nav__links a:hover { color: #ffffff; }
+</style>
+<nav class="site-nav">
+  <a class="site-nav__brand" href="index.html">Lot #86 — Site Profile</a>
+  <div class="site-nav__links">
+    <a href="base-map.html">Base Map</a>
+    <a href="sectors.html">Sectors</a>
+    <a href="zones-design.html">Zones &amp; Design</a>
+    <a href="climate.html">Climate</a>
+    <a href="water.html">Water</a>
+    <a href="sun-solar.html">Sun &amp; Solar</a>
+    <a href="flood-hazard.html">Flood &amp; Hazard</a>
+    <a href="species-inventory.html">Species Inventory</a>
+    <a href="project-plan.html">Project Plan</a>
+  </div>
+</nav>
+<!-- NAV:END -->
+<div class="viz-root">
+  <div class="wrap">
+    <header class="page-head">
+      <h1>Flood Risk</h1>
+      <p class="subhead">Resolves the flood-risk gap flagged in the Site &amp; Regional Challenges report: the parcel's actual FEMA flood zone, checked directly rather than assumed from river distance.</p>
+      <p class="subhead-muted">Sources: First Street Foundation property &amp; city climate-risk reports; FEMA Flood Map Service Center (National Flood Hazard Layer).</p>
+    </header>
+
+    <div class="stat-row">
+      <div class="panel">
+        <p class="panel-eyebrow">This Parcel — First Street Flood Factor</p>
+        <span class="status-chip good"><span class="icon">&#10003;</span>Minimal</span>
+        <div class="hero-figure">1<sup>/ 10</sup></div>
+        <p class="hero-caption">First Street Foundation's property-level flood factor for 58 Freestone Ave — the lowest band on their 1–10 scale.</p>
+        <div class="scale-track-wrap">
+          <div class="scale-track">
+            <div class="scale-marker" style="left: 10%;" data-label="This parcel"></div>
+          </div>
+          <div class="scale-endcaps"><span>Minimal</span><span>Extreme</span></div>
+          <div class="scale-ticks"><span>0</span><span>2</span><span>4</span><span>6</span><span>8</span><span>10</span></div>
+        </div>
+      </div>
+
+      <div class="panel">
+        <p class="panel-eyebrow">City of Portland — 30-Year Outlook</p>
+        <span class="status-chip serious"><span class="icon">&#9888;</span>Major</span>
+        <div class="city-figure">247 <span class="unit">properties</span></div>
+        <p class="city-sub">at risk of flooding over the next 30 years — <b>9.1%</b> of all properties citywide. This is an aggregate across the whole town, including riverfront parcels; it is not this property's own score (above).</p>
+      </div>
+    </div>
+
+    <div class="table-card">
+      <table class="data-table">
+        <caption>FEMA National Flood Hazard Layer — direct address lookup</caption>
+        <tbody>
+          <tr><td>Flood zone</td><td>Zone X — Area of Minimal Flood Hazard (unshaded / outside the Special Flood Hazard Area)</td></tr>
+          <tr><td>FIRM panel</td><td>09007C0109G, effective 8/28/2008</td></tr>
+          <tr><td>Community</td><td>Town of Portland, CT — #090130</td></tr>
+          <tr><td>Coordinates</td><td>41.572814, &minus;72.634377</td></tr>
+          <tr><td>Nearest mapped hazard</td><td>Zone AE (1% annual chance flood, base flood elevation established) along the Connecticut River corridor</td></tr>
+        </tbody>
+      </table>
+      <p class="callout">
+        This confirms the parcel sits <b>outside</b> FEMA's 100-year floodplain — the check the Site &amp; Regional Challenges
+        report flagged as outstanding. The 0.9–1.25&nbsp;km river buffer previously cited as suggestive evidence is now backed
+        by a direct FIRM lookup, not just distance. Two independent sources agree: First Street's own property-level Flood
+        Factor (1/10, Minimal) and FEMA's zone determination (Zone X) both read this specific parcel as low risk, even though
+        the city overall — driven by its riverfront properties — carries a "major" rating.
+      </p>
+    </div>
+
+    <footer class="notes">
+      Parcel data: <a href="https://firststreet.org/property/58-freestone-ave-portland-ct-06480/90017461_fsid/0">First Street Foundation, 58 Freestone Ave property report</a>.
+      City data: <a href="https://firststreet.org/city/portland-ct/961870_fsid/flood">First Street Foundation, Portland, CT flood report</a>.
+      FEMA determination: <a href="https://msc.fema.gov/portal/search">FEMA Flood Map Service Center</a>, searched directly by address (not inferred).
+      First Street's own FEMA-zone and flood-insurance-assessment fields on the property page sit behind their account paywall and weren't accessed for that reason —
+      the zone determination above comes independently from FEMA's public map service instead, which agrees with First Street's factor score.
+      First Street's page also scores this parcel's Fire (1/10, Minimal), Wind (6/10), Air (3/10), and Heat (5/10) factors — out of scope
+      for this flood-focused report, but the Wind figure is worth a look alongside the ice-storm/hurricane-wind resilience section
+      in the Disaster Resilience Brainstorm.
+    </footer>
+  </div>
+</div>
+<!-- FOOTER:START -->
+<style>
+  .site-footer {
+    font-family: system-ui, -apple-system, "Segoe UI", sans-serif;
+    padding: 20px; text-align: center;
+    font-size: 12px; color: #898781;
+    background: #fcfcfb; border-top: 1px solid rgba(11,11,11,0.10);
+  }
+  .site-footer a { color: #52514e; }
+  @media (prefers-color-scheme: dark) {
+    :root:not([data-theme="light"]) .site-footer { background: #1a1a19; border-top-color: rgba(255,255,255,0.10); }
+    :root:not([data-theme="light"]) .site-footer a { color: #c3c2b7; }
+  }
+  :root[data-theme="dark"] .site-footer { background: #1a1a19; border-top-color: rgba(255,255,255,0.10); }
+  :root[data-theme="dark"] .site-footer a { color: #c3c2b7; }
+</style>
+<footer class="site-footer">
+  <p>Demo site for <a href="https://github.com/keser/site-toolkit">site-toolkit</a>.
+    Example data: Lot #86, 58 Freestone Avenue, Portland, CT 06480.</p>
+</footer>
+<!-- FOOTER:END -->
+</body>
+</html>

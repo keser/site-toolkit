@@ -1,0 +1,558 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta charset="UTF-8">
+<title>Species Inventory</title>
+<style>
+  .viz-root {
+    color-scheme: light;
+    --surface-1:      #fcfcfb;
+    --page:           #f9f9f7;
+    --text-primary:   #0b0b0b;
+    --text-secondary: #52514e;
+    --text-muted:     #898781;
+    --grid:           #e1e0d9;
+    --baseline:       #c3c2b7;
+    --border:         rgba(11,11,11,0.10);
+    --group-plantae:  #5b8c3a;
+    --group-insecta:  #d98c3d;
+    --group-mammalia: #8d6748;
+    --group-fungi:    #9b6b9e;
+    --group-other:    #7a7a7a;
+    --status-native:     #2a9d5c;
+    --status-introduced: #c9862f;
+    --badge-bg:       #eef0ea;
+    --site-fill:      #f3f4ee;
+  }
+  @media (prefers-color-scheme: dark) {
+    :root:where(:not([data-theme="light"])) .viz-root {
+      color-scheme: dark;
+      --surface-1:      #1a1a19;
+      --page:           #0d0d0d;
+      --text-primary:   #ffffff;
+      --text-secondary: #c3c2b7;
+      --text-muted:     #898781;
+      --grid:           #2c2c2a;
+      --baseline:       #383835;
+      --border:         rgba(255,255,255,0.10);
+      --group-plantae:  #7ab85a;
+      --group-insecta:  #e5a05c;
+      --group-mammalia: #ad8a6c;
+      --group-fungi:    #c090c4;
+      --group-other:    #9a9a9a;
+      --status-native:     #4fc47f;
+      --status-introduced: #dba14f;
+      --badge-bg:       #23261f;
+      --site-fill:      #1e211b;
+    }
+  }
+  :root[data-theme="dark"] .viz-root {
+    color-scheme: dark;
+    --surface-1:      #1a1a19;
+    --page:           #0d0d0d;
+    --text-primary:   #ffffff;
+    --text-secondary: #c3c2b7;
+    --text-muted:     #898781;
+    --grid:           #2c2c2a;
+    --baseline:       #383835;
+    --border:         rgba(255,255,255,0.10);
+    --group-plantae:  #7ab85a;
+    --group-insecta:  #e5a05c;
+    --group-mammalia: #ad8a6c;
+    --group-fungi:    #c090c4;
+    --group-other:    #9a9a9a;
+    --status-native:     #4fc47f;
+    --status-introduced: #dba14f;
+    --badge-bg:       #23261f;
+    --site-fill:      #1e211b;
+  }
+
+  * { box-sizing: border-box; }
+  body { margin: 0; }
+  .viz-root {
+    font-family: system-ui, -apple-system, "Segoe UI", sans-serif;
+    background: var(--page);
+    color: var(--text-primary);
+    min-height: 100vh;
+    padding: 32px 20px 60px;
+  }
+  .wrap { max-width: 1280px; margin: 0 auto; }
+  header.page-head { margin-bottom: 20px; }
+  h1 { font-size: 22px; font-weight: 600; margin: 0 0 6px; }
+  .subhead { color: var(--text-secondary); font-size: 14px; line-height: 1.5; margin: 0 0 10px; }
+
+  .badge-row { display: flex; flex-wrap: wrap; gap: 8px; margin-bottom: 24px; }
+  .badge {
+    background: var(--badge-bg);
+    border: 1px solid var(--border);
+    border-radius: 999px;
+    padding: 5px 12px;
+    font-size: 12px;
+    color: var(--text-secondary);
+  }
+  .badge b { color: var(--text-primary); font-weight: 600; }
+
+  .grid { display: grid; grid-template-columns: 1fr 1fr; gap: 20px; }
+  @media (max-width: 720px) { .grid { grid-template-columns: 1fr; } }
+
+  .panel {
+    background: var(--surface-1);
+    border: 1px solid var(--border);
+    border-radius: 12px;
+    padding: 18px 18px 12px;
+    position: relative;
+    margin-bottom: 20px;
+  }
+  .panel-title { font-size: 15px; font-weight: 600; margin: 0 0 2px; }
+  .panel-sub { font-size: 12px; color: var(--text-muted); margin: 0 0 8px; }
+  .panel-stats {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 4px 14px;
+    font-size: 12px;
+    color: var(--text-secondary);
+    margin-bottom: 10px;
+  }
+  .panel-stats b { color: var(--text-primary); font-weight: 600; }
+
+  .legend {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 14px;
+    align-items: center;
+    font-size: 12px;
+    color: var(--text-secondary);
+    margin-bottom: 10px;
+  }
+  .legend .swatch { display: inline-flex; align-items: center; gap: 6px; }
+  .legend .dot { width: 9px; height: 9px; border-radius: 50%; display: inline-block; }
+
+  svg.chart { width: 100%; height: auto; display: block; overflow: visible; }
+  .grid-line { stroke: var(--grid); stroke-width: 1; }
+  .baseline { stroke: var(--baseline); stroke-width: 1; }
+  .axis-label { fill: var(--text-muted); font-size: 9.5px; }
+  .site-obs-dot { stroke: var(--surface-1); stroke-width: 1; cursor: pointer; }
+
+  .crosshair-line { stroke: var(--text-muted); stroke-width: 1; stroke-dasharray: 2,2; pointer-events: none; opacity: 0; }
+  .tooltip {
+    position: absolute;
+    pointer-events: none;
+    background: var(--text-primary);
+    color: var(--surface-1);
+    font-size: 11px;
+    padding: 5px 8px;
+    border-radius: 6px;
+    line-height: 1.4;
+    opacity: 0;
+    transform: translate(-50%, -100%);
+    white-space: nowrap;
+    z-index: 5;
+  }
+  .hit-layer { fill: transparent; cursor: crosshair; }
+
+  .bar-row { display: flex; align-items: center; gap: 10px; margin: 7px 0; font-size: 12px; }
+  .bar-row .bar-label { width: 78px; flex-shrink: 0; color: var(--text-secondary); }
+  .bar-row .bar-track { flex: 1; background: var(--grid); border-radius: 4px; height: 12px; overflow: hidden; }
+  .bar-row .bar-fill { height: 100%; border-radius: 4px 0 0 4px; }
+  .bar-row .bar-value { width: 30px; text-align: right; color: var(--text-primary); font-weight: 600; flex-shrink: 0; }
+
+  .stack-bar { display: flex; height: 22px; border-radius: 6px; overflow: hidden; margin: 8px 0; }
+  .stack-seg { display: flex; align-items: center; justify-content: center; font-size: 11px; font-weight: 600; color: #fff; }
+
+  .group-heading {
+    font-size: 13px; font-weight: 600; color: var(--text-primary);
+    margin: 18px 0 10px; padding-top: 12px; border-top: 1px solid var(--border);
+    display: flex; align-items: center; gap: 8px;
+  }
+  .group-heading:first-child { border-top: none; padding-top: 0; margin-top: 0; }
+
+  .species-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(150px, 1fr)); gap: 12px; }
+  .species-card {
+    background: var(--surface-1);
+    border: 1px solid var(--border);
+    border-radius: 10px;
+    overflow: hidden;
+  }
+  .species-card a { display: block; }
+  .species-card img { width: 100%; height: 110px; object-fit: cover; display: block; background: var(--grid); cursor: zoom-in; }
+  .species-card .card-body { padding: 8px 10px 10px; }
+  .species-card .common { font-size: 12.5px; font-weight: 600; color: var(--text-primary); line-height: 1.3; }
+  .species-card .sci { font-size: 11px; font-style: italic; color: var(--text-muted); margin: 1px 0 6px; }
+  .card-pills { display: flex; flex-wrap: wrap; gap: 4px; }
+  .pill {
+    font-size: 9.5px; font-weight: 600; padding: 1px 6px; border-radius: 999px;
+    color: #fff;
+  }
+  .pill.outline { background: transparent; border: 1px solid var(--border); color: var(--text-muted); font-weight: 500; }
+  .obs-date { font-size: 10.5px; color: var(--text-muted); margin-top: 5px; }
+
+  details.table-toggle {
+    margin-top: 8px;
+    background: var(--surface-1);
+    border: 1px solid var(--border);
+    border-radius: 12px;
+    padding: 14px 18px;
+  }
+  details.table-toggle summary {
+    cursor: pointer;
+    font-size: 14px;
+    font-weight: 600;
+    color: var(--text-primary);
+  }
+  table.data-table {
+    width: 100%;
+    border-collapse: collapse;
+    font-size: 12px;
+    font-variant-numeric: tabular-nums;
+    margin-top: 12px;
+  }
+  table.data-table th, table.data-table td {
+    text-align: left;
+    padding: 5px 8px;
+    color: var(--text-secondary);
+    border-bottom: 1px solid var(--grid);
+  }
+  table.data-table td:first-child, table.data-table th:first-child { color: var(--text-primary); }
+  table.data-table td.sci { font-style: italic; }
+  table.data-table th { color: var(--text-muted); font-weight: 500; }
+  table.data-table tbody tr:hover { background: var(--grid); }
+
+  footer.notes { margin-top: 22px; font-size: 12px; color: var(--text-muted); line-height: 1.6; }
+  footer.notes a { color: var(--text-secondary); }
+</style>
+</head>
+<body>
+<!-- NAV:START -->
+<style>
+  .site-nav {
+    font-family: system-ui, -apple-system, "Segoe UI", sans-serif;
+    display: flex; flex-wrap: wrap; align-items: center; justify-content: space-between;
+    gap: 12px; padding: 14px 20px;
+    background: #fcfcfb; border-bottom: 1px solid rgba(11,11,11,0.10);
+  }
+  .site-nav__brand { font-weight: 600; font-size: 14px; color: #0b0b0b; text-decoration: none; }
+  .site-nav__links { display: flex; gap: 18px; flex-wrap: wrap; }
+  .site-nav__links a { font-size: 13px; color: #52514e; text-decoration: none; }
+  .site-nav__links a:hover { color: #0b0b0b; }
+  @media (prefers-color-scheme: dark) {
+    :root:not([data-theme="light"]) .site-nav { background: #1a1a19; border-bottom-color: rgba(255,255,255,0.10); }
+    :root:not([data-theme="light"]) .site-nav__brand { color: #ffffff; }
+    :root:not([data-theme="light"]) .site-nav__links a { color: #c3c2b7; }
+    :root:not([data-theme="light"]) .site-nav__links a:hover { color: #ffffff; }
+  }
+  :root[data-theme="dark"] .site-nav { background: #1a1a19; border-bottom-color: rgba(255,255,255,0.10); }
+  :root[data-theme="dark"] .site-nav__brand { color: #ffffff; }
+  :root[data-theme="dark"] .site-nav__links a { color: #c3c2b7; }
+  :root[data-theme="dark"] .site-nav__links a:hover { color: #ffffff; }
+</style>
+<nav class="site-nav">
+  <a class="site-nav__brand" href="index.html">Lot #86 — Site Profile</a>
+  <div class="site-nav__links">
+    <a href="base-map.html">Base Map</a>
+    <a href="sectors.html">Sectors</a>
+    <a href="zones-design.html">Zones &amp; Design</a>
+    <a href="climate.html">Climate</a>
+    <a href="water.html">Water</a>
+    <a href="sun-solar.html">Sun &amp; Solar</a>
+    <a href="flood-hazard.html">Flood &amp; Hazard</a>
+    <a href="species-inventory.html">Species Inventory</a>
+    <a href="project-plan.html">Project Plan</a>
+  </div>
+</nav>
+<!-- NAV:END -->
+<div class="viz-root">
+  <div class="wrap">
+    <header class="page-head">
+      <h1>Species Inventory</h1>
+      <p class="subhead">Personal observations logged on iNaturalist (user: keser) within the site boundary</p>
+      <div class="badge-row" id="badge-row"></div>
+    </header>
+
+    <div class="grid" id="composition-grid"></div>
+
+    <div class="panel" id="timeline-panel"></div>
+
+    <div class="panel">
+      <div class="panel-title">Species Catalog</div>
+      <div class="panel-sub">One card per confirmed species &middot; grouped by taxonomic class &middot; photos are placeholders in this demo</div>
+      <div id="species-catalog"></div>
+    </div>
+
+    <details class="table-toggle">
+      <summary>View raw observation table</summary>
+      <table class="data-table" id="raw-table">
+        <thead><tr><th>Common name</th><th>Scientific name</th><th>Group</th><th>Status</th><th>Quality</th><th>First observed</th></tr></thead>
+        <tbody></tbody>
+      </table>
+    </details>
+
+    <footer class="notes">
+      Source: <a href="https://www.inaturalist.org/observations?nelat=41.574013646&amp;nelng=-72.633248848&amp;subview=table&amp;swlat=41.572313693&amp;swlng=-72.634956137&amp;user_id=keser&amp;verifiable=any" target="_blank" rel="noopener">iNaturalist observations by user keser</a>, fetched via the public iNaturalist API (api.inaturalist.org/v1/observations) filtered to the site's lat/lng bounding box, <code>verifiable=any</code> (includes Casual-grade and Needs ID records, not just Research Grade).
+      Coordinates are each observation's recorded GPS location, not geocoded from a place name — accuracy is the device's reported positional accuracy (typically 5&ndash;30&nbsp;m). "Native" / "introduced" reflects iNaturalist's regional establishment-means data for Connecticut, not a global designation — e.g. Eastern Cottontail reads as introduced here because the species native to New England is the (visually similar) New England Cottontail.
+      Where a species was logged more than once, the catalog and raw table below show its single highest-quality observation; only the site map plots every individual observation (so its dot count, 79, exceeds the 74-species catalog).
+      Photos are the observer's own (c) keser, CC BY-NC, hosted by iNaturalist.
+      Aerial photo: Google satellite imagery (Apr 16, 2026) via Google Earth Pro, with the parcel's "Lot Boundary" design overlaid. Observations are placed on this photo by georeferencing it independently of the site map above: the boundary's real perimeter (865&nbsp;ft, from Google Earth Pro's own measurement tool) calibrates the image's feet-per-pixel scale, and an OpenStreetMap geocode of 58 Freestone Avenue anchors its position — not GPS metadata baked into the photo itself, since Google Earth screenshots don't carry any. That combination places ~95% of observations within a few meters of the boundary; a couple of clear outliers (logged near the shared property line) are pinned to the frame edge with a dashed ring rather than hidden.
+    </footer>
+  </div>
+</div>
+
+<script>
+const SW = { lat: 41.572313693, lng: -72.634956137 };
+const NE = { lat: 41.574013646, lng: -72.633248848 };
+
+// [xFrac, yFrac, group, common, sci, date] — one row per observation
+const OBS = [[0.0714, 0.2186, "Plantae", "low smartweed", "Persicaria longiseta", "2026-07-17"], [0.2501, 0.4587, "Plantae", "upright yellow woodsorrel", "Oxalis stricta", "2026-07-17"], [0.3216, 0.4834, "Plantae", "American burnweed", "Erechtites hieraciifolius", "2026-07-17"], [0.3574, 0.5395, "Mammalia", "Eastern Cottontail", "Sylvilagus floridanus", "2026-07-08"], [0.3127, 0.3465, "Plantae", "tree-of-heaven", "Ailanthus altissima", "2026-06-26"], [0.3082, 0.3487, "Plantae", "American elm", "Ulmus americana", "2026-06-26"], [0.3395, 0.3285, "Plantae", "Dicots", "Magnoliopsida", "2026-06-26"], [0.4155, 0.4654, "Plantae", "Japanese white pine", "Pinus parviflora", "2026-06-26"], [0.4021, 0.4452, "Plantae", "Mexican Stonecrop", "Sedum mexicanum", "2026-06-26"], [0.3842, 0.4699, "Plantae", "sycamore maple", "Acer pseudoplatanus", "2026-06-26"], [0.3395, 0.425, "Plantae", "American jumpseed", "Persicaria virginiana", "2026-06-26"], [0.3663, 0.4295, "Plantae", "koyamaki", "Sciadopitys verticillata", "2026-06-26"], [0.3842, 0.3487, "Plantae", "Canada yew", "Taxus canadensis", "2026-06-26"], [0.3797, 0.2949, "Plantae", "garden privet", "Ligustrum ovalifolium", "2026-06-26"], [0.3484, 0.3308, "Plantae", "Gooseneck Loosestrife", "Lysimachia clethroides", "2026-06-26"], [0.335, 0.333, "Plantae", "purple coneflower", "Echinacea purpurea", "2026-06-26"], [0.3529, 0.3442, "Plantae", "common lantana", "Lantana camara", "2026-06-26"], [0.3529, 0.3442, "Plantae", "Goutweed", "Aegopodium podagraria", "2026-06-26"], [0.3529, 0.3442, "Insecta", "Brown-belted Bumble Bee", "Bombus griseocollis", "2026-06-26"], [0.3529, 0.3465, "Plantae", "wild bergamot", "Monarda fistulosa", "2026-06-26"], [0.3216, 0.2634, "Plantae", "Goatsbeard", "Aruncus dioicus", "2026-06-26"], [0.3529, 0.3465, "Insecta", "Oriental Beetle", "Exomala orientalis", "2026-06-26"], [0.3529, 0.3442, "Plantae", "queen of the prairie", "Filipendula rubra", "2026-06-26"], [0.3529, 0.3442, "Plantae", "Whorled Coreopsis", "Coreopsis verticillata", "2026-06-26"], [0.335, 0.25, "Plantae", "eastern black walnut", "Juglans nigra", "2026-06-26"], [0.2993, 0.517, "Plantae", "mock strawberry", "Potentilla indica", "2026-06-26"], [0.3752, 0.5686, "Plantae", "Norway spruce", "Picea abies", "2026-06-26"], [0.3797, 0.6158, "Plantae", "Norway maple", "Acer platanoides", "2026-06-26"], [0.7864, 0.7616, "Plantae", "Allegheny blackberry", "Rubus allegheniensis", "2026-06-26"], [0.8042, 0.8222, "Plantae", "Bloody Crane's-bill", "Geranium sanguineum", "2026-06-26"], [0.3216, 0.6045, "Plantae", "Asian bittersweet", "Celastrus orbiculatus", "2026-06-26"], [0.3127, 0.6113, "Plantae", "bitternut hickory", "Carya cordiformis", "2026-06-26"], [0.2635, 0.5439, "Plantae", "Common Blue Wood Aster", "Symphyotrichum cordifolium", "2026-06-26"], [0.3574, 0.4519, "Plantae", "Japanese stiltgrass", "Microstegium vimineum", "2026-06-26"], [0.4021, 0.5237, "Plantae", "American pokeweed", "Phytolacca americana", "2026-06-26"], [0.5138, 0.5103, "Plantae", "horseweed", "Erigeron canadensis", "2026-06-26"], [0.411, 0.1288, "Plantae", "Asiatic dayflower", "Commelina communis", "2026-06-26"], [0.4378, 0.5282, "Plantae", "upright yellow woodsorrel", "Oxalis stricta", "2026-06-26"], [0.4601, 0.5731, "Plantae", "ground-ivy", "Glechoma hederacea", "2026-06-26"], [0.4155, 0.4587, "Plantae", "riverbank grape", "Vitis riparia", "2026-06-26"], [0.4065, 0.3734, "Plantae", "common chickweed", "Stellaria media", "2026-06-26"], [0.3886, 0.4452, "Plantae", "seductive entodon moss", "Entodon seductrix", "2026-06-26"], [0.4021, 0.4475, "Plantae", "Allium Subg. Melanocrommyum", "Melanocrommyum", "2026-06-26"], [0.3842, 0.4699, "Plantae", "Scented hosta", "Hosta plantaginea", "2026-06-26"], [0.4065, 0.4452, "Plantae", "Small-leaved Plantain Lily", "Hosta sieboldii", "2026-06-26"], [0.3708, 0.4452, "Plantae", "purple loosestrife", "Lythrum salicaria", "2026-06-26"], [0.3752, 0.2747, "Plantae", "white clover", "Trifolium repens", "2026-06-26"], [0.3529, 0.1916, "Plantae", "American plantain", "Plantago rugelii", "2026-06-26"], [0.3797, 0.3353, "Plantae", "northern lady fern", "Athyrium angustum", "2026-06-26"], [0.3618, 0.3285, "Plantae", "sensitive fern", "Onoclea sensibilis", "2026-06-26"], [0.3976, 0.3667, "Plantae", "northern lady fern", "Athyrium angustum", "2026-06-26"], [0.3708, 0.3712, "Plantae", "juniper haircap moss", "Polytrichum juniperinum", "2026-06-26"], [0.3484, 0.3554, "Plantae", "orange day-lily", "Hemerocallis fulva", "2026-06-26"], [0.3842, 0.3779, "Plantae", "Japanese maple", "Acer palmatum", "2026-06-26"], [0.3886, 0.3644, "Plantae", "northern whitecedar", "Thuja occidentalis", "2026-06-26"], [0.8311, 0.3689, "Plantae", "thicket creeper", "Parthenocissus inserta", "2026-06-26"], [0.2814, 0.3375, "Plantae", "Small-leaved Plantain Lily", "Hosta sieboldii", "2026-06-26"], [0.3842, 0.3869, "Plantae", "Virginia creeper", "Parthenocissus quinquefolia", "2026-06-26"], [0.3574, 0.4026, "Plantae", "Jerusalem artichoke", "Helianthus tuberosus", "2026-06-26"], [0.2903, 0.333, "Plantae", "black-eyed Susan", "Rudbeckia hirta", "2026-06-26"], [0.3752, 0.6068, "Plantae", "eastern poison ivy", "Toxicodendron radicans", "2026-05-11"], [0.3216, 0.6045, "Plantae", "Allegheny blackberry", "Rubus allegheniensis", "2026-05-11"], [0.2859, 0.2477, "Plantae", "common grape hyacinth", "Muscari botryoides", "2026-04-18"], [0.2725, 0.2477, "Plantae", "carpet bugle", "Ajuga reptans", "2026-04-18"], [0.409, 0.321, "Plantae", "Ohio Haircap Moss", "Polytrichum ohioense", "2025-08-01"], [0.3618, 0.5843, "Plantae", "Northern highbush blueberry", "Vaccinium corymbosum", "2025-06-19"], [0.4021, 0.6113, "Plantae", "eastern American blue violets", "Borealiamericanae", "2024-04-08"], [0.3574, 0.5013, "Plantae", "lesser periwinkle", "Vinca minor", "2024-04-08"], [0.4021, 0.6068, "Plantae", "common dandelion", "Taraxacum officinale", "2024-04-08"], [0.3484, 0.5529, "Plantae", "hairy bittercress", "Cardamine hirsuta", "2024-04-07"], [0.2546, 0.259, "Insecta", "Eastern Black Carpenter Ant", "Camponotus pennsylvanicus", "2026-08-01"], [0.4959, 0.5888, "Plantae", "black cherry", "Prunus serotina", "2026-08-02"], [0.2769, 0.2791, "Insecta", "Eastern Carpenter Bee", "Xylocopa virginica", "2026-08-07"], [0.2859, 0.2926, "Insecta", "Peck's Skipper", "Polites peckius", "2026-08-07"], [0.3127, 0.342, "Plantae", "fall phlox", "Phlox paniculata", "2026-08-07"], [0.4244, 0.4676, "Plantae", "dawn redwood", "Metasequoia glyptostroboides", "2026-08-07"], [0.4244, 0.3644, "Plantae", "riverbank grape", "Vitis riparia", "2026-08-07"], [0.4557, 0.517, "Fungi", "Peeling Puffball", "Lycoperdon marginatum", "2026-08-07"], [0.2814, 0.2814, "Insecta", "Greater Anglewing", "Microcentrum rhombifolium", "2026-09-06"]];
+
+const CATALOG = [{"common": "Brown-belted Bumble Bee", "sci": "Bombus griseocollis", "group": "Insecta", "native": true, "quality": "needs_id", "date": "2026-06-26"}, {"common": "Oriental Beetle", "sci": "Exomala orientalis", "group": "Insecta", "native": false, "quality": "research", "date": "2026-06-26"}, {"common": "Eastern Cottontail", "sci": "Sylvilagus floridanus", "group": "Mammalia", "native": false, "quality": "needs_id", "date": "2026-07-08"}, {"common": "Allegheny blackberry", "sci": "Rubus allegheniensis", "group": "Plantae", "native": true, "quality": "needs_id", "date": "2026-06-26"}, {"common": "Allium Subg. Melanocrommyum", "sci": "Melanocrommyum", "group": "Plantae", "native": false, "quality": "casual", "date": "2026-06-26"}, {"common": "American burnweed", "sci": "Erechtites hieraciifolius", "group": "Plantae", "native": true, "quality": "research", "date": "2026-07-17"}, {"common": "American elm", "sci": "Ulmus americana", "group": "Plantae", "native": true, "quality": "research", "date": "2026-06-26"}, {"common": "American jumpseed", "sci": "Persicaria virginiana", "group": "Plantae", "native": true, "quality": "research", "date": "2026-06-26"}, {"common": "American plantain", "sci": "Plantago rugelii", "group": "Plantae", "native": true, "quality": "needs_id", "date": "2026-06-26"}, {"common": "American pokeweed", "sci": "Phytolacca americana", "group": "Plantae", "native": true, "quality": "research", "date": "2026-06-26"}, {"common": "Asian bittersweet", "sci": "Celastrus orbiculatus", "group": "Plantae", "native": false, "quality": "needs_id", "date": "2026-06-26"}, {"common": "Asiatic dayflower", "sci": "Commelina communis", "group": "Plantae", "native": false, "quality": "needs_id", "date": "2026-06-26"}, {"common": "Bloody Crane's-bill", "sci": "Geranium sanguineum", "group": "Plantae", "native": false, "quality": "needs_id", "date": "2026-06-26"}, {"common": "Canada yew", "sci": "Taxus canadensis", "group": "Plantae", "native": true, "quality": "research", "date": "2026-06-26"}, {"common": "Common Blue Wood Aster", "sci": "Symphyotrichum cordifolium", "group": "Plantae", "native": true, "quality": "needs_id", "date": "2026-06-26"}, {"common": "Dicots", "sci": "Magnoliopsida", "group": "Plantae", "native": false, "quality": "needs_id", "date": "2026-06-26"}, {"common": "Goatsbeard", "sci": "Aruncus dioicus", "group": "Plantae", "native": false, "quality": "casual", "date": "2026-06-26"}, {"common": "Gooseneck Loosestrife", "sci": "Lysimachia clethroides", "group": "Plantae", "native": false, "quality": "research", "date": "2026-06-26"}, {"common": "Goutweed", "sci": "Aegopodium podagraria", "group": "Plantae", "native": false, "quality": "needs_id", "date": "2026-06-26"}, {"common": "Japanese maple", "sci": "Acer palmatum", "group": "Plantae", "native": false, "quality": "casual", "date": "2026-06-26"}, {"common": "Japanese stiltgrass", "sci": "Microstegium vimineum", "group": "Plantae", "native": false, "quality": "research", "date": "2026-06-26"}, {"common": "Japanese white pine", "sci": "Pinus parviflora", "group": "Plantae", "native": false, "quality": "casual", "date": "2026-06-26"}, {"common": "Jerusalem artichoke", "sci": "Helianthus tuberosus", "group": "Plantae", "native": false, "quality": "needs_id", "date": "2026-06-26"}, {"common": "Mexican Stonecrop", "sci": "Sedum mexicanum", "group": "Plantae", "native": true, "quality": "casual", "date": "2026-06-26"}, {"common": "Northern highbush blueberry", "sci": "Vaccinium corymbosum", "group": "Plantae", "native": true, "quality": "needs_id", "date": "2025-06-19"}, {"common": "Norway maple", "sci": "Acer platanoides", "group": "Plantae", "native": false, "quality": "needs_id", "date": "2026-06-26"}, {"common": "Norway spruce", "sci": "Picea abies", "group": "Plantae", "native": false, "quality": "needs_id", "date": "2026-06-26"}, {"common": "Ohio Haircap Moss", "sci": "Polytrichum ohioense", "group": "Plantae", "native": true, "quality": "needs_id", "date": "2025-08-01"}, {"common": "Scented hosta", "sci": "Hosta plantaginea", "group": "Plantae", "native": false, "quality": "casual", "date": "2026-06-26"}, {"common": "Small-leaved Plantain Lily", "sci": "Hosta sieboldii", "group": "Plantae", "native": false, "quality": "casual", "date": "2026-06-26"}, {"common": "Virginia creeper", "sci": "Parthenocissus quinquefolia", "group": "Plantae", "native": true, "quality": "needs_id", "date": "2026-06-26"}, {"common": "Whorled Coreopsis", "sci": "Coreopsis verticillata", "group": "Plantae", "native": false, "quality": "needs_id", "date": "2026-06-26"}, {"common": "bitternut hickory", "sci": "Carya cordiformis", "group": "Plantae", "native": true, "quality": "needs_id", "date": "2026-06-26"}, {"common": "black-eyed Susan", "sci": "Rudbeckia hirta", "group": "Plantae", "native": false, "quality": "needs_id", "date": "2026-06-26"}, {"common": "carpet bugle", "sci": "Ajuga reptans", "group": "Plantae", "native": false, "quality": "research", "date": "2026-04-18"}, {"common": "common chickweed", "sci": "Stellaria media", "group": "Plantae", "native": false, "quality": "needs_id", "date": "2026-06-26"}, {"common": "common dandelion", "sci": "Taraxacum officinale", "group": "Plantae", "native": false, "quality": "research", "date": "2024-04-08"}, {"common": "common grape hyacinth", "sci": "Muscari botryoides", "group": "Plantae", "native": false, "quality": "needs_id", "date": "2026-04-18"}, {"common": "common lantana", "sci": "Lantana camara", "group": "Plantae", "native": false, "quality": "needs_id", "date": "2026-06-26"}, {"common": "eastern American blue violets", "sci": "Borealiamericanae", "group": "Plantae", "native": true, "quality": "needs_id", "date": "2024-04-08"}, {"common": "eastern black walnut", "sci": "Juglans nigra", "group": "Plantae", "native": true, "quality": "research", "date": "2026-06-26"}, {"common": "eastern poison ivy", "sci": "Toxicodendron radicans", "group": "Plantae", "native": true, "quality": "research", "date": "2026-05-11"}, {"common": "garden privet", "sci": "Ligustrum ovalifolium", "group": "Plantae", "native": false, "quality": "needs_id", "date": "2026-06-26"}, {"common": "ground-ivy", "sci": "Glechoma hederacea", "group": "Plantae", "native": false, "quality": "research", "date": "2026-06-26"}, {"common": "hairy bittercress", "sci": "Cardamine hirsuta", "group": "Plantae", "native": false, "quality": "research", "date": "2024-04-07"}, {"common": "horseweed", "sci": "Erigeron canadensis", "group": "Plantae", "native": true, "quality": "needs_id", "date": "2026-06-26"}, {"common": "juniper haircap moss", "sci": "Polytrichum juniperinum", "group": "Plantae", "native": true, "quality": "needs_id", "date": "2026-06-26"}, {"common": "koyamaki", "sci": "Sciadopitys verticillata", "group": "Plantae", "native": false, "quality": "casual", "date": "2026-06-26"}, {"common": "lesser periwinkle", "sci": "Vinca minor", "group": "Plantae", "native": false, "quality": "research", "date": "2024-04-08"}, {"common": "low smartweed", "sci": "Persicaria longiseta", "group": "Plantae", "native": false, "quality": "research", "date": "2026-07-17"}, {"common": "mock strawberry", "sci": "Potentilla indica", "group": "Plantae", "native": false, "quality": "research", "date": "2026-06-26"}, {"common": "northern lady fern", "sci": "Athyrium angustum", "group": "Plantae", "native": true, "quality": "needs_id", "date": "2026-06-26"}, {"common": "northern whitecedar", "sci": "Thuja occidentalis", "group": "Plantae", "native": true, "quality": "needs_id", "date": "2026-06-26"}, {"common": "orange day-lily", "sci": "Hemerocallis fulva", "group": "Plantae", "native": false, "quality": "research", "date": "2026-06-26"}, {"common": "purple coneflower", "sci": "Echinacea purpurea", "group": "Plantae", "native": false, "quality": "casual", "date": "2026-06-26"}, {"common": "purple loosestrife", "sci": "Lythrum salicaria", "group": "Plantae", "native": false, "quality": "needs_id", "date": "2026-06-26"}, {"common": "queen of the prairie", "sci": "Filipendula rubra", "group": "Plantae", "native": true, "quality": "needs_id", "date": "2026-06-26"}, {"common": "riverbank grape", "sci": "Vitis riparia", "group": "Plantae", "native": true, "quality": "needs_id", "date": "2026-06-26"}, {"common": "seductive entodon moss", "sci": "Entodon seductrix", "group": "Plantae", "native": true, "quality": "needs_id", "date": "2026-06-26"}, {"common": "sensitive fern", "sci": "Onoclea sensibilis", "group": "Plantae", "native": true, "quality": "research", "date": "2026-06-26"}, {"common": "sycamore maple", "sci": "Acer pseudoplatanus", "group": "Plantae", "native": false, "quality": "research", "date": "2026-06-26"}, {"common": "thicket creeper", "sci": "Parthenocissus inserta", "group": "Plantae", "native": true, "quality": "needs_id", "date": "2026-06-26"}, {"common": "tree-of-heaven", "sci": "Ailanthus altissima", "group": "Plantae", "native": false, "quality": "research", "date": "2026-06-26"}, {"common": "upright yellow woodsorrel", "sci": "Oxalis stricta", "group": "Plantae", "native": true, "quality": "needs_id", "date": "2026-07-17"}, {"common": "white clover", "sci": "Trifolium repens", "group": "Plantae", "native": false, "quality": "research", "date": "2026-06-26"}, {"common": "wild bergamot", "sci": "Monarda fistulosa", "group": "Plantae", "native": true, "quality": "needs_id", "date": "2026-06-26"}, {"common": "Eastern Black Carpenter Ant", "sci": "Camponotus pennsylvanicus", "group": "Insecta", "native": true, "quality": "research", "date": "2026-08-01"}, {"common": "black cherry", "sci": "Prunus serotina", "group": "Plantae", "native": true, "quality": "needs_id", "date": "2026-08-02"}, {"common": "Eastern Carpenter Bee", "sci": "Xylocopa virginica", "group": "Insecta", "native": true, "quality": "research", "date": "2026-08-07"}, {"common": "Peck's Skipper", "sci": "Polites peckius", "group": "Insecta", "native": true, "quality": "research", "date": "2026-08-07"}, {"common": "fall phlox", "sci": "Phlox paniculata", "group": "Plantae", "native": false, "quality": "casual", "date": "2026-08-07"}, {"common": "dawn redwood", "sci": "Metasequoia glyptostroboides", "group": "Plantae", "native": false, "quality": "casual", "date": "2026-08-07"}, {"common": "Peeling Puffball", "sci": "Lycoperdon marginatum", "group": "Fungi", "native": true, "quality": "needs_id", "date": "2026-08-07"}, {"common": "Greater Anglewing", "sci": "Microcentrum rhombifolium", "group": "Insecta", "native": true, "quality": "needs_id", "date": "2026-09-06"}];
+
+// [date, cumulativeUniqueSpecies]
+const CURVE = [["2024-04-07", 1], ["2024-04-08", 2], ["2024-04-08", 3], ["2024-04-08", 4], ["2025-06-19", 5], ["2025-08-01", 6], ["2026-04-18", 7], ["2026-04-18", 8], ["2026-05-11", 9], ["2026-05-11", 10], ["2026-06-26", 11], ["2026-06-26", 12], ["2026-06-26", 13], ["2026-06-26", 14], ["2026-06-26", 15], ["2026-06-26", 16], ["2026-06-26", 17], ["2026-06-26", 18], ["2026-06-26", 19], ["2026-06-26", 20], ["2026-06-26", 21], ["2026-06-26", 22], ["2026-06-26", 23], ["2026-06-26", 24], ["2026-06-26", 25], ["2026-06-26", 26], ["2026-06-26", 27], ["2026-06-26", 28], ["2026-06-26", 29], ["2026-06-26", 30], ["2026-06-26", 31], ["2026-06-26", 32], ["2026-06-26", 33], ["2026-06-26", 34], ["2026-06-26", 35], ["2026-06-26", 36], ["2026-06-26", 37], ["2026-06-26", 38], ["2026-06-26", 39], ["2026-06-26", 40], ["2026-06-26", 41], ["2026-06-26", 42], ["2026-06-26", 43], ["2026-06-26", 44], ["2026-06-26", 45], ["2026-06-26", 46], ["2026-06-26", 47], ["2026-06-26", 48], ["2026-06-26", 49], ["2026-06-26", 50], ["2026-06-26", 51], ["2026-06-26", 52], ["2026-06-26", 53], ["2026-06-26", 54], ["2026-06-26", 55], ["2026-06-26", 56], ["2026-06-26", 57], ["2026-06-26", 58], ["2026-06-26", 59], ["2026-06-26", 60], ["2026-06-26", 61], ["2026-06-26", 62], ["2026-06-26", 63], ["2026-07-08", 64], ["2026-07-17", 65], ["2026-07-17", 66], ["2026-08-01", 67], ["2026-08-02", 68], ["2026-08-07", 69], ["2026-08-07", 70], ["2026-08-07", 71], ["2026-08-07", 72], ["2026-08-07", 73], ["2026-09-06", 74]];
+
+const GROUP_ORDER = ["Plantae", "Insecta", "Mammalia", "Fungi"];
+const GROUP_COLOR = { Plantae: "--group-plantae", Insecta: "--group-insecta", Mammalia: "--group-mammalia", Fungi: "--group-fungi" };
+function groupColor(g) { return `var(${GROUP_COLOR[g] || "--group-other"})`; }
+
+function svgEl(tag, attrs) {
+  const el = document.createElementNS("http://www.w3.org/2000/svg", tag);
+  for (const k in attrs) el.setAttribute(k, attrs[k]);
+  return el;
+}
+function hashJitter(str, seed) {
+  let h = 0;
+  const s = str + seed;
+  for (let i = 0; i < s.length; i++) h = (h * 31 + s.charCodeAt(i)) | 0;
+  return ((h % 2000) / 1000 - 1); // -1..1
+}
+function fmtDate(iso) {
+  const [y,m,d] = iso.split("-").map(Number);
+  return new Date(Date.UTC(y,m-1,d)).toLocaleDateString(undefined, { month: "short", day: "numeric", year: "numeric", timeZone: "UTC" });
+}
+
+// ---------- badges ----------
+(function badges(){
+  const uniqueDates = new Set(OBS.map(o => o[5]));
+  const dates = OBS.map(o => o[5]).sort();
+  document.getElementById("badge-row").innerHTML = `
+    <span class="badge"><b>${OBS.length}</b> observations</span>
+    <span class="badge"><b>${CATALOG.length}</b> species</span>
+    <span class="badge"><b>${uniqueDates.size}</b> survey days</span>
+    <span class="badge">${fmtDate(dates[0])} &ndash; ${fmtDate(dates[dates.length-1])}</span>
+  `;
+})();
+
+// ---------- Composition panels ----------
+(function buildCompositionPanels(){
+  const container = document.getElementById("composition-grid");
+
+  // taxonomic group breakdown
+  const groupCounts = {};
+  CATALOG.forEach(c => { groupCounts[c.group] = (groupCounts[c.group]||0) + 1; });
+  const maxCount = Math.max(...Object.values(groupCounts));
+
+  const p1 = document.createElement("div");
+  p1.className = "panel";
+  p1.innerHTML = `
+    <div class="panel-title">Species by Taxonomic Group</div>
+    <div class="panel-sub">Unique species logged, by iNaturalist "iconic taxon"</div>
+  `;
+  GROUP_ORDER.filter(g => groupCounts[g]).forEach(g => {
+    const count = groupCounts[g];
+    const row = document.createElement("div");
+    row.className = "bar-row";
+    row.innerHTML = `
+      <span class="bar-label">${g}</span>
+      <span class="bar-track"><span class="bar-fill" style="width:${(count/maxCount*100).toFixed(0)}%; background:${groupColor(g)}"></span></span>
+      <span class="bar-value">${count}</span>
+    `;
+    p1.appendChild(row);
+  });
+  container.appendChild(p1);
+
+  // native vs introduced
+  const nativeCount = CATALOG.filter(c => c.native).length;
+  const introCount = CATALOG.length - nativeCount;
+  const nativePct = (nativeCount/CATALOG.length*100);
+  const p2 = document.createElement("div");
+  p2.className = "panel";
+  p2.innerHTML = `
+    <div class="panel-title">Native vs. Introduced</div>
+    <div class="panel-sub">Establishment means for Connecticut, per iNaturalist</div>
+    <div class="stack-bar">
+      <div class="stack-seg" style="width:${nativePct.toFixed(1)}%; background:var(--status-native);">${nativeCount}</div>
+      <div class="stack-seg" style="width:${(100-nativePct).toFixed(1)}%; background:var(--status-introduced);">${introCount}</div>
+    </div>
+    <div class="legend">
+      <span class="swatch"><span class="dot" style="background:var(--status-native)"></span>Native (${nativePct.toFixed(0)}%)</span>
+      <span class="swatch"><span class="dot" style="background:var(--status-introduced)"></span>Introduced (${(100-nativePct).toFixed(0)}%)</span>
+    </div>
+  `;
+  container.appendChild(p2);
+})();
+
+// ---------- Survey timeline (species accumulation) ----------
+(function buildTimelinePanel(){
+  const VB_W = 980, VB_H = 260;
+  const PAD = { top: 14, right: 20, bottom: 26, left: 34 };
+  const plotW = VB_W - PAD.left - PAD.right;
+  const plotH = VB_H - PAD.top - PAD.bottom;
+
+  const t0 = Date.parse(CURVE[0][0]);
+  const t1 = Date.parse(CURVE[CURVE.length-1][0]);
+  const yMax = CURVE[CURVE.length-1][1];
+
+  function xPix(dateStr) { return PAD.left + (Date.parse(dateStr)-t0)/(t1-t0) * plotW; }
+  function yPix(v) { return PAD.top + (1 - v/yMax) * plotH; }
+
+  const svg = svgEl("svg", { class: "chart", viewBox: `0 0 ${VB_W} ${VB_H}` });
+
+  const yTicks = [0, Math.round(yMax*0.25), Math.round(yMax*0.5), Math.round(yMax*0.75), yMax];
+  yTicks.forEach(v => {
+    const y = yPix(v);
+    svg.appendChild(svgEl("line", { class: v===0?"baseline":"grid-line", x1: PAD.left, x2: VB_W-PAD.right, y1: y, y2: y }));
+    const lbl = svgEl("text", { class: "axis-label", x: PAD.left-6, y: y+3, "text-anchor": "end" });
+    lbl.textContent = v;
+    svg.appendChild(lbl);
+  });
+
+  // year ticks
+  const startYear = new Date(t0).getUTCFullYear(), endYear = new Date(t1).getUTCFullYear();
+  for (let y = startYear; y <= endYear; y++) {
+    ["01-01"].forEach(md => {
+      const iso = `${y}-${md}`;
+      const ts = Date.parse(iso);
+      if (ts >= t0 && ts <= t1) {
+        const x = xPix(iso);
+        svg.appendChild(svgEl("line", { class: "grid-line", x1: x, x2: x, y1: PAD.top, y2: VB_H-PAD.bottom }));
+        const lbl = svgEl("text", { class: "axis-label", x, y: VB_H-PAD.bottom+14, "text-anchor": "middle" });
+        lbl.textContent = y;
+        svg.appendChild(lbl);
+      }
+    });
+  }
+
+  // step path
+  let d = `M ${xPix(CURVE[0][0]).toFixed(2)} ${yPix(0).toFixed(2)}`;
+  d += ` L ${xPix(CURVE[0][0]).toFixed(2)} ${yPix(CURVE[0][1]).toFixed(2)}`;
+  for (let i = 1; i < CURVE.length; i++) {
+    const [date, v] = CURVE[i];
+    const [, prevV] = CURVE[i-1];
+    const x = xPix(date);
+    d += ` L ${x.toFixed(2)} ${yPix(prevV).toFixed(2)} L ${x.toFixed(2)} ${yPix(v).toFixed(2)}`;
+  }
+  svg.appendChild(svgEl("path", { d, fill: "none", stroke: "var(--group-plantae)", "stroke-width": 2 }));
+
+  const areaD = d + ` L ${xPix(CURVE[CURVE.length-1][0]).toFixed(2)} ${yPix(0).toFixed(2)} Z`;
+  svg.appendChild(svgEl("path", { d: areaD, fill: "var(--group-plantae)", opacity: 0.08 }));
+
+  const hit = svgEl("rect", { class: "hit-layer", x: PAD.left, y: PAD.top, width: plotW, height: plotH });
+  const crosshair = svgEl("line", { class: "crosshair-line", y1: PAD.top, y2: VB_H-PAD.bottom });
+  svg.appendChild(crosshair);
+  svg.appendChild(hit);
+
+  const panel = document.getElementById("timeline-panel");
+  panel.style.position = "relative";
+  const uniqueDates = [...new Set(CURVE.map(c=>c[0]))];
+  panel.innerHTML = `
+    <div class="panel-title">Survey Timeline</div>
+    <div class="panel-sub">Cumulative unique species logged over time &middot; ${uniqueDates.length} distinct survey days &mdash; most of the inventory (53 of 74 species) came from one visit on ${fmtDate("2026-06-26")}, the rest added in occasional follow-up sightings since</div>
+  `;
+  panel.appendChild(svg);
+  const tooltip = document.createElement("div");
+  tooltip.className = "tooltip";
+  panel.appendChild(tooltip);
+
+  hit.addEventListener("mousemove", (evt) => {
+    const rect = svg.getBoundingClientRect();
+    const relX = (evt.clientX - rect.left) / rect.width * VB_W;
+    let nearest = CURVE[0], best = Infinity;
+    for (const c of CURVE) {
+      const dx = Math.abs(xPix(c[0]) - relX);
+      if (dx < best) { best = dx; nearest = c; }
+    }
+    const x = xPix(nearest[0]);
+    crosshair.setAttribute("x1", x); crosshair.setAttribute("x2", x);
+    crosshair.style.opacity = 1;
+    const scale = rect.width / VB_W;
+    const panelRect = panel.getBoundingClientRect();
+    tooltip.style.left = (rect.left - panelRect.left + x*scale) + "px";
+    tooltip.style.top = (rect.top - panelRect.top + yPix(nearest[1])*scale - 10) + "px";
+    tooltip.innerHTML = `${fmtDate(nearest[0])}<br>${nearest[1]} species logged so far`;
+    tooltip.style.opacity = 1;
+  });
+  hit.addEventListener("mouseleave", () => { crosshair.style.opacity = 0; tooltip.style.opacity = 0; });
+})();
+
+// ---------- Species catalog ----------
+(function buildCatalog(){
+  const container = document.getElementById("species-catalog");
+  const qualityLabel = { research: "RG", needs_id: "ID", casual: "CAS" };
+
+  GROUP_ORDER.filter(g => CATALOG.some(c => c.group === g)).forEach(group => {
+    const heading = document.createElement("div");
+    heading.className = "group-heading";
+    heading.innerHTML = `<span class="dot" style="width:9px;height:9px;border-radius:50%;background:${groupColor(group)};display:inline-block;"></span>${group}`;
+    container.appendChild(heading);
+
+    const grid = document.createElement("div");
+    grid.className = "species-grid";
+    CATALOG.filter(c => c.group === group).sort((a,b) => a.common.localeCompare(b.common)).forEach(c => {
+      const card = document.createElement("div");
+      card.className = "species-card";
+      card.innerHTML = `
+        <img src="assets/species-placeholder.svg" alt="Placeholder: photo of ${c.common} here" loading="lazy">
+        <div class="card-body">
+          <div class="common">${c.common}</div>
+          <div class="sci">${c.sci}</div>
+          <div class="card-pills">
+            <span class="pill" style="background:${c.native ? "var(--status-native)" : "var(--status-introduced)"}">${c.native ? "native" : "introduced"}</span>
+            <span class="pill outline">${qualityLabel[c.quality] || c.quality}</span>
+          </div>
+          <div class="obs-date">${fmtDate(c.date)}</div>
+        </div>
+      `;
+      grid.appendChild(card);
+    });
+    container.appendChild(grid);
+  });
+})();
+
+// ---------- raw table ----------
+(function buildRawTable(){
+  const tbody = document.querySelector("#raw-table tbody");
+  const sorted = CATALOG.slice().sort((a,b) => a.group.localeCompare(b.group) || a.common.localeCompare(b.common));
+  tbody.innerHTML = sorted.map(c => `
+    <tr>
+      <td>${c.common}</td>
+      <td class="sci">${c.sci}</td>
+      <td>${c.group}</td>
+      <td>${c.native ? "Native" : "Introduced"}</td>
+      <td>${c.quality.replace("_"," ")}</td>
+      <td>${fmtDate(c.date)}</td>
+    </tr>
+  `).join("");
+})();
+</script>
+<!-- FOOTER:START -->
+<style>
+  .site-footer {
+    font-family: system-ui, -apple-system, "Segoe UI", sans-serif;
+    padding: 20px; text-align: center;
+    font-size: 12px; color: #898781;
+    background: #fcfcfb; border-top: 1px solid rgba(11,11,11,0.10);
+  }
+  .site-footer a { color: #52514e; }
+  @media (prefers-color-scheme: dark) {
+    :root:not([data-theme="light"]) .site-footer { background: #1a1a19; border-top-color: rgba(255,255,255,0.10); }
+    :root:not([data-theme="light"]) .site-footer a { color: #c3c2b7; }
+  }
+  :root[data-theme="dark"] .site-footer { background: #1a1a19; border-top-color: rgba(255,255,255,0.10); }
+  :root[data-theme="dark"] .site-footer a { color: #c3c2b7; }
+</style>
+<footer class="site-footer">
+  <p>Demo site for <a href="https://github.com/keser/site-toolkit">site-toolkit</a>.
+    Example data: Lot #86, 58 Freestone Avenue, Portland, CT 06480.</p>
+</footer>
+<!-- FOOTER:END -->
+</body>
+</html>

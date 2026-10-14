@@ -1,0 +1,278 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Project Plan — Lot #86</title>
+<style>
+  .viz-root {
+    color-scheme: light;
+    --surface-1: #fcfcfb; --page: #f9f9f7; --text-primary: #0b0b0b;
+    --text-secondary: #52514e; --text-muted: #898781; --grid: #e1e0d9;
+    --baseline: #c3c2b7; --border: rgba(11,11,11,0.10);
+    --badge-bg: #eef0ea; --accent: #e07b39;
+    --status-active: #2a78d6; --status-active-bg: rgba(42,120,214,0.12);
+    --status-hold: #c9821f; --status-hold-bg: rgba(201,130,31,0.14);
+    --status-done: #0ca30c; --status-done-bg: rgba(12,163,12,0.10);
+    --status-pending-bg: rgba(137,135,129,0.12);
+  }
+  @media (prefers-color-scheme: dark) {
+    :root:where(:not([data-theme="light"])) .viz-root {
+      color-scheme: dark;
+      --surface-1: #1a1a19; --page: #0d0d0d; --text-primary: #ffffff;
+      --text-secondary: #c3c2b7; --text-muted: #898781; --grid: #2c2c2a;
+      --baseline: #383835; --border: rgba(255,255,255,0.10);
+      --badge-bg: #23261f; --accent: #e8935a;
+      --status-active: #6fa8ea; --status-active-bg: rgba(111,168,234,0.16);
+      --status-hold: #e0a94a; --status-hold-bg: rgba(224,169,74,0.16);
+      --status-done: #4fd44f; --status-done-bg: rgba(79,212,79,0.14);
+      --status-pending-bg: rgba(137,135,129,0.18);
+    }
+  }
+  :root[data-theme="dark"] .viz-root {
+    color-scheme: dark;
+    --surface-1: #1a1a19; --page: #0d0d0d; --text-primary: #ffffff;
+    --text-secondary: #c3c2b7; --text-muted: #898781; --grid: #2c2c2a;
+    --baseline: #383835; --border: rgba(255,255,255,0.10);
+    --badge-bg: #23261f; --accent: #e8935a;
+    --status-active: #6fa8ea; --status-active-bg: rgba(111,168,234,0.16);
+    --status-hold: #e0a94a; --status-hold-bg: rgba(224,169,74,0.16);
+    --status-done: #4fd44f; --status-done-bg: rgba(79,212,79,0.14);
+    --status-pending-bg: rgba(137,135,129,0.18);
+  }
+  * { box-sizing: border-box; }
+  body { margin: 0; }
+  .viz-root {
+    font-family: system-ui, -apple-system, "Segoe UI", sans-serif;
+    background: var(--page); color: var(--text-primary);
+    min-height: 100vh; padding: 32px 20px 60px;
+  }
+  .wrap { max-width: 1280px; margin: 0 auto; }
+  .section-title { font-size: 21px; font-weight: 600; margin: 0 0 6px; }
+  .subhead { color: var(--text-secondary); font-size: 14px; line-height: 1.5; margin: 0 0 12px; }
+  .subhead-muted { color: var(--text-muted); font-size: 12px; margin: 0 0 20px; }
+  .subhead a, .subhead-muted a { color: inherit; }
+  .badge-row { display: flex; flex-wrap: wrap; gap: 8px; margin-bottom: 20px; }
+  .badge {
+    background: var(--badge-bg); border: 1px solid var(--border); border-radius: 999px;
+    padding: 5px 12px; font-size: 12px; color: var(--text-secondary);
+    text-decoration: none;
+  }
+  .badge b { color: var(--text-primary); font-weight: 600; }
+  a.badge:hover { border-color: var(--accent); color: var(--text-primary); }
+  section.page-section { margin-bottom: 44px; padding-bottom: 4px; border-bottom: 1px solid var(--border); }
+  section.page-section:last-of-type { border-bottom: none; }
+
+  .activity-list { margin: 0; padding-left: 20px; font-size: 13.5px; color: var(--text-secondary); line-height: 1.75; }
+  .activity-list li { margin-bottom: 6px; }
+  .activity-list b { color: var(--text-primary); }
+
+  .table-scroll { overflow-x: auto; margin-bottom: 8px; }
+  table.data-table { width: 100%; border-collapse: collapse; font-size: 12.5px; }
+  table.data-table th, table.data-table td {
+    text-align: left; padding: 8px 10px; vertical-align: top;
+    border-bottom: 1px solid var(--grid); color: var(--text-secondary);
+  }
+  table.data-table th { color: var(--text-muted); font-weight: 600; font-size: 11px; text-transform: uppercase; letter-spacing: 0.03em; }
+  table.data-table td:first-child { color: var(--text-primary); font-weight: 600; white-space: nowrap; }
+  table.data-table td.task-name { color: var(--text-primary); font-weight: 500; white-space: normal; min-width: 160px; }
+  table.data-table td.depends { white-space: nowrap; font-size: 12px; color: var(--text-muted); }
+  table.data-table tbody tr:hover { background: var(--grid); }
+
+  .status-pill {
+    display: inline-block; padding: 3px 10px; border-radius: 999px;
+    font-size: 11px; font-weight: 600; white-space: nowrap;
+  }
+  .status-in-progress { background: var(--status-active-bg); color: var(--status-active); }
+  .status-yet-to-begin { background: var(--status-pending-bg); color: var(--text-muted); }
+  .status-on-hold { background: var(--status-hold-bg); color: var(--status-hold); }
+  .status-completed { background: var(--status-done-bg); color: var(--status-done); }
+</style>
+</head>
+<body>
+<!-- NAV:START -->
+<style>
+  .site-nav {
+    font-family: system-ui, -apple-system, "Segoe UI", sans-serif;
+    display: flex; flex-wrap: wrap; align-items: center; justify-content: space-between;
+    gap: 12px; padding: 14px 20px;
+    background: #fcfcfb; border-bottom: 1px solid rgba(11,11,11,0.10);
+  }
+  .site-nav__brand { font-weight: 600; font-size: 14px; color: #0b0b0b; text-decoration: none; }
+  .site-nav__links { display: flex; gap: 18px; flex-wrap: wrap; }
+  .site-nav__links a { font-size: 13px; color: #52514e; text-decoration: none; }
+  .site-nav__links a:hover { color: #0b0b0b; }
+  @media (prefers-color-scheme: dark) {
+    :root:not([data-theme="light"]) .site-nav { background: #1a1a19; border-bottom-color: rgba(255,255,255,0.10); }
+    :root:not([data-theme="light"]) .site-nav__brand { color: #ffffff; }
+    :root:not([data-theme="light"]) .site-nav__links a { color: #c3c2b7; }
+    :root:not([data-theme="light"]) .site-nav__links a:hover { color: #ffffff; }
+  }
+  :root[data-theme="dark"] .site-nav { background: #1a1a19; border-bottom-color: rgba(255,255,255,0.10); }
+  :root[data-theme="dark"] .site-nav__brand { color: #ffffff; }
+  :root[data-theme="dark"] .site-nav__links a { color: #c3c2b7; }
+  :root[data-theme="dark"] .site-nav__links a:hover { color: #ffffff; }
+</style>
+<nav class="site-nav">
+  <a class="site-nav__brand" href="index.html">Lot #86 — Site Profile</a>
+  <div class="site-nav__links">
+    <a href="base-map.html">Base Map</a>
+    <a href="sectors.html">Sectors</a>
+    <a href="zones-design.html">Zones &amp; Design</a>
+    <a href="climate.html">Climate</a>
+    <a href="water.html">Water</a>
+    <a href="sun-solar.html">Sun &amp; Solar</a>
+    <a href="flood-hazard.html">Flood &amp; Hazard</a>
+    <a href="species-inventory.html">Species Inventory</a>
+    <a href="project-plan.html">Project Plan</a>
+  </div>
+</nav>
+<!-- NAV:END -->
+<div class="viz-root">
+  <div class="wrap">
+    <header>
+      <h1 class="section-title" style="font-size:22px;">Project Plan</h1>
+      <p class="subhead">Every task in the site's phased plan — Reset, Construction, Establish Systems, Diversity &amp; Habitat, and ongoing Design — with current status and dependencies. Ported from the project's task-tracking files, not auto-generated; see the <a href="https://github.com/keser/permaculture-site-plan/blob/main/site-plan/progress-log.md">full dated progress log</a> in the repo for the narrative behind each change.</p>
+      <p class="subhead-muted">Snapshot as of 2026-10-10.</p>
+      <div class="badge-row" id="section-nav">
+        <a class="badge" href="#recent-activity">Recent Activity</a>
+        <a class="badge" href="#phase-reset">Reset</a>
+        <a class="badge" href="#phase-construction">Construction</a>
+        <a class="badge" href="#phase-systems">Establish Systems</a>
+        <a class="badge" href="#phase-diversity">Diversity &amp; Habitat</a>
+        <a class="badge" href="#phase-design">Design</a>
+      </div>
+    </header>
+
+    <section class="page-section" id="recent-activity">
+      <h2 class="section-title">Recent Activity</h2>
+      <p class="subhead">What changed since the last snapshot (2026-09-18) &mdash; one design session and one on-site change.</p>
+      <ul class="activity-list">
+        <li><b>SE-corner hedge removed (2026-09-29):</b> the street-side hedge is gone and the ground raked level. No planting decision yet &mdash; windbreak/screening options still open.</li>
+        <li><b>Compost designs finalized (2026-09-27):</b> the hot compost (S1) becomes a 3&ndash;4 bin turning system that also takes the coop manure/bedding, with a hardware-cloth-lined, lidded fresh-fill bay against tunneling. The cold compost (S2) stays a single open corral &mdash; the earlier &ldquo;3-bin&rdquo; label belonged to S1.</li>
+        <li><b>Wood processing formalized:</b> a two-section, elevated chip-staging area (&ldquo;drying&rdquo; / &ldquo;ready to chip&rdquo;) in the windy NW corner (R4), and a sorted, skid-mounted wood pile (R19).</li>
+        <li><b>New task D6 &mdash; pawpaw understory:</b> pawpaw and a future mushroom bed move to the camper side of Zone 5, freeing the mulberry/pine corner for the compost/wood-processing cluster.</li>
+      </ul>
+    </section>
+
+    <section class="page-section" id="phase-reset">
+      <h2 class="section-title">Phase 1 — Reset</h2>
+      <p class="subhead">Clear the site of invasive species, deadwood, and clutter. In progress as of September 2026.</p>
+      <div class="table-scroll">
+        <table class="data-table">
+          <thead><tr><th>ID</th><th>Task</th><th>Description</th><th>Depends On</th><th>Status</th></tr></thead>
+          <tbody>
+            <tr><td>R1</td><td class="task-name">Clear invasive &amp; nuisance species</td><td>Remove bittersweet, Rose of Sharon, poison ivy, and overgrowth choking desired plants. Three triclopyr rounds so far, most recently 2026-09-12&ndash;18 (incl. a newly found Japanese knotweed plant); the entire tree/ivy-covered fence line was also cut back and sprayed.</td><td class="depends">&mdash;</td><td><span class="status-pill status-in-progress">In Progress</span></td></tr>
+            <tr><td>R2</td><td class="task-name">Clear deadwood &amp; branch fall</td><td>Clear accumulated branch fall in the rototiller area and elsewhere, incl. dead mulberry branches.</td><td class="depends">&mdash;</td><td><span class="status-pill status-in-progress">In Progress</span></td></tr>
+            <tr><td>R3</td><td class="task-name">Trim lower branches (spruce &amp; oaks)</td><td>Limb lower branches to reduce tick habitat and improve access; keep the trees.</td><td class="depends">&mdash;</td><td><span class="status-pill status-in-progress">In Progress</span></td></tr>
+            <tr><td>R6</td><td class="task-name">Transplant salvageable plants</td><td>Move plants worth keeping out of garden areas to be reorganized.</td><td class="depends">R1</td><td><span class="status-pill status-yet-to-begin">Yet to Begin</span></td></tr>
+            <tr><td>R8</td><td class="task-name">Cut back maples, save trunks</td><td>Cut back maples; keep trunk material for later reuse. 5 maples felled as of 2026-09-12&ndash;18. Some rounds inoculated as mushroom-log stock (S7, done). Remaining trunks &mdash; current and future &mdash; still need cutting into firewood. Further felling elsewhere is for sunlight/mulch, not more trunk-salvage.</td><td class="depends">&mdash;</td><td><span class="status-pill status-in-progress">In Progress</span></td></tr>
+            <tr><td>R10</td><td class="task-name">Clear back area, bring scraps to landfill</td><td>Clear the back area; haul scrap wood/metal that isn't being kept.</td><td class="depends">&mdash;</td><td><span class="status-pill status-yet-to-begin">Yet to Begin</span></td></tr>
+            <tr><td>R16</td><td class="task-name">Shrink garden footprint, remove garden fence</td><td>Reduce garden footprint as part of reorganization. Coop needs its own fenced perimeter, standalone from the garden fence.</td><td class="depends">R6</td><td><span class="status-pill status-yet-to-begin">Yet to Begin</span></td></tr>
+            <tr><td>R18</td><td class="task-name">Notify neighbors of boundary-adjacent plans</td><td>Talk to the adjacent neighbors before boundary-adjacent work.</td><td class="depends">&mdash;</td><td><span class="status-pill status-yet-to-begin">Yet to Begin</span></td></tr>
+            <tr><td>R19</td><td class="task-name">Move and organize wood pile</td><td>Move the wood pile to the corner by the mulberry; only after R1&ndash;R18 above is clear. Formalized 2026-09-27: sort by function/diameter (poles/stakes vs. hugelkultur/bed-wall stock), keep off the ground on skids.</td><td class="depends">R1, R2, R3, R6, R8, R10, R16, R18</td><td><span class="status-pill status-yet-to-begin">Yet to Begin</span></td></tr>
+            <tr><td>R9</td><td class="task-name">Cut down white cedar</td><td>On hold &mdash; only if the camper moves closer to the house, or driveway access next door is lost.</td><td class="depends">&mdash;</td><td><span class="status-pill status-on-hold">On Hold &mdash; Conditional</span></td></tr>
+            <tr><td>R4</td><td class="task-name">Chip branches for mulch</td><td>Chip material from R2/R3 for on-site mulch. Wood must be dry (green material bogs the chipper), so cut material piles to dry first. Deliberately paused 2026-09-12&ndash;18 until a second person is available, which also buys the piled material more drying time. Staging formalized 2026-09-27: two elevated sections (&ldquo;drying&rdquo; / &ldquo;ready to chip&rdquo;) in the windy NW corner, sized for about two cutting seasons of material.</td><td class="depends">R2, R3</td><td><span class="status-pill status-in-progress">In Progress</span></td></tr>
+            <tr><td>R5</td><td class="task-name">Deep mulch non-lawn areas</td><td>Apply deep mulch ahead of new plantings. Fence line already cleared and mulched. Next target: the Zone 3 veg garden over cardboard (already collected); waiting on R4's deferred chipping.</td><td class="depends">R4</td><td><span class="status-pill status-in-progress">In Progress</span></td></tr>
+            <tr><td>R17</td><td class="task-name">Build raised beds along fence line</td><td>Raised beds for tomatoes, peppers, herbs, flowers.</td><td class="depends">R1, C1&ndash;C5</td><td><span class="status-pill status-yet-to-begin">Yet to Begin</span></td></tr>
+            <tr><td>R20</td><td class="task-name">Relocate 2 grape vines</td><td>Dig up and move the two existing grape plants (likely Catawba); likely target the new raised beds (D4). Plan changed 2026-09-18: leave in place, staked and protected, until the vines go dormant.</td><td class="depends">&mdash;</td><td><span class="status-pill status-in-progress">In Progress</span></td></tr>
+            <tr><td>R21</td><td class="task-name">Air-layer white cedar, Rose of Sharon &amp; lilacs</td><td>Propagate all three before removal/reuse. Lilacs given a major prune 2026-09-12&ndash;18; no air-layering started on any of the three yet &mdash; pushed to spring.</td><td class="depends">&mdash;</td><td><span class="status-pill status-in-progress">In Progress</span></td></tr>
+          </tbody>
+        </table>
+      </div>
+    </section>
+
+    <section class="page-section" id="phase-construction">
+      <h2 class="section-title">Phase 2 — Construction</h2>
+      <p class="subhead">Structural additions, repairs, and new utility lines &mdash; runs independently of Phase 1's clearing.</p>
+      <div class="table-scroll">
+        <table class="data-table">
+          <thead><tr><th>ID</th><th>Task</th><th>Description</th><th>Depends On</th><th>Status</th></tr></thead>
+          <tbody>
+            <tr><td>C1</td><td class="task-name">Repair basement water spigot</td><td>Replace cracked spigot and rotted board.</td><td class="depends">&mdash;</td><td><span class="status-pill status-yet-to-begin">Yet to Begin</span></td></tr>
+            <tr><td>C2</td><td class="task-name">Add second water spigot</td><td>New spigot on the opposite side of the house.</td><td class="depends">&mdash;</td><td><span class="status-pill status-yet-to-begin">Yet to Begin</span></td></tr>
+            <tr><td>C3</td><td class="task-name">Run water line to back of property</td><td>Above-ground PVC to the back yard for seasonal water.</td><td class="depends">C1</td><td><span class="status-pill status-yet-to-begin">Yet to Begin</span></td></tr>
+            <tr><td>C4</td><td class="task-name">Electrical panel upgrade</td><td>Prerequisite for mini-split, water feature pump, other future loads.</td><td class="depends">&mdash;</td><td><span class="status-pill status-yet-to-begin">Yet to Begin</span></td></tr>
+            <tr><td>C5</td><td class="task-name">Build new 10x8 shed</td><td>Remove old shed, build new per DS1's design; confirm permit requirement.</td><td class="depends">DS1</td><td><span class="status-pill status-yet-to-begin">Yet to Begin</span></td></tr>
+          </tbody>
+        </table>
+      </div>
+    </section>
+
+    <section class="page-section" id="phase-systems">
+      <h2 class="section-title">Phase 3 — Establish Systems</h2>
+      <p class="subhead">The time-sensitive, low-maintenance systems (composting, cropping, storage, water, energy) the site will run on long-term.</p>
+      <div class="table-scroll">
+        <table class="data-table">
+          <thead><tr><th>ID</th><th>Task</th><th>Description</th><th>Depends On</th><th>Status</th></tr></thead>
+          <tbody>
+            <tr><td>S1</td><td class="task-name">Hot composting system</td><td>Active/hot composting for fast-turnaround waste. Sited in the NW corner; underway. Design finalized 2026-09-27: a 3&ndash;4 bin wood-and-wire turning system that also takes the coop manure/bedding; the fresh-fill bay is lined with hardware cloth and lidded against tunneling.</td><td class="depends">R2, R4</td><td><span class="status-pill status-in-progress">In Progress</span></td></tr>
+            <tr><td>S2</td><td class="task-name">Cold/slow composting system</td><td>Built from the existing Zone 5 brush pile: spray &rarr; shred &rarr; compact &rarr; enclose in a single open staked-fence corral (corrected 2026-09-27 &mdash; the 3-bin design belongs to S1). Tree removal for the footprint is done (2026-09-18); posts/fencing for the corral still need to go in. Shredding/compacting still blocked on R4's deferred chipping.</td><td class="depends">&mdash;</td><td><span class="status-pill status-in-progress">In Progress</span></td></tr>
+            <tr><td>S3</td><td class="task-name">Forage crops</td><td>Forage crop plantings for low-maintenance food systems.</td><td class="depends">&mdash;</td><td><span class="status-pill status-yet-to-begin">Yet to Begin</span></td></tr>
+            <tr><td>S4</td><td class="task-name">Winter cover crops</td><td>Cover crops to protect and build soil off-season.</td><td class="depends">&mdash;</td><td><span class="status-pill status-yet-to-begin">Yet to Begin</span></td></tr>
+            <tr><td>S5</td><td class="task-name">Pollard willow row (raw material barrier)</td><td>Raw-material crop that doubles as a visual barrier.</td><td class="depends">&mdash;</td><td><span class="status-pill status-yet-to-begin">Yet to Begin</span></td></tr>
+            <tr><td>S6</td><td class="task-name">Storage systems</td><td>Storage for raw materials/building supplies, planned together with the shed's design.</td><td class="depends">DS1</td><td><span class="status-pill status-yet-to-begin">Yet to Begin</span></td></tr>
+            <tr><td>S7</td><td class="task-name">Mushroom cultivation</td><td>Mushroom system using wood byproducts. Inoculation done 2026-09-18: shiitake and oyster spawn in maple and mulberry rounds, stacked under the pool deck &mdash; a deliberate wood/freshness comparison. Nothing further to do but let it colonize. A separate future mushroom bed moved with D6 to the camper side of Zone 5 (2026-09-27).</td><td class="depends">R8</td><td><span class="status-pill status-in-progress">In Progress</span></td></tr>
+            <tr><td>S8</td><td class="task-name">Water harvesting system</td><td>Capture water off coop/shed roofs.</td><td class="depends">C5</td><td><span class="status-pill status-yet-to-begin">Yet to Begin</span></td></tr>
+            <tr><td>S10</td><td class="task-name">Waterfall/pond feature</td><td>Long-desired water feature; needs pump + electrical capacity.</td><td class="depends">C4</td><td><span class="status-pill status-yet-to-begin">Yet to Begin</span></td></tr>
+            <tr><td>S11</td><td class="task-name">Solar panels on chicken coop</td><td>Small-scale renewable energy on the coop.</td><td class="depends">&mdash;</td><td><span class="status-pill status-yet-to-begin">Yet to Begin</span></td></tr>
+          </tbody>
+        </table>
+      </div>
+    </section>
+
+    <section class="page-section" id="phase-diversity">
+      <h2 class="section-title">Phase 4 — Diversity &amp; Habitat</h2>
+      <p class="subhead">Build out planting diversity and habitat value &mdash; trees, shrubs, and flowers selected for yield, beauty, and pollinator/wildlife support.</p>
+      <div class="table-scroll">
+        <table class="data-table">
+          <thead><tr><th>ID</th><th>Task</th><th>Description</th><th>Depends On</th><th>Status</th></tr></thead>
+          <tbody>
+            <tr><td>D1</td><td class="task-name">Plant native trees &amp; shrubs</td><td>Diversity over monocrop; fruit, nut, raw material, or habitat yield.</td><td class="depends">R1</td><td><span class="status-pill status-yet-to-begin">Yet to Begin</span></td></tr>
+            <tr><td>D2</td><td class="task-name">Plant flowers for beauty &amp; pollinators</td><td>Color, pollinator support, cut/dry flower varieties.</td><td class="depends">&mdash;</td><td><span class="status-pill status-yet-to-begin">Yet to Begin</span></td></tr>
+            <tr><td>D3</td><td class="task-name">Perennial garden along back fence</td><td>Lilacs (family sentimental) and hydrangeas, planned deliberately. Source lilac stock via air-layering (R21).</td><td class="depends">R17</td><td><span class="status-pill status-yet-to-begin">Yet to Begin</span></td></tr>
+            <tr><td>D4</td><td class="task-name">Hops, grapes, blueberries</td><td>Productive perennial plantings. Plan changed 2026-09-18: sourcing new low-bush blueberry plants as ground cover instead of propagating cuttings. Grapes (R20) staying in place, protected, until dormancy.</td><td class="depends">&mdash;</td><td><span class="status-pill status-in-progress">In Progress</span></td></tr>
+            <tr><td>D5</td><td class="task-name">Clean up chicken/evergreen area for habitat use</td><td>Reduce clutter/rodent issues; add raised beds.</td><td class="depends">R2</td><td><span class="status-pill status-yet-to-begin">Yet to Begin</span></td></tr>
+            <tr><td>D6</td><td class="task-name">Pawpaw understory planting</td><td>Pawpaw saplings in a full-shade understory spot. Added 2026-09-27, sited on the camper side of Zone 5. Open questions: comparable shade/moisture, and overlap with the rotational chicken-paddock footprint.</td><td class="depends">&mdash;</td><td><span class="status-pill status-yet-to-begin">Yet to Begin</span></td></tr>
+          </tbody>
+        </table>
+      </div>
+    </section>
+
+    <section class="page-section" id="phase-design">
+      <h2 class="section-title">Design (Ongoing)</h2>
+      <p class="subhead">Spans the full 5-year vision; runs alongside any active phase as long as it isn't designing something currently under construction.</p>
+      <div class="table-scroll">
+        <table class="data-table">
+          <thead><tr><th>ID</th><th>Task</th><th>Description</th><th>Depends On</th><th>Status</th></tr></thead>
+          <tbody>
+            <tr><td>DS1</td><td class="task-name">Design new shed &amp; overall storage layout</td><td>Design the shed (C5) together with the property's broader storage needs (S6).</td><td class="depends">&mdash;</td><td><span class="status-pill status-yet-to-begin">Yet to Begin</span></td></tr>
+          </tbody>
+        </table>
+      </div>
+    </section>
+  </div>
+</div>
+<!-- FOOTER:START -->
+<style>
+  .site-footer {
+    font-family: system-ui, -apple-system, "Segoe UI", sans-serif;
+    padding: 20px; text-align: center;
+    font-size: 12px; color: #898781;
+    background: #fcfcfb; border-top: 1px solid rgba(11,11,11,0.10);
+  }
+  .site-footer a { color: #52514e; }
+  @media (prefers-color-scheme: dark) {
+    :root:not([data-theme="light"]) .site-footer { background: #1a1a19; border-top-color: rgba(255,255,255,0.10); }
+    :root:not([data-theme="light"]) .site-footer a { color: #c3c2b7; }
+  }
+  :root[data-theme="dark"] .site-footer { background: #1a1a19; border-top-color: rgba(255,255,255,0.10); }
+  :root[data-theme="dark"] .site-footer a { color: #c3c2b7; }
+</style>
+<footer class="site-footer">
+  <p>Demo site for <a href="https://github.com/keser/site-toolkit">site-toolkit</a>.
+    Example data: Lot #86, 58 Freestone Avenue, Portland, CT 06480.</p>
+</footer>
+<!-- FOOTER:END -->
+</body>
+</html>

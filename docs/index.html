@@ -1,0 +1,257 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Lot #86 — Site Profile</title>
+<style>
+  .viz-root {
+    color-scheme: light;
+    --surface-1: #fcfcfb; --page: #f9f9f7; --text-primary: #0b0b0b;
+    --text-secondary: #52514e; --text-muted: #898781; --border: rgba(11,11,11,0.10);
+    --grid: #e1e0d9;
+  }
+  @media (prefers-color-scheme: dark) {
+    :root:not([data-theme="light"]) .viz-root {
+      color-scheme: dark;
+      --surface-1: #1a1a19; --page: #0d0d0d; --text-primary: #ffffff;
+      --text-secondary: #c3c2b7; --text-muted: #898781; --border: rgba(255,255,255,0.10);
+      --grid: #2c2c2a;
+    }
+  }
+  :root[data-theme="dark"] .viz-root {
+    color-scheme: dark;
+    --surface-1: #1a1a19; --page: #0d0d0d; --text-primary: #ffffff;
+    --text-secondary: #c3c2b7; --text-muted: #898781; --border: rgba(255,255,255,0.10);
+    --grid: #2c2c2a;
+  }
+  * { box-sizing: border-box; }
+  body { margin: 0; }
+  .viz-root {
+    font-family: system-ui, -apple-system, "Segoe UI", sans-serif;
+    background: var(--page); color: var(--text-primary); min-height: 80vh;
+    padding: 32px 20px 60px;
+  }
+  .wrap { max-width: 1280px; margin: 0 auto; }
+  h1 { font-size: 26px; font-weight: 600; margin: 0 0 6px; }
+  .subhead { color: var(--text-secondary); font-size: 15px; line-height: 1.6; margin: 0 0 8px; max-width: 640px; }
+  .subhead-muted { color: var(--text-muted); font-size: 12px; margin: 0 0 24px; }
+
+  .fact-row {
+    display: grid; grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+    gap: 14px; margin: 24px 0 32px;
+  }
+  .fact {
+    background: var(--surface-1); border: 1px solid var(--border); border-radius: 12px;
+    padding: 14px 16px;
+  }
+  .fact-label { font-size: 11px; font-weight: 600; letter-spacing: 0.04em; text-transform: uppercase; color: var(--text-muted); margin: 0 0 6px; }
+  .fact-value { font-size: 16px; font-weight: 600; color: var(--text-primary); margin: 0; line-height: 1.3; }
+
+  h2.section-head { font-size: 13px; font-weight: 600; letter-spacing: 0.04em; text-transform: uppercase; color: var(--text-muted); margin: 0 0 12px; }
+  .card-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(240px, 1fr)); gap: 16px; margin-bottom: 32px; }
+  .nav-card {
+    background: var(--surface-1); border: 1px solid var(--border);
+    border-radius: 12px; padding: 18px 20px;
+  }
+  .nav-card .card-title { display: block; text-decoration: none; color: inherit; }
+  .nav-card .card-title:hover h3 { text-decoration: underline; }
+  .nav-card h3 { font-size: 15px; font-weight: 600; margin: 0 0 6px; color: var(--text-primary); }
+  .nav-card p { font-size: 13px; color: var(--text-secondary); margin: 0; line-height: 1.5; }
+  .card-stats { display: flex; flex-direction: column; gap: 5px; margin: 12px 0 0; padding-top: 12px; border-top: 1px solid var(--border); }
+  .card-stats a { font-size: 12px; color: var(--text-secondary); text-decoration: none; }
+  .card-stats a:hover { color: var(--text-primary); text-decoration: underline; }
+  .card-stats a::before { content: "→ "; color: var(--text-muted); }
+  .divider { height: 1px; background: var(--grid); margin: 8px 0 32px; border: none; }
+  .history-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(260px, 1fr)); gap: 16px; }
+  .history-card { background: var(--surface-1); border: 1px solid var(--border); border-radius: 12px; overflow: hidden; }
+  .history-card img { width: 100%; height: auto; display: block; }
+  .history-photos { display: grid; grid-template-columns: 1fr 1fr; gap: 2px; }
+  .history-card .body { padding: 14px 16px 16px; }
+  .history-card h3 { font-size: 14px; font-weight: 600; margin: 0 0 6px; color: var(--text-primary); }
+  .history-card p { font-size: 12.5px; color: var(--text-secondary); margin: 0; line-height: 1.55; }
+</style>
+</head>
+<body>
+<!-- NAV:START -->
+<style>
+  .site-nav {
+    font-family: system-ui, -apple-system, "Segoe UI", sans-serif;
+    display: flex; flex-wrap: wrap; align-items: center; justify-content: space-between;
+    gap: 12px; padding: 14px 20px;
+    background: #fcfcfb; border-bottom: 1px solid rgba(11,11,11,0.10);
+  }
+  .site-nav__brand { font-weight: 600; font-size: 14px; color: #0b0b0b; text-decoration: none; }
+  .site-nav__links { display: flex; gap: 18px; flex-wrap: wrap; }
+  .site-nav__links a { font-size: 13px; color: #52514e; text-decoration: none; }
+  .site-nav__links a:hover { color: #0b0b0b; }
+  @media (prefers-color-scheme: dark) {
+    :root:not([data-theme="light"]) .site-nav { background: #1a1a19; border-bottom-color: rgba(255,255,255,0.10); }
+    :root:not([data-theme="light"]) .site-nav__brand { color: #ffffff; }
+    :root:not([data-theme="light"]) .site-nav__links a { color: #c3c2b7; }
+    :root:not([data-theme="light"]) .site-nav__links a:hover { color: #ffffff; }
+  }
+  :root[data-theme="dark"] .site-nav { background: #1a1a19; border-bottom-color: rgba(255,255,255,0.10); }
+  :root[data-theme="dark"] .site-nav__brand { color: #ffffff; }
+  :root[data-theme="dark"] .site-nav__links a { color: #c3c2b7; }
+  :root[data-theme="dark"] .site-nav__links a:hover { color: #ffffff; }
+</style>
+<nav class="site-nav">
+  <a class="site-nav__brand" href="index.html">Lot #86 — Site Profile</a>
+  <div class="site-nav__links">
+    <a href="base-map.html">Base Map</a>
+    <a href="sectors.html">Sectors</a>
+    <a href="zones-design.html">Zones &amp; Design</a>
+    <a href="climate.html">Climate</a>
+    <a href="water.html">Water</a>
+    <a href="sun-solar.html">Sun &amp; Solar</a>
+    <a href="flood-hazard.html">Flood &amp; Hazard</a>
+    <a href="species-inventory.html">Species Inventory</a>
+    <a href="project-plan.html">Project Plan</a>
+  </div>
+</nav>
+<!-- NAV:END -->
+<div class="viz-root">
+  <div class="wrap">
+    <header>
+      <h1>Lot #86 — Site Profile</h1>
+      <p class="subhead">A working reference for designing this 0.43-acre property's permaculture future — climate, solar, wind, hazard, watershed, species, and zone data, all in one place.</p>
+      <p class="subhead-muted">58 Freestone Avenue, Portland, CT 06480 &middot; 41&deg;34&prime;22&Prime;N 72&deg;38&prime;04&Prime;W</p>
+    </header>
+
+    <div class="fact-row">
+      <div class="fact"><p class="fact-label">Area</p><p class="fact-value">0.43 ac (&asymp;18,730 ft&sup2;)</p></div>
+      <div class="fact"><p class="fact-label">Elevation</p><p class="fact-value">106&ndash;114 ft</p></div>
+      <div class="fact"><p class="fact-label">Climate</p><p class="fact-value">Dfa &mdash; hot-summer continental</p></div>
+      <div class="fact"><p class="fact-label">Hardiness zone</p><p class="fact-value">6b</p></div>
+      <div class="fact"><p class="fact-label">Frost-free season</p><p class="fact-value">Apr 14 &ndash; Oct 23</p></div>
+      <div class="fact"><p class="fact-label">Flood risk</p><p class="fact-value">FEMA Zone X &mdash; minimal</p></div>
+    </div>
+
+    <hr class="divider">
+
+    <h2 class="section-head">Available now</h2>
+    <div class="card-grid">
+      <div class="nav-card">
+        <a class="card-title" href="base-map.html"><h3>Base Map</h3></a>
+        <p>The full-color hand-drawn site plan every other spatial page works from, with a legend.</p>
+        <div class="card-stats">
+          <a href="base-map.html">106&ndash;114 ft elevation</a>
+          <a href="base-map.html">41&deg;34&prime;22.04&Prime;N 72&deg;38&prime;03.90&Prime;W</a>
+        </div>
+      </div>
+      <div class="nav-card">
+        <a class="card-title" href="sectors.html"><h3>Sectors</h3></a>
+        <p>Sun, wind, fire, noise, and other outside forces mapped and matched with a design response.</p>
+        <div class="card-stats">
+          <a href="sectors.html#wind">Wind: N (winter), S (summer, 23.7%)</a>
+          <a href="sectors.html#sun-solar">46.8&deg; solar-noon swing, winter to summer</a>
+        </div>
+      </div>
+      <div class="nav-card">
+        <a class="card-title" href="zones-design.html"><h3>Zones &amp; Design</h3></a>
+        <p>The property's current permaculture zones, their microclimates, and a brainstorm of proposed design changes for the future.</p>
+        <div class="card-stats">
+          <a href="zones-design.html#current-zones">5 zones, house &rarr; wild</a>
+          <a href="zones-design.html#microclimates">4 microclimate types</a>
+        </div>
+      </div>
+      <div class="nav-card">
+        <a class="card-title" href="climate.html"><h3>Climate</h3></a>
+        <p>Temperature, precipitation, wind, and frost-free/hardiness data for the site.</p>
+        <div class="card-stats">
+          <a href="climate.html#frost-panel">192 frost-free days</a>
+          <a href="climate.html#precipitation">43.5 in/yr, no dry season</a>
+        </div>
+      </div>
+      <div class="nav-card">
+        <a class="card-title" href="water.html"><h3>Watersheds &amp; Water</h3></a>
+        <p>Eight views of water on the property: rainfall, runoff, water balance, elevation, flow, storm design, the macro watershed, and seasonal household use.</p>
+        <div class="card-stats">
+          <a href="water.html#water-balance">508,000 gal/yr rain, ~25% runoff</a>
+          <a href="water.html#water-use">&asymp;46,000 gal/yr household use</a>
+        </div>
+      </div>
+      <div class="nav-card">
+        <a class="card-title" href="sun-solar.html"><h3>Sun &amp; Solar</h3></a>
+        <p>Three views of solar exposure: sun-path charts, a 3D seasonal model, and a base-map exposure overlay.</p>
+        <div class="card-stats">
+          <a href="sun-solar.html#sun-path-charts">71.9&deg; summer / 25.0&deg; winter solar noon</a>
+        </div>
+      </div>
+      <div class="nav-card">
+        <a class="card-title" href="flood-hazard.html"><h3>Flood &amp; Hazard</h3></a>
+        <p>FEMA flood zone and First Street Foundation risk-factor data, checked directly by address.</p>
+        <div class="card-stats">
+          <a href="flood-hazard.html">FEMA Zone X &middot; Flood Factor 1/10 &mdash; minimal</a>
+        </div>
+      </div>
+      <div class="nav-card">
+        <a class="card-title" href="species-inventory.html"><h3>Species Inventory</h3></a>
+        <p>A georeferenced site map of observed species, from iNaturalist field data.</p>
+        <div class="card-stats">
+          <a href="species-inventory.html#species-catalog">79 observations / 74 species</a>
+        </div>
+      </div>
+      <div class="nav-card">
+        <a class="card-title" href="project-plan.html"><h3>Project Plan</h3></a>
+        <p>The full phased task list &mdash; what's active, what's next, and what changed most recently on-site.</p>
+        <div class="card-stats">
+          <a href="project-plan.html#recent-activity">Last synced 2026-09-18</a>
+          <a href="project-plan.html">12 tasks in progress</a>
+        </div>
+      </div>
+    </div>
+
+    <h2 class="section-head">Site History</h2>
+    <div class="history-grid">
+      <div class="history-card">
+        <img src="assets/site-history-city.svg" alt="Placeholder: Aerial view of your project site&#x27;s town here" width="1200" height="843">
+        <div class="body">
+          <h3>A Brief History of Portland, CT</h3>
+          <p>Lot #86 is centrally located within the Town of Portland, Connecticut. The town was first settled 8&ndash;10K years ago by Wangunk peoples (roughly translates to big-bend) where the river played a huge role in their daily lives that centered around hunting, fishing and growing crops. European colonizers first settled the area in the 1650s (English stonecutters) who developed the economy around the abundant brownstone in the area &mdash; the quarries' close proximity to the river made transport and trade much more affordable than existing options, which helped the local economy thrive. Other businesses like ship building (for transporting stone) and animal husbandry (oxen and draft horses to haul stone) were also quite prevalent until other building materials became more favorable and affordable. The river's annual seasonal flooding also created soil perfect for growing tobacco, another thriving industry in town. In 1934, the quarries flooded after a major hurricane and largely sat unused for many years. In the 2000s the town purchased the quarries and developed them into the Brownstone Adventure Park, where visitors can enjoy the deepest freshwater scuba diving on the East Coast.</p>
+        </div>
+      </div>
+      <div class="history-card">
+        <img src="assets/site-history-neighborhood.svg" alt="Placeholder: Aerial view of your project site&#x27;s neighborhood here" width="1200" height="843">
+        <div class="body">
+          <h3>The Neighborhood</h3>
+          <p>Lot #86 is on Freestone Avenue, a street that gets its name from being the former dumping ground of byproduct from quarrying local brownstone. It is surrounded on all sides by Main Street, Waverly Avenue, Foley Road and Cross Street. Before the lot was subdivided by the previous owners, it spanned from Freestone Avenue to Foley Road (the curved road to the north east of the lot). The lot was divided into 3, and a second house was built on the property in back of Lot #86.</p>
+        </div>
+      </div>
+      <div class="history-card">
+        <div class="history-photos">
+          <img src="assets/site-history-1990-infrared.svg" alt="Placeholder: Historic aerial photo of your project site&#x27;s area here" width="1200" height="884">
+          <img src="assets/site-history-1990-lot86.svg" alt="Placeholder: Close historic aerial photo of your project site here" width="1200" height="884">
+        </div>
+        <div class="body">
+          <h3>Historic Images (1990)</h3>
+          <p>Aerial infrared photograph from the 1990 Connecticut Department of Environmental Protection survey (left), where red areas highlight foliage and teal shows paved or unplanted surface area (source: CTDEP_CIR_12K_1990_0585, Keystone Aerial Surveys, Inc., Aug 1990, UConn/CTDEEP). At the time of the close-up photo (right), the property only had turf grass and minimal plantings &mdash; taken a year after my parents purchased the property but before they made any major changes to the landscape.</p>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+<!-- FOOTER:START -->
+<style>
+  .site-footer {
+    font-family: system-ui, -apple-system, "Segoe UI", sans-serif;
+    padding: 20px; text-align: center;
+    font-size: 12px; color: #898781;
+    background: #fcfcfb; border-top: 1px solid rgba(11,11,11,0.10);
+  }
+  .site-footer a { color: #52514e; }
+  @media (prefers-color-scheme: dark) {
+    :root:not([data-theme="light"]) .site-footer { background: #1a1a19; border-top-color: rgba(255,255,255,0.10); }
+    :root:not([data-theme="light"]) .site-footer a { color: #c3c2b7; }
+  }
+  :root[data-theme="dark"] .site-footer { background: #1a1a19; border-top-color: rgba(255,255,255,0.10); }
+  :root[data-theme="dark"] .site-footer a { color: #c3c2b7; }
+</style>
+<footer class="site-footer">
+  <p>Demo site for <a href="https://github.com/keser/site-toolkit">site-toolkit</a>.
+    Example data: Lot #86, 58 Freestone Avenue, Portland, CT 06480.</p>
+</footer>
+<!-- FOOTER:END -->
+</body>
+</html>

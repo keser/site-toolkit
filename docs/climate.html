@@ -1,0 +1,815 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Climate Survey Charts</title>
+<style>
+  .viz-root {
+    color-scheme: light;
+    --surface-1:      #fcfcfb;
+    --page:           #f9f9f7;
+    --text-primary:   #0b0b0b;
+    --text-secondary: #52514e;
+    --text-muted:     #898781;
+    --grid:           #e1e0d9;
+    --baseline:       #c3c2b7;
+    --border:         rgba(11,11,11,0.10);
+    --series-high:    #e07b39;
+    --series-low:     #2a9d9d;
+    --series-precip:  #5598e7;
+    --wind-fill:      #86b6ef;
+    --wind-accent:    #2a78d6;
+    --band-frost:     rgba(139,195,74,0.16);
+    --band-frost-line:#7cb342;
+    --badge-bg:       #eef0ea;
+  }
+  @media (prefers-color-scheme: dark) {
+    :root:where(:not([data-theme="light"])) .viz-root {
+      color-scheme: dark;
+      --surface-1:      #1a1a19;
+      --page:           #0d0d0d;
+      --text-primary:   #ffffff;
+      --text-secondary: #c3c2b7;
+      --text-muted:     #898781;
+      --grid:           #2c2c2a;
+      --baseline:       #383835;
+      --border:         rgba(255,255,255,0.10);
+      --series-high:    #e8935a;
+      --series-low:     #3fb8b8;
+      --series-precip:  #5598e7;
+      --wind-fill:      #3987e5;
+      --wind-accent:    #86b6ef;
+      --band-frost:     rgba(139,195,74,0.14);
+      --band-frost-line:#8bc34a;
+      --badge-bg:       #23261f;
+    }
+  }
+  :root[data-theme="dark"] .viz-root {
+    color-scheme: dark;
+    --surface-1:      #1a1a19;
+    --page:           #0d0d0d;
+    --text-primary:   #ffffff;
+    --text-secondary: #c3c2b7;
+    --text-muted:     #898781;
+    --grid:           #2c2c2a;
+    --baseline:       #383835;
+    --border:         rgba(255,255,255,0.10);
+    --series-high:    #e8935a;
+    --series-low:     #3fb8b8;
+    --series-precip:  #5598e7;
+    --wind-fill:      #3987e5;
+    --wind-accent:    #86b6ef;
+    --band-frost:     rgba(139,195,74,0.14);
+    --band-frost-line:#8bc34a;
+    --badge-bg:       #23261f;
+  }
+
+  * { box-sizing: border-box; }
+  body { margin: 0; }
+  .viz-root {
+    font-family: system-ui, -apple-system, "Segoe UI", sans-serif;
+    background: var(--page);
+    color: var(--text-primary);
+    min-height: 100vh;
+    padding: 32px 20px 60px;
+  }
+  .wrap { max-width: 1280px; margin: 0 auto; }
+  header.page-head { margin-bottom: 20px; }
+  h1 { font-size: 22px; font-weight: 600; margin: 0 0 6px; }
+  .subhead { color: var(--text-secondary); font-size: 14px; line-height: 1.5; margin: 0 0 10px; }
+
+  .badge-row { display: flex; flex-wrap: wrap; gap: 8px; margin-bottom: 24px; }
+  .badge {
+    background: var(--badge-bg);
+    border: 1px solid var(--border);
+    border-radius: 999px;
+    padding: 5px 12px;
+    font-size: 12px;
+    color: var(--text-secondary);
+  }
+  .badge b { color: var(--text-primary); font-weight: 600; }
+
+  .grid { display: grid; grid-template-columns: 1fr 1fr; gap: 20px; }
+  .grid.full { grid-template-columns: 1fr; }
+  @media (max-width: 720px) {
+    .grid { grid-template-columns: 1fr; }
+  }
+
+  .panel {
+    background: var(--surface-1);
+    border: 1px solid var(--border);
+    border-radius: 12px;
+    padding: 18px 18px 12px;
+    position: relative;
+    margin-bottom: 20px;
+  }
+  .panel-title { font-size: 15px; font-weight: 600; margin: 0 0 2px; }
+  .panel-sub { font-size: 12px; color: var(--text-muted); margin: 0 0 8px; }
+  .panel-stats {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 4px 14px;
+    font-size: 12px;
+    color: var(--text-secondary);
+    margin-bottom: 10px;
+  }
+  .panel-stats b { color: var(--text-primary); font-weight: 600; }
+
+  .legend {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 14px;
+    align-items: center;
+    font-size: 12px;
+    color: var(--text-secondary);
+    margin-bottom: 8px;
+  }
+  .legend .swatch { display: inline-flex; align-items: center; gap: 6px; }
+  .legend .dot { width: 10px; height: 10px; border-radius: 2px; display: inline-block; }
+  .legend .line { width: 14px; height: 2px; display: inline-block; }
+
+  svg.chart { width: 100%; height: auto; display: block; overflow: visible; }
+  .grid-line { stroke: var(--grid); stroke-width: 1; }
+  .baseline { stroke: var(--baseline); stroke-width: 1; }
+  .grid-ring { fill: none; stroke: var(--grid); stroke-width: 1; }
+  .baseline-ring { fill: none; stroke: var(--baseline); stroke-width: 1; }
+  .axis-label { fill: var(--text-muted); font-size: 9.5px; }
+  .dir-label { fill: var(--text-secondary); font-size: 10px; font-weight: 600; }
+  .value-label { fill: var(--text-secondary); font-size: 9.5px; text-anchor: middle; }
+  .value-label-strong { fill: var(--text-primary); font-size: 10px; font-weight: 600; text-anchor: middle; }
+
+  .crosshair-line { stroke: var(--text-muted); stroke-width: 1; stroke-dasharray: 2,2; pointer-events: none; opacity: 0; }
+  .hover-dot { pointer-events: none; opacity: 0; }
+  .tooltip {
+    position: absolute;
+    pointer-events: none;
+    background: var(--text-primary);
+    color: var(--surface-1);
+    font-size: 11px;
+    padding: 5px 8px;
+    border-radius: 6px;
+    line-height: 1.4;
+    opacity: 0;
+    transform: translate(-50%, -100%);
+    white-space: nowrap;
+    z-index: 5;
+  }
+  .hit-layer { fill: transparent; cursor: crosshair; }
+
+  details.table-toggle {
+    margin-top: 8px;
+    background: var(--surface-1);
+    border: 1px solid var(--border);
+    border-radius: 12px;
+    padding: 14px 18px;
+  }
+  details.table-toggle summary {
+    cursor: pointer;
+    font-size: 14px;
+    font-weight: 600;
+    color: var(--text-primary);
+  }
+  .tables { display: grid; grid-template-columns: 1fr 1fr; gap: 24px; margin-top: 14px; }
+  @media (max-width: 720px) { .tables { grid-template-columns: 1fr; } }
+  table.data-table {
+    width: 100%;
+    border-collapse: collapse;
+    font-size: 12px;
+    font-variant-numeric: tabular-nums;
+  }
+  table.data-table caption {
+    text-align: left;
+    font-size: 12px;
+    font-weight: 600;
+    color: var(--text-primary);
+    margin-bottom: 6px;
+    font-variant-numeric: normal;
+  }
+  table.data-table th, table.data-table td {
+    text-align: right;
+    padding: 3px 6px;
+    color: var(--text-secondary);
+    border-bottom: 1px solid var(--grid);
+  }
+  table.data-table th:first-child, table.data-table td:first-child { text-align: left; color: var(--text-primary); }
+  table.data-table th { color: var(--text-muted); font-weight: 500; font-variant-numeric: normal; }
+
+  footer.notes { margin-top: 22px; font-size: 12px; color: var(--text-muted); line-height: 1.6; }
+</style>
+</head>
+<body>
+<!-- NAV:START -->
+<style>
+  .site-nav {
+    font-family: system-ui, -apple-system, "Segoe UI", sans-serif;
+    display: flex; flex-wrap: wrap; align-items: center; justify-content: space-between;
+    gap: 12px; padding: 14px 20px;
+    background: #fcfcfb; border-bottom: 1px solid rgba(11,11,11,0.10);
+  }
+  .site-nav__brand { font-weight: 600; font-size: 14px; color: #0b0b0b; text-decoration: none; }
+  .site-nav__links { display: flex; gap: 18px; flex-wrap: wrap; }
+  .site-nav__links a { font-size: 13px; color: #52514e; text-decoration: none; }
+  .site-nav__links a:hover { color: #0b0b0b; }
+  @media (prefers-color-scheme: dark) {
+    :root:not([data-theme="light"]) .site-nav { background: #1a1a19; border-bottom-color: rgba(255,255,255,0.10); }
+    :root:not([data-theme="light"]) .site-nav__brand { color: #ffffff; }
+    :root:not([data-theme="light"]) .site-nav__links a { color: #c3c2b7; }
+    :root:not([data-theme="light"]) .site-nav__links a:hover { color: #ffffff; }
+  }
+  :root[data-theme="dark"] .site-nav { background: #1a1a19; border-bottom-color: rgba(255,255,255,0.10); }
+  :root[data-theme="dark"] .site-nav__brand { color: #ffffff; }
+  :root[data-theme="dark"] .site-nav__links a { color: #c3c2b7; }
+  :root[data-theme="dark"] .site-nav__links a:hover { color: #ffffff; }
+</style>
+<nav class="site-nav">
+  <a class="site-nav__brand" href="index.html">Lot #86 — Site Profile</a>
+  <div class="site-nav__links">
+    <a href="base-map.html">Base Map</a>
+    <a href="sectors.html">Sectors</a>
+    <a href="zones-design.html">Zones &amp; Design</a>
+    <a href="climate.html">Climate</a>
+    <a href="water.html">Water</a>
+    <a href="sun-solar.html">Sun &amp; Solar</a>
+    <a href="flood-hazard.html">Flood &amp; Hazard</a>
+    <a href="species-inventory.html">Species Inventory</a>
+    <a href="project-plan.html">Project Plan</a>
+  </div>
+</nav>
+<!-- NAV:END -->
+<div class="viz-root">
+  <div class="wrap">
+    <header class="page-head">
+      <h1>Climate Survey</h1>
+      <p class="subhead">41°34'22.04"N 72°38'03.90"W · 106–114 ft elevation · Connecticut River Valley, Middlesex County · digitized from the Lesson 1 Climate Survey slides (Figma, June 2026)</p>
+      <div class="badge-row" id="badge-row"></div>
+    </header>
+
+    <div class="panel" id="frost-panel"></div>
+
+    <div class="grid">
+      <div class="panel">
+        <div class="panel-title">USDA Plant Hardiness Zone</div>
+        <img src="assets/hardiness-zone-map.svg" alt="Placeholder: USDA hardiness zone map of your project site here" width="1200" height="742" style="width:100%;height:auto;border-radius:8px;margin-top:8px;display:block;">
+        <div class="panel-sub" style="margin-top:8px;">Zone 6b &mdash; minimum average winter temperature -5&deg;F to 0&deg;F.</div>
+      </div>
+      <div class="panel">
+        <div class="panel-title">Bioregion</div>
+        <img src="assets/bioregion-map.svg" alt="Placeholder: Bioregion map of your project site here" width="1200" height="742" style="width:100%;height:auto;border-radius:8px;margin-top:8px;display:block;">
+        <div class="panel-sub" style="margin-top:8px;">Northeastern Coastal Forest (NA10) &mdash; Connecticut River Valley.</div>
+      </div>
+    </div>
+
+    <div class="grid" id="chart-grid-1"></div>
+
+    <section id="wind">
+      <div id="wind-annual-wrap"></div>
+
+      <div style="margin: 4px 0 12px;">
+        <div class="panel-title">Seasonal Wind Roses</div>
+        <div class="panel-sub">10-year hourly METAR observations, Hartford-Brainard Airport (KHFD, ~16&nbsp;km from site), 2016–2025. Winter prevails from the N; spring, summer, and fall all trend S (summer most strongly, at 23.7%).</div>
+        <div class="panel-stats" id="season-summary-line"></div>
+      </div>
+      <div class="grid" id="chart-grid-seasons"></div>
+    </section>
+
+    <details class="table-toggle">
+      <summary>View raw data tables</summary>
+      <div class="tables" id="table-grid"></div>
+    </details>
+
+    <footer class="notes">
+      Monthly temperature and precipitation normals, USDA hardiness zone, and wind summary digitized from the site's Lesson 1 Climate Survey (Figma Slides, June 2026), sourced there via WeatherSpark and NASA POWER. Record high/low and elevation via NOAA (Hartford-Brainard Airport / Hartford, ~18&nbsp;mi from site) and the USGS National Elevation Dataset. The hardiness zone and bioregion map images above are the original screenshots from that same slide, cropped to just the map (USDA Plant Hardiness Zone Map / bioregion screenshot, June 2026).
+      The annual wind rose's percentages are approximate — reconstructed from the source Figma chart's wedge geometry, not re-queried from underlying station data — and kept here for fidelity to the original Lesson 1 assignment.
+      The four seasonal wind roses below it are the actual data: 10 years of hourly METAR observations from Hartford-Brainard Airport (KHFD, ~16&nbsp;km from the site), reused directly from the Lesson 3 Sector Analysis report. They resolve what the annual chart averages away — winter prevails from the N, while spring, summer, and fall all trend S (summer most strongly, at 23.7%).
+      Wind data: Iowa Environmental Mesonet ASOS archive for station HFD (Hartford-Brainard Airport), via mesonet.agron.iastate.edu — real hourly wind observations, not a forecast model. Seasons are meteorological (Winter = Dec/Jan/Feb, etc). Direction bins are 16-point compass (22.5° sectors).
+    </footer>
+  </div>
+</div>
+
+<script>
+const SITE = {
+  koppen: "Dfa — Humid Continental, Hot Summer",
+  hardiness: "USDA Zone 6b (–05°F to 0°F)",
+  bioregion: "Northeastern Coastal Forest (NA10)",
+};
+
+const MONTHS = ["Jan","Feb","Mar","Apr","May","Jun","Jul","Aug","Sep","Oct","Nov","Dec"];
+const TEMP = {
+  high: [37,39,47,60,71,80,85,83,76,60,52,42],
+  low:  [21,22,29,39,50,59,65,64,57,44,34,26],
+};
+const PRECIP = [3.04,2.81,3.49,3.76,3.49,3.80,4.25,3.66,3.99,4.14,3.34,3.76];
+
+const WIND = {
+  avgSpeedMph: 8.3,
+  predominant: "W / SW",
+  sectors: ["N","NNE","NE","ENE","E","ESE","SE","SSE","S","SSW","SW","WSW","W","WNW","NW","NNW"],
+  pct:     [10.0,3.9,2.4,1.6,2.1,2.8,5.1,5.0,8.1,8.9,8.9,5.2,6.1,9.9,10.0,10.0],
+};
+
+// Seasonal detail reused from the Lesson 3 Sector Analysis report's wind-roses.html —
+// 10 years of hourly KHFD (Hartford-Brainard Airport) METAR observations, 2016-2025.
+const SECTORS_16 = ["N","NNE","NE","ENE","E","ESE","SE","SSE","S","SSW","SW","WSW","W","WNW","NW","NNW"];
+const SEASONS = [
+  { key: "winter", label: "Winter (DJF)", meanKt: 5.78, calmPct: 20.11, predominant: "N",
+    pct: [14.916,4.116,1.123,0.63,0.527,0.502,1.018,3.311,12.835,4.377,2.072,3.244,5.274,5.687,10.69,9.567],
+    matrixPct: {"N":{"1-3":1.47,"4-7":8.386,"8-12":4.197,"13-18":0.825,"19+":0.038},"NNE":{"1-3":0.835,"4-7":2.419,"8-12":0.749,"13-18":0.104,"19+":0.009},"NE":{"1-3":0.341,"4-7":0.545,"8-12":0.175,"13-18":0.062,"19+":0.0},"ENE":{"1-3":0.19,"4-7":0.346,"8-12":0.085,"13-18":0.009,"19+":0.0},"E":{"1-3":0.275,"4-7":0.204,"8-12":0.043,"13-18":0.005,"19+":0.0},"ESE":{"1-3":0.308,"4-7":0.161,"8-12":0.028,"13-18":0.005,"19+":0.0},"SE":{"1-3":0.564,"4-7":0.384,"8-12":0.047,"13-18":0.014,"19+":0.009},"SSE":{"1-3":1.186,"4-7":1.717,"8-12":0.304,"13-18":0.071,"19+":0.033},"S":{"1-3":1.935,"4-7":7.404,"8-12":2.794,"13-18":0.645,"19+":0.057},"SSW":{"1-3":0.503,"4-7":2.371,"8-12":1.252,"13-18":0.242,"19+":0.009},"SW":{"1-3":0.341,"4-7":1.257,"8-12":0.427,"13-18":0.047,"19+":0.0},"WSW":{"1-3":0.327,"4-7":1.684,"8-12":1.043,"13-18":0.19,"19+":0.0},"W":{"1-3":0.678,"4-7":2.405,"8-12":1.688,"13-18":0.47,"19+":0.033},"WNW":{"1-3":0.379,"4-7":1.992,"8-12":2.296,"13-18":0.93,"19+":0.09},"NW":{"1-3":0.341,"4-7":3.154,"8-12":4.876,"13-18":2.115,"19+":0.204},"NNW":{"1-3":0.422,"4-7":3.913,"8-12":4.017,"13-18":1.134,"19+":0.081}} },
+  { key: "spring", label: "Spring (MAM)", meanKt: 6.51, calmPct: 15.82, predominant: "S",
+    pct: [12.103,5.43,2.679,1.761,1.585,1.258,2.003,5.383,17.86,3.787,1.197,2.106,4.265,6.201,8.828,7.734],
+    matrixPct: {"N":{"1-3":0.857,"4-7":5.472,"8-12":4.648,"13-18":1.041,"19+":0.085},"NNE":{"1-3":0.587,"4-7":2.58,"8-12":1.747,"13-18":0.483,"19+":0.033},"NE":{"1-3":0.336,"4-7":1.316,"8-12":0.852,"13-18":0.17,"19+":0.005},"ENE":{"1-3":0.336,"4-7":0.928,"8-12":0.407,"13-18":0.09,"19+":0.0},"E":{"1-3":0.383,"4-7":0.989,"8-12":0.204,"13-18":0.009,"19+":0.0},"ESE":{"1-3":0.312,"4-7":0.776,"8-12":0.17,"13-18":0.0,"19+":0.0},"SE":{"1-3":0.63,"4-7":1.127,"8-12":0.246,"13-18":0.0,"19+":0.0},"SSE":{"1-3":1.122,"4-7":3.006,"8-12":1.127,"13-18":0.128,"19+":0.0},"S":{"1-3":1.69,"4-7":9.032,"8-12":5.874,"13-18":1.198,"19+":0.066},"SSW":{"1-3":0.327,"4-7":1.747,"8-12":1.401,"13-18":0.293,"19+":0.019},"SW":{"1-3":0.189,"4-7":0.596,"8-12":0.393,"13-18":0.019,"19+":0.0},"WSW":{"1-3":0.275,"4-7":0.989,"8-12":0.686,"13-18":0.156,"19+":0.0},"W":{"1-3":0.407,"4-7":1.6,"8-12":1.676,"13-18":0.544,"19+":0.038},"WNW":{"1-3":0.293,"4-7":1.794,"8-12":2.755,"13-18":1.231,"19+":0.128},"NW":{"1-3":0.26,"4-7":2.414,"8-12":4.033,"13-18":1.917,"19+":0.204},"NNW":{"1-3":0.279,"4-7":2.812,"8-12":3.261,"13-18":1.283,"19+":0.099}} },
+  { key: "summer", label: "Summer (JJA)", meanKt: 4.94, calmPct: 21.13, predominant: "S",
+    pct: [8.197,4.576,1.964,1.303,1.357,1.405,3.181,9.948,23.696,5.426,1.975,2.322,2.901,2.786,3.837,3.997],
+    matrixPct: {"N":{"1-3":0.623,"4-7":4.88,"8-12":2.457,"13-18":0.232,"19+":0.005},"NNE":{"1-3":0.671,"4-7":2.775,"8-12":1.004,"13-18":0.126,"19+":0.0},"NE":{"1-3":0.473,"4-7":1.086,"8-12":0.391,"13-18":0.014,"19+":0.0},"ENE":{"1-3":0.391,"4-7":0.772,"8-12":0.126,"13-18":0.014,"19+":0.0},"E":{"1-3":0.541,"4-7":0.777,"8-12":0.034,"13-18":0.005,"19+":0.0},"ESE":{"1-3":0.57,"4-7":0.777,"8-12":0.058,"13-18":0.0,"19+":0.0},"SE":{"1-3":1.25,"4-7":1.762,"8-12":0.159,"13-18":0.005,"19+":0.005},"SSE":{"1-3":2.447,"4-7":5.845,"8-12":1.53,"13-18":0.126,"19+":0.0},"S":{"1-3":3.181,"4-7":13.815,"8-12":6.096,"13-18":0.594,"19+":0.01},"SSW":{"1-3":0.488,"4-7":3.012,"8-12":1.81,"13-18":0.116,"19+":0.0},"SW":{"1-3":0.237,"4-7":1.13,"8-12":0.603,"13-18":0.005,"19+":0.0},"WSW":{"1-3":0.237,"4-7":1.245,"8-12":0.777,"13-18":0.063,"19+":0.0},"W":{"1-3":0.27,"4-7":1.545,"8-12":1.028,"13-18":0.053,"19+":0.005},"WNW":{"1-3":0.179,"4-7":1.376,"8-12":1.091,"13-18":0.14,"19+":0.0},"NW":{"1-3":0.227,"4-7":1.805,"8-12":1.501,"13-18":0.304,"19+":0.0},"NNW":{"1-3":0.188,"4-7":2.018,"8-12":1.453,"13-18":0.319,"19+":0.019}} },
+  { key: "fall",   label: "Fall (SON)",   meanKt: 4.95, calmPct: 26.05, predominant: "S",
+    pct: [14.272,6.041,1.96,1.283,1.111,1.016,1.707,4.625,14.444,3.911,1.741,2.251,3.457,3.839,6.052,6.246],
+    matrixPct: {"N":{"1-3":1.178,"4-7":7.372,"8-12":5.036,"13-18":0.672,"19+":0.014},"NNE":{"1-3":0.815,"4-7":3.533,"8-12":1.373,"13-18":0.315,"19+":0.005},"NE":{"1-3":0.505,"4-7":1.03,"8-12":0.324,"13-18":0.091,"19+":0.01},"ENE":{"1-3":0.41,"4-7":0.677,"8-12":0.191,"13-18":0.005,"19+":0.0},"E":{"1-3":0.534,"4-7":0.491,"8-12":0.086,"13-18":0.0,"19+":0.0},"ESE":{"1-3":0.529,"4-7":0.463,"8-12":0.024,"13-18":0.0,"19+":0.0},"SE":{"1-3":0.844,"4-7":0.758,"8-12":0.081,"13-18":0.024,"19+":0.0},"SSE":{"1-3":1.483,"4-7":2.394,"8-12":0.653,"13-18":0.081,"19+":0.014},"S":{"1-3":2.48,"4-7":8.183,"8-12":3.209,"13-18":0.529,"19+":0.043},"SSW":{"1-3":0.401,"4-7":2.26,"8-12":1.121,"13-18":0.129,"19+":0.0},"SW":{"1-3":0.224,"4-7":1.183,"8-12":0.324,"13-18":0.01,"19+":0.0},"WSW":{"1-3":0.234,"4-7":1.297,"8-12":0.577,"13-18":0.143,"19+":0.0},"W":{"1-3":0.567,"4-7":1.421,"8-12":1.178,"13-18":0.267,"19+":0.024},"WNW":{"1-3":0.358,"4-7":1.564,"8-12":1.497,"13-18":0.396,"19+":0.024},"NW":{"1-3":0.329,"4-7":2.208,"8-12":2.647,"13-18":0.844,"19+":0.024},"NNW":{"1-3":0.52,"4-7":2.532,"8-12":2.565,"13-18":0.61,"19+":0.019}} },
+];
+const KT_TO_MPH = 1.15078;
+
+const WIND_MONTHLY = [
+  {"month":"January","n_obs":7250,"mean_speed_kt":6.02,"max_speed_kt":23.0,"calm_pct":18.58,"prevailing_direction":"N","prevailing_pct":15.53},
+  {"month":"February","n_obs":6614,"mean_speed_kt":6.1,"max_speed_kt":28.0,"calm_pct":18.28,"prevailing_direction":"N","prevailing_pct":16.21},
+  {"month":"March","n_obs":7172,"mean_speed_kt":7.05,"max_speed_kt":67.0,"calm_pct":14.78,"prevailing_direction":"S","prevailing_pct":13.94},
+  {"month":"April","n_obs":6909,"mean_speed_kt":6.64,"max_speed_kt":24.0,"calm_pct":15.4,"prevailing_direction":"S","prevailing_pct":18.09},
+  {"month":"May","n_obs":7045,"mean_speed_kt":5.82,"max_speed_kt":21.0,"calm_pct":17.29,"prevailing_direction":"S","prevailing_pct":21.62},
+  {"month":"June","n_obs":6806,"mean_speed_kt":5.36,"max_speed_kt":19.0,"calm_pct":18.92,"prevailing_direction":"S","prevailing_pct":26.54},
+  {"month":"July","n_obs":6954,"mean_speed_kt":4.92,"max_speed_kt":20.0,"calm_pct":20.05,"prevailing_direction":"S","prevailing_pct":24.62},
+  {"month":"August","n_obs":6957,"mean_speed_kt":4.56,"max_speed_kt":30.0,"calm_pct":24.36,"prevailing_direction":"S","prevailing_pct":19.99},
+  {"month":"September","n_obs":6815,"mean_speed_kt":4.63,"max_speed_kt":20.0,"calm_pct":25.8,"prevailing_direction":"N","prevailing_pct":16.45},
+  {"month":"October","n_obs":7172,"mean_speed_kt":4.89,"max_speed_kt":21.0,"calm_pct":27.41,"prevailing_direction":"N","prevailing_pct":15.53},
+  {"month":"November","n_obs":6984,"mean_speed_kt":5.32,"max_speed_kt":36.0,"calm_pct":24.89,"prevailing_direction":"S","prevailing_pct":13.46},
+  {"month":"December","n_obs":7220,"mean_speed_kt":5.26,"max_speed_kt":25.0,"calm_pct":23.31,"prevailing_direction":"N","prevailing_pct":13.12}
+];
+const WIND_SPEED_BINS = ["1-3","4-7","8-12","13-18","19+"];
+const WIND_SPEED_LABELS = { "1-3": "1–3 kt", "4-7": "4–7 kt", "8-12": "8–12 kt", "13-18": "13–18 kt", "19+": "19+ kt" };
+
+const FROST = {
+  lastSpringDay: 104,  // Apr 14
+  firstFallDay: 296,   // Oct 23
+  freeDays: 192,
+  recordHighF: 103, recordHighLabel: "103°F · Jul 22, 2011 (Hartford-Brainard Airport)",
+  recordLowF: -26, recordLowLabel: "-26°F · Jan 22, 1961 (Hartford)",
+};
+
+function svgEl(tag, attrs) {
+  const el = document.createElementNS("http://www.w3.org/2000/svg", tag);
+  for (const k in attrs) el.setAttribute(k, attrs[k]);
+  return el;
+}
+
+// ---------- badges ----------
+document.getElementById("badge-row").innerHTML = `
+  <span class="badge">Köppen-Geiger <b>${SITE.koppen}</b></span>
+  <span class="badge">Hardiness <b>${SITE.hardiness}</b></span>
+  <span class="badge">Bioregion <b>${SITE.bioregion}</b></span>
+`;
+
+// ---------- Temperature panel ----------
+(function buildTempPanel(){
+  const VB_W = 480, VB_H = 300;
+  const PAD = { top: 14, right: 14, bottom: 20, left: 30 };
+  const plotW = VB_W - PAD.left - PAD.right;
+  const plotH = VB_H - PAD.top - PAD.bottom;
+  const Y_MIN = 0, Y_MAX = 100;
+  const Y_TICKS = [0,20,40,60,80,100];
+
+  function xPix(i) { return PAD.left + i/(MONTHS.length-1) * plotW; }
+  function yPix(v) { return PAD.top + (1 - (v - Y_MIN)/(Y_MAX-Y_MIN)) * plotH; }
+
+  const svg = svgEl("svg", { class: "chart", viewBox: `0 0 ${VB_W} ${VB_H}` });
+
+  // frost-free band (Apr-Oct, approximated to month indices 3..9)
+  const bandX0 = xPix(3) - (xPix(3)-xPix(2))*0.35;
+  const bandX1 = xPix(9) + (xPix(9)-xPix(8))*0.6;
+  svg.appendChild(svgEl("rect", { x: bandX0, y: PAD.top, width: bandX1-bandX0, height: plotH, fill: "var(--band-frost)" }));
+
+  Y_TICKS.forEach(v => {
+    const y = yPix(v);
+    svg.appendChild(svgEl("line", { class: v === 0 ? "baseline" : "grid-line", x1: PAD.left, x2: VB_W-PAD.right, y1: y, y2: y }));
+    const lbl = svgEl("text", { class: "axis-label", x: PAD.left-5, y: y+3, "text-anchor": "end" });
+    lbl.textContent = v + "°";
+    svg.appendChild(lbl);
+  });
+  MONTHS.forEach((m,i) => {
+    const lbl = svgEl("text", { class: "axis-label", x: xPix(i), y: VB_H-PAD.bottom+13, "text-anchor": "middle" });
+    lbl.textContent = m;
+    svg.appendChild(lbl);
+  });
+
+  // shaded band between high/low
+  const bandPath = MONTHS.map((_,i) => `${i===0?"M":"L"} ${xPix(i).toFixed(2)} ${yPix(TEMP.high[i]).toFixed(2)}`).join(" ") +
+    " " + MONTHS.slice().reverse().map((_,ri) => { const i = MONTHS.length-1-ri; return `L ${xPix(i).toFixed(2)} ${yPix(TEMP.low[i]).toFixed(2)}`; }).join(" ") + " Z";
+  svg.appendChild(svgEl("path", { d: bandPath, fill: "var(--series-high)", opacity: 0.10 }));
+
+  function line(values, colorVar) {
+    const d = values.map((v,i) => `${i===0?"M":"L"} ${xPix(i).toFixed(2)} ${yPix(v).toFixed(2)}`).join(" ");
+    svg.appendChild(svgEl("path", { d, fill: "none", stroke: `var(${colorVar})`, "stroke-width": 2, "stroke-linecap":"round", "stroke-linejoin":"round" }));
+    values.forEach((v,i) => {
+      svg.appendChild(svgEl("circle", { cx: xPix(i), cy: yPix(v), r: 3, fill: `var(${colorVar})`, stroke: "var(--surface-1)" }));
+    });
+  }
+  line(TEMP.low, "--series-low");
+  line(TEMP.high, "--series-high");
+
+  // hover
+  const crosshair = svgEl("line", { class: "crosshair-line", y1: PAD.top, y2: VB_H-PAD.bottom });
+  svg.appendChild(crosshair);
+  const hit = svgEl("rect", { class: "hit-layer", x: PAD.left, y: PAD.top, width: plotW, height: plotH });
+  svg.appendChild(hit);
+
+  const panel = document.createElement("div");
+  panel.className = "panel";
+  panel.id = "temperature";
+  panel.style.position = "relative";
+  const annualAvgHigh = (TEMP.high.reduce((a,b)=>a+b,0)/12).toFixed(1);
+  const annualAvgLow = (TEMP.low.reduce((a,b)=>a+b,0)/12).toFixed(1);
+  panel.innerHTML = `
+    <div class="panel-title">Monthly Temperature Range</div>
+    <div class="panel-sub">Average daily high / low, °F · shaded band = frost-free growing season (Apr 14 – Oct 23)</div>
+    <div class="panel-stats">
+      <span>Avg high <b>${annualAvgHigh}°F</b></span>
+      <span>Avg low <b>${annualAvgLow}°F</b></span>
+      <span>Record high <b>${FROST.recordHighF}°F</b></span>
+      <span>Record low <b>${FROST.recordLowF}°F</b></span>
+    </div>
+  `;
+  panel.appendChild(svg);
+  const tooltip = document.createElement("div");
+  tooltip.className = "tooltip";
+  panel.appendChild(tooltip);
+  document.getElementById("chart-grid-1").appendChild(panel);
+
+  hit.addEventListener("mousemove", (evt) => {
+    const rect = svg.getBoundingClientRect();
+    const relX = (evt.clientX - rect.left) / rect.width * VB_W;
+    let idx = Math.round((relX - PAD.left) / plotW * (MONTHS.length-1));
+    idx = Math.max(0, Math.min(MONTHS.length-1, idx));
+    const x = xPix(idx);
+    crosshair.setAttribute("x1", x); crosshair.setAttribute("x2", x);
+    crosshair.style.opacity = 1;
+    const scale = rect.width / VB_W;
+    const panelRect = panel.getBoundingClientRect();
+    tooltip.style.left = (rect.left - panelRect.left + x*scale) + "px";
+    tooltip.style.top = (rect.top - panelRect.top + yPix(TEMP.high[idx])*scale - 10) + "px";
+    tooltip.innerHTML = `${MONTHS[idx]}<br>high ${TEMP.high[idx]}°F · low ${TEMP.low[idx]}°F`;
+    tooltip.style.opacity = 1;
+  });
+  hit.addEventListener("mouseleave", () => { crosshair.style.opacity = 0; tooltip.style.opacity = 0; });
+})();
+
+// ---------- Precipitation panel ----------
+(function buildPrecipPanel(){
+  const VB_W = 480, VB_H = 300;
+  const PAD = { top: 14, right: 14, bottom: 20, left: 30 };
+  const plotW = VB_W - PAD.left - PAD.right;
+  const plotH = VB_H - PAD.top - PAD.bottom;
+  const Y_MAX = 5;
+  const Y_TICKS = [0,1,2,3,4,5];
+  const barW = plotW / MONTHS.length * 0.62;
+
+  function xCenter(i) { return PAD.left + (i+0.5)/MONTHS.length * plotW; }
+  function yPix(v) { return PAD.top + (1 - v/Y_MAX) * plotH; }
+
+  const svg = svgEl("svg", { class: "chart", viewBox: `0 0 ${VB_W} ${VB_H}` });
+  Y_TICKS.forEach(v => {
+    const y = yPix(v);
+    svg.appendChild(svgEl("line", { class: v===0?"baseline":"grid-line", x1: PAD.left, x2: VB_W-PAD.right, y1: y, y2: y }));
+    const lbl = svgEl("text", { class: "axis-label", x: PAD.left-5, y: y+3, "text-anchor": "end" });
+    lbl.textContent = v.toFixed(0) + `"`;
+    svg.appendChild(lbl);
+  });
+  MONTHS.forEach((m,i) => {
+    const lbl = svgEl("text", { class: "axis-label", x: xCenter(i), y: VB_H-PAD.bottom+13, "text-anchor": "middle" });
+    lbl.textContent = m;
+    svg.appendChild(lbl);
+  });
+
+  const bars = [];
+  PRECIP.forEach((v,i) => {
+    const x = xCenter(i) - barW/2;
+    const y = yPix(v);
+    const bar = svgEl("rect", { x, y, width: barW, height: (VB_H-PAD.bottom)-y, fill: "var(--series-precip)", rx: 2 });
+    svg.appendChild(bar);
+    bars.push({bar, i, v});
+  });
+
+  const panel = document.createElement("div");
+  panel.className = "panel";
+  panel.id = "precipitation";
+  panel.style.position = "relative";
+  const total = PRECIP.reduce((a,b)=>a+b,0).toFixed(1);
+  panel.innerHTML = `
+    <div class="panel-title">Monthly Precipitation</div>
+    <div class="panel-sub">Average monthly precipitation, inches · Köppen "f" — no pronounced dry season</div>
+    <div class="panel-stats">
+      <span>Chart total <b>${total} in/yr</b></span>
+      <span>Avg annual rainfall <b>40.0 in</b> (WeatherSpark)</span>
+      <span>Avg annual snowfall <b>34.0 in</b></span>
+      <span>24hr extreme <b>~6.5 in</b></span>
+    </div>
+  `;
+  panel.appendChild(svg);
+  const tooltip = document.createElement("div");
+  tooltip.className = "tooltip";
+  panel.appendChild(tooltip);
+  document.getElementById("chart-grid-1").appendChild(panel);
+
+  bars.forEach(({bar,i,v}) => {
+    bar.addEventListener("mousemove", (evt) => {
+      const rect = svg.getBoundingClientRect();
+      const scale = rect.width / VB_W;
+      const panelRect = panel.getBoundingClientRect();
+      tooltip.style.left = (rect.left - panelRect.left + xCenter(i)*scale) + "px";
+      tooltip.style.top = (rect.top - panelRect.top + yPix(v)*scale - 10) + "px";
+      tooltip.innerHTML = `${MONTHS[i]}<br>${v.toFixed(2)}"`;
+      tooltip.style.opacity = 1;
+      bar.style.opacity = 0.8;
+    });
+    bar.addEventListener("mouseleave", () => { tooltip.style.opacity = 0; bar.style.opacity = 1; });
+  });
+})();
+
+// ---------- shared wind-rose builder ----------
+// Draws a single-color 16-sector frequency rose into a panel. Returns the panel element.
+function buildWindRosePanel({ container, title, sub, stats, sectors, pct, predominantSectors, yMax, rings, vbH, cy, rMax }) {
+  const VB_W = 420, VB_H = vbH || 380;
+  const CX = VB_W/2, CY = cy || 190;
+  const R_MAX = rMax || 148;
+  const Y_MAX = yMax;
+  const n = sectors.length;
+  const step = 360/n;
+
+  function polar(angleDeg, r) {
+    const rad = (angleDeg - 90) * Math.PI/180;
+    return [CX + r*Math.cos(rad), CY + r*Math.sin(rad)];
+  }
+  function radiusFor(p) { return Math.min(p, Y_MAX)/Y_MAX * R_MAX; }
+  function wedgePath(a0, a1, r) {
+    const [x1,y1] = polar(a1, r), [x0,y0] = polar(a0, r);
+    return `M ${CX} ${CY} L ${x0.toFixed(2)} ${y0.toFixed(2)} A ${r.toFixed(2)} ${r.toFixed(2)} 0 0 1 ${x1.toFixed(2)} ${y1.toFixed(2)} Z`;
+  }
+
+  const svg = svgEl("svg", { class: "chart", viewBox: `0 0 ${VB_W} ${VB_H}` });
+
+  rings.forEach(ringPct => {
+    const r = radiusFor(ringPct);
+    svg.appendChild(svgEl("circle", { class: ringPct===Y_MAX?"baseline-ring":"grid-ring", cx: CX, cy: CY, r }));
+    const lbl = svgEl("text", { class: "axis-label", x: CX+4, y: CY-r-2, "text-anchor": "start" });
+    lbl.textContent = ringPct + "%";
+    svg.appendChild(lbl);
+  });
+
+  const compass8 = [["N",0],["NE",45],["E",90],["SE",135],["S",180],["SW",225],["W",270],["NW",315]];
+  compass8.forEach(([label, ang]) => {
+    const [x,y] = polar(ang, R_MAX+14);
+    const t = svgEl("text", { class: "dir-label", x, y: y+3, "text-anchor": "middle" });
+    t.textContent = label;
+    svg.appendChild(t);
+  });
+
+  const wedges = [];
+  sectors.forEach((sector, i) => {
+    const centerAngle = i * step;
+    const a0 = centerAngle - step/2 + 1, a1 = centerAngle + step/2 - 1;
+    const p = pct[i];
+    const r = radiusFor(p);
+    const isPredominant = predominantSectors.includes(sector);
+    const path = svgEl("path", {
+      d: wedgePath(a0, a1, r),
+      fill: isPredominant ? "var(--wind-accent)" : "var(--wind-fill)",
+      stroke: "var(--surface-1)", "stroke-width": 1,
+    });
+    svg.appendChild(path);
+    wedges.push({path, sector, pct: p});
+  });
+
+  const panel = document.createElement("div");
+  panel.className = "panel";
+  panel.style.position = "relative";
+  panel.innerHTML = `
+    <div class="panel-title">${title}</div>
+    <div class="panel-sub">${sub}</div>
+    <div class="panel-stats">${stats}</div>
+  `;
+  panel.appendChild(svg);
+  const tooltip = document.createElement("div");
+  tooltip.className = "tooltip";
+  panel.appendChild(tooltip);
+  container.appendChild(panel);
+
+  wedges.forEach(({path, sector, pct}) => {
+    path.addEventListener("mousemove", (evt) => {
+      const panelRect = panel.getBoundingClientRect();
+      tooltip.style.left = (evt.clientX - panelRect.left) + "px";
+      tooltip.style.top = (evt.clientY - panelRect.top - 10) + "px";
+      tooltip.innerHTML = `${sector}<br>${pct.toFixed(1)}% of observations`;
+      tooltip.style.opacity = 1;
+      path.style.opacity = 0.8;
+    });
+    path.addEventListener("mouseleave", () => { tooltip.style.opacity = 0; path.style.opacity = 1; });
+  });
+
+  return panel;
+}
+
+// ---------- Annual wind rose (Lesson 1 Figma slide, approximate) ----------
+(function buildAnnualWindPanel(){
+  buildWindRosePanel({
+    container: document.getElementById("wind-annual-wrap"),
+    title: "Annual Wind Rose",
+    sub: "% of observations by direction · approximate, digitized from the Lesson 1 climate-survey slide",
+    stats: `<span>Predominant <b>${WIND.predominant}</b></span><span>Avg annual speed <b>${WIND.avgSpeedMph} mph</b></span>`,
+    sectors: WIND.sectors,
+    pct: WIND.pct,
+    predominantSectors: ["W","SW"],
+    yMax: 12,
+    rings: [2,4,6,8,10,12],
+  });
+})();
+
+// ---------- Seasonal wind roses (KHFD station data, via Lesson 3 report) ----------
+(function buildSeasonalWindPanels(){
+  const container = document.getElementById("chart-grid-seasons");
+  const Y_MAX = 25;
+  const RINGS = [5,10,15,20,25];
+
+  SEASONS.forEach(season => {
+    const meanMph = (season.meanKt * KT_TO_MPH).toFixed(1);
+    const predPct = season.pct[SECTORS_16.indexOf(season.predominant)];
+    buildWindRosePanel({
+      container,
+      title: season.label,
+      sub: "KHFD, 2016–2025 · shared 0–25% scale across seasons",
+      stats: `<span>Predominant <b>${season.predominant}</b> (${predPct.toFixed(1)}%)</span><span>Mean <b>${meanMph} mph</b></span><span>Calm <b>${season.calmPct}%</b></span>`,
+      sectors: SECTORS_16,
+      pct: season.pct,
+      predominantSectors: [season.predominant],
+      yMax: Y_MAX,
+      rings: RINGS,
+      vbH: 340,
+      cy: 175,
+      rMax: 130,
+    });
+  });
+
+  const summaryLine = document.getElementById("season-summary-line");
+  summaryLine.innerHTML = SEASONS.map(s => {
+    const p = s.pct[SECTORS_16.indexOf(s.predominant)];
+    return `<span>${s.label.split(" ")[0]} <b>${s.predominant}</b> (${p.toFixed(1)}%)</span>`;
+  }).join("");
+})();
+
+// ---------- Frost / hardiness timeline panel ----------
+(function buildFrostPanel(){
+  const VB_W = 980, VB_H = 140;
+  const PAD = { top: 34, right: 20, bottom: 30, left: 20 };
+  const plotW = VB_W - PAD.left - PAD.right;
+  const DAYS_IN_YEAR = 365;
+
+  function xPix(day) { return PAD.left + day/DAYS_IN_YEAR * plotW; }
+
+  const svg = svgEl("svg", { class: "chart", viewBox: `0 0 ${VB_W} ${VB_H}` });
+
+  const trackY = 60, trackH = 22;
+  svg.appendChild(svgEl("rect", { x: PAD.left, y: trackY, width: plotW, height: trackH, rx: 6, fill: "var(--grid)" }));
+
+  const bandX0 = xPix(FROST.lastSpringDay), bandX1 = xPix(FROST.firstFallDay);
+  svg.appendChild(svgEl("rect", { x: bandX0, y: trackY, width: bandX1-bandX0, height: trackH, rx: 6, fill: "var(--band-frost-line)" }));
+
+  // month ticks
+  const cumDays = [0,31,59,90,120,151,181,212,243,273,304,334,365];
+  MONTHS.forEach((m,i) => {
+    const x = xPix((cumDays[i]+cumDays[i+1])/2);
+    const lbl = svgEl("text", { class: "axis-label", x, y: trackY+trackH+16, "text-anchor": "middle" });
+    lbl.textContent = m;
+    svg.appendChild(lbl);
+    if (i>0) {
+      const tickX = xPix(cumDays[i]);
+      svg.appendChild(svgEl("line", { class: "grid-line", x1: tickX, x2: tickX, y1: trackY-4, y2: trackY+trackH+4 }));
+    }
+  });
+
+  // markers
+  [[FROST.lastSpringDay, "Last spring frost", "Apr 14"], [FROST.firstFallDay, "First fall frost", "Oct 23"]].forEach(([day,label,date]) => {
+    const x = xPix(day);
+    svg.appendChild(svgEl("line", { x1:x, x2:x, y1: trackY-10, y2: trackY+trackH+10, stroke: "var(--text-primary)", "stroke-width": 1.5 }));
+    const lbl = svgEl("text", { class: "value-label-strong", x, y: trackY-16 });
+    lbl.textContent = `${label} · ${date}`;
+    svg.appendChild(lbl);
+  });
+
+  const centerDay = (FROST.lastSpringDay+FROST.firstFallDay)/2;
+  const freeLbl = svgEl("text", { class: "value-label", x: xPix(centerDay), y: trackY+trackH/2+4, fill: "#fff" });
+  freeLbl.style.fill = "#fff";
+  freeLbl.setAttribute("font-weight", "600");
+  freeLbl.textContent = `${FROST.freeDays} frost-free days`;
+  svg.appendChild(freeLbl);
+
+  const panel = document.getElementById("frost-panel");
+  panel.innerHTML = `
+    <div class="panel-title">Frost-Free Season &amp; Hardiness Zone</div>
+    <div class="panel-sub">${SITE.hardiness} · ${SITE.koppen}</div>
+    <div class="panel-stats">
+      <span>Frost-free period <b>${FROST.freeDays} days</b></span>
+      <span>Last spring frost <b>Apr 14</b> (50% probability)</span>
+      <span>First fall frost <b>Oct 23</b> (50% probability)</span>
+      <span>Record high <b>${FROST.recordHighLabel}</b></span>
+      <span>Record low <b>${FROST.recordLowLabel}</b></span>
+    </div>
+  `;
+  panel.appendChild(svg);
+})();
+
+// ---------- data tables ----------
+(function buildTables(){
+  const tableGrid = document.getElementById("table-grid");
+
+  const t1 = document.createElement("table");
+  t1.className = "data-table";
+  t1.innerHTML = `
+    <caption>Monthly temperature °F</caption>
+    <thead><tr><th>Month</th><th>High</th><th>Low</th></tr></thead>
+    <tbody>${MONTHS.map((m,i)=>`<tr><td>${m}</td><td>${TEMP.high[i]}</td><td>${TEMP.low[i]}</td></tr>`).join("")}</tbody>
+  `;
+  tableGrid.appendChild(t1);
+
+  const t2 = document.createElement("table");
+  t2.className = "data-table";
+  t2.innerHTML = `
+    <caption>Monthly precipitation (in)</caption>
+    <thead><tr><th>Month</th><th>Precip.</th></tr></thead>
+    <tbody>${MONTHS.map((m,i)=>`<tr><td>${m}</td><td>${PRECIP[i].toFixed(2)}</td></tr>`).join("")}</tbody>
+  `;
+  tableGrid.appendChild(t2);
+
+  const t3 = document.createElement("table");
+  t3.className = "data-table";
+  t3.innerHTML = `
+    <caption>Annual wind direction frequency (approx.)</caption>
+    <thead><tr><th>Dir.</th><th>%</th></tr></thead>
+    <tbody>${WIND.sectors.map((s,i)=>`<tr><td>${s}</td><td>${WIND.pct[i].toFixed(1)}</td></tr>`).join("")}</tbody>
+  `;
+  tableGrid.appendChild(t3);
+
+  const t4 = document.createElement("table");
+  t4.className = "data-table";
+  t4.innerHTML = `
+    <caption>Seasonal wind summary (KHFD, 2016–2025)</caption>
+    <thead><tr><th>Season</th><th>Predominant</th><th>%</th><th>Mean speed</th><th>Calm %</th></tr></thead>
+    <tbody>${SEASONS.map(s => {
+      const p = s.pct[SECTORS_16.indexOf(s.predominant)];
+      const mph = (s.meanKt * KT_TO_MPH).toFixed(1);
+      return `<tr><td>${s.label}</td><td>${s.predominant}</td><td>${p.toFixed(1)}</td><td>${mph} mph</td><td>${s.calmPct}</td></tr>`;
+    }).join("")}</tbody>
+  `;
+  tableGrid.appendChild(t4);
+
+  const t5 = document.createElement("table");
+  t5.className = "data-table";
+  t5.innerHTML = `
+    <caption>Monthly wind summary — KHFD, 2016–2025</caption>
+    <thead><tr><th>Month</th><th>Mean speed</th><th>Max gust</th><th>Calm %</th><th>Prevailing dir.</th><th>Prevailing %</th></tr></thead>
+    <tbody>${WIND_MONTHLY.map(m => `<tr><td>${m.month}</td><td>${(m.mean_speed_kt * KT_TO_MPH).toFixed(1)} mph</td><td>${(m.max_speed_kt * KT_TO_MPH).toFixed(1)} mph</td><td>${m.calm_pct}%</td><td>${m.prevailing_direction}</td><td>${m.prevailing_pct}%</td></tr>`).join("")}</tbody>
+  `;
+  tableGrid.appendChild(t5);
+
+  SEASONS.forEach(season => {
+    const t = document.createElement("table");
+    t.className = "data-table";
+    const rows = SECTORS_16.map(sec => {
+      const cells = WIND_SPEED_BINS.map(b => `<td>${(season.matrixPct[sec][b] || 0).toFixed(1)}%</td>`).join("");
+      return `<tr><td>${sec}</td>${cells}<td><b>${season.pct[SECTORS_16.indexOf(sec)].toFixed(1)}%</b></td></tr>`;
+    }).join("");
+    t.innerHTML = `
+      <caption>${season.label} — direction × speed (KHFD, 2016–2025)</caption>
+      <thead><tr><th style="text-align:left;">Dir.</th>${WIND_SPEED_BINS.map(b => `<th>${WIND_SPEED_LABELS[b]}</th>`).join("")}<th>Total</th></tr></thead>
+      <tbody>${rows}</tbody>
+    `;
+    tableGrid.appendChild(t);
+  });
+})();
+</script>
+<!-- FOOTER:START -->
+<style>
+  .site-footer {
+    font-family: system-ui, -apple-system, "Segoe UI", sans-serif;
+    padding: 20px; text-align: center;
+    font-size: 12px; color: #898781;
+    background: #fcfcfb; border-top: 1px solid rgba(11,11,11,0.10);
+  }
+  .site-footer a { color: #52514e; }
+  @media (prefers-color-scheme: dark) {
+    :root:not([data-theme="light"]) .site-footer { background: #1a1a19; border-top-color: rgba(255,255,255,0.10); }
+    :root:not([data-theme="light"]) .site-footer a { color: #c3c2b7; }
+  }
+  :root[data-theme="dark"] .site-footer { background: #1a1a19; border-top-color: rgba(255,255,255,0.10); }
+  :root[data-theme="dark"] .site-footer a { color: #c3c2b7; }
+</style>
+<footer class="site-footer">
+  <p>Demo site for <a href="https://github.com/keser/site-toolkit">site-toolkit</a>.
+    Example data: Lot #86, 58 Freestone Avenue, Portland, CT 06480.</p>
+</footer>
+<!-- FOOTER:END -->
+</body>
+</html>

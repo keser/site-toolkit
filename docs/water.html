@@ -1,0 +1,1042 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta charset="UTF-8">
+<title>Water — Lot #86</title>
+<style>
+  .viz-root {
+    color-scheme: light;
+    --surface-1: #fcfcfb; --page: #f9f9f7; --text-primary: #0b0b0b;
+    --text-secondary: #52514e; --text-muted: #898781; --grid: #e1e0d9;
+    --baseline: #c3c2b7; --border: rgba(11,11,11,0.10);
+    --badge-bg: #eef0ea; --accent: #e07b39;
+  }
+  @media (prefers-color-scheme: dark) {
+    :root:where(:not([data-theme="light"])) .viz-root {
+      color-scheme: dark;
+      --surface-1: #1a1a19; --page: #0d0d0d; --text-primary: #ffffff;
+      --text-secondary: #c3c2b7; --text-muted: #898781; --grid: #2c2c2a;
+      --baseline: #383835; --border: rgba(255,255,255,0.10);
+      --badge-bg: #23261f; --accent: #e8935a;
+    }
+  }
+  :root[data-theme="dark"] .viz-root {
+    color-scheme: dark;
+    --surface-1: #1a1a19; --page: #0d0d0d; --text-primary: #ffffff;
+    --text-secondary: #c3c2b7; --text-muted: #898781; --grid: #2c2c2a;
+    --baseline: #383835; --border: rgba(255,255,255,0.10);
+    --badge-bg: #23261f; --accent: #e8935a;
+  }
+  * { box-sizing: border-box; }
+  body { margin: 0; }
+  .viz-root {
+    font-family: system-ui, -apple-system, "Segoe UI", sans-serif;
+    background: var(--page); color: var(--text-primary);
+    min-height: 100vh; padding: 32px 20px 60px;
+  }
+  .wrap { max-width: 1280px; margin: 0 auto; }
+  .section-title { font-size: 21px; font-weight: 600; margin: 0 0 6px; }
+  .subhead { color: var(--text-secondary); font-size: 14px; line-height: 1.5; margin: 0 0 12px; }
+  .badge-row { display: flex; flex-wrap: wrap; gap: 8px; margin-bottom: 20px; }
+  .badge {
+    background: var(--badge-bg); border: 1px solid var(--border); border-radius: 999px;
+    padding: 5px 12px; font-size: 12px; color: var(--text-secondary);
+    text-decoration: none;
+  }
+  .badge b { color: var(--text-primary); font-weight: 600; }
+  a.badge:hover { border-color: var(--accent); color: var(--text-primary); }
+  .panel {
+    background: var(--surface-1); border: 1px solid var(--border);
+    border-radius: 10px; padding: 16px 16px 10px;
+  }
+  .panel-title { font-size: 15px; font-weight: 600; margin: 0 0 2px; }
+  .panel-sub { font-size: 12px; color: var(--text-muted); margin: 0 0 10px; }
+  svg.chart { width: 100%; height: auto; display: block; overflow: visible; }
+  section.page-section { margin-bottom: 48px; padding-bottom: 4px; border-bottom: 1px solid var(--border); }
+  section.page-section:last-of-type { border-bottom: none; }
+
+  /* ---- precipitation-by-month.html (precip-) ---- */
+  .viz-root { --precip-band-et: rgba(224,123,57,0.14); --precip-band-et-line: #e07b39; --precip-mean-line: #52514e; --precip-series-precip: #5598e7; }
+  @media (prefers-color-scheme: dark) {
+    :root:where(:not([data-theme="light"])) .viz-root { --precip-band-et: rgba(232,147,90,0.16); --precip-band-et-line: #e8935a; --precip-mean-line: #c3c2b7; --precip-series-precip: #5598e7; }
+  }
+  :root[data-theme="dark"] .viz-root { --precip-band-et: rgba(232,147,90,0.16); --precip-band-et-line: #e8935a; --precip-mean-line: #c3c2b7; --precip-series-precip: #5598e7; }
+  .precip-ax { fill: var(--text-muted); font-size: 11px; }
+  .precip-val { fill: var(--text-secondary); font-size: 10.5px; font-weight: 600; }
+  .precip-gl { stroke: var(--grid); stroke-width: 1; }
+  .precip-base { stroke: var(--baseline); stroke-width: 1.5; }
+  .precip-mean { stroke: var(--precip-mean-line); stroke-width: 1.5; stroke-dasharray: 5 4; }
+  .precip-mean-lbl { fill: var(--precip-mean-line); font-size: 10.5px; font-weight: 600; }
+  .precip-et-band { fill: var(--precip-band-et); }
+  .precip-et-lbl { fill: var(--precip-band-et-line); font-size: 10.5px; font-weight: 600; }
+  .precip-note { font-size: 12.5px; color: var(--text-secondary); line-height: 1.55; margin: 12px 2px 0; }
+  .precip-src { font-size: 11.5px; color: var(--text-muted); margin: 14px 2px 0; }
+
+  /* ---- runoff-by-surface.html (runoff-) ---- */
+  .viz-root { --runoff-hard: #5598e7; --runoff-hard-2: #2a78d6; --runoff-perm: #6f8f52; --runoff-perm-2: #4d6b34; }
+  @media (prefers-color-scheme: dark) {
+    :root:where(:not([data-theme="light"])) .viz-root { --runoff-hard: #5598e7; --runoff-hard-2: #86b6ef; --runoff-perm: #8fae6f; --runoff-perm-2: #a9c48c; }
+  }
+  :root[data-theme="dark"] .viz-root { --runoff-hard: #5598e7; --runoff-hard-2: #86b6ef; --runoff-perm: #8fae6f; --runoff-perm-2: #a9c48c; }
+  .runoff-axt { fill: var(--text-muted); font-size: 10px; }
+  .runoff-gl { stroke: var(--grid); stroke-width: 1; }
+  .runoff-headline { background: var(--badge-bg); border: 1px solid var(--border); border-left: 3px solid var(--accent); border-radius: 6px; padding: 10px 12px; font-size: 13.5px; line-height: 1.5; margin: 0 0 20px; }
+  .runoff-headline b { color: var(--text-primary); }
+  .runoff-lbl { fill: var(--text-secondary); font-size: 11px; }
+  .runoff-lbl-b { fill: var(--text-primary); font-size: 11px; font-weight: 600; }
+  .runoff-legend { display: flex; gap: 16px; font-size: 12px; color: var(--text-secondary); margin: 2px 2px 0; }
+  .runoff-seclbl { fill: var(--text-muted); font-size: 10.5px; font-weight: 700; letter-spacing: .04em; }
+  .runoff-sw { display: inline-block; width: 11px; height: 11px; border-radius: 2px; vertical-align: -1px; margin-right: 5px; }
+  .runoff-val { fill: var(--text-primary); font-size: 11px; font-weight: 600; }
+  .runoff-val-m2 { fill: var(--text-muted); font-size: 10px; }
+  .runoff-src { font-size: 11.5px; color: var(--text-muted); margin: 14px 2px 0; }
+
+  /* ---- water-balance.html (wbal-) ---- */
+  .viz-root { --wbal-hard: #5598e7; --wbal-infil: #6f8f52; --wbal-node: #c3c2b7; --wbal-perm: #8fae6f; --wbal-rain: #7fb0e8; --wbal-runoff: #e07b39; }
+  @media (prefers-color-scheme: dark) {
+    :root:where(:not([data-theme="light"])) .viz-root { --wbal-hard: #5598e7; --wbal-infil: #8fae6f; --wbal-node: #4a4a46; --wbal-perm: #a9c48c; --wbal-rain: #5f92cf; --wbal-runoff: #e8935a; }
+  }
+  :root[data-theme="dark"] .viz-root { --wbal-hard: #5598e7; --wbal-infil: #8fae6f; --wbal-node: #4a4a46; --wbal-perm: #a9c48c; --wbal-rain: #5f92cf; --wbal-runoff: #e8935a; }
+  .wbal-foot { background: var(--badge-bg); border: 1px solid var(--border); border-left: 3px solid var(--accent); border-radius: 6px; padding: 11px 12px; font-size: 13px; line-height: 1.55; margin: 16px 0 0; }
+  .wbal-foot b { color: var(--text-primary); }
+  .wbal-nlbl { fill: var(--text-primary); font-size: 12px; font-weight: 600; }
+  .wbal-nsub { fill: var(--text-secondary); font-size: 10.5px; }
+  .wbal-src { font-size: 11.5px; color: var(--text-muted); margin: 14px 2px 0; }
+
+  /* ---- elevation-sections.html (elev-) ---- */
+  .viz-root { --elev-divide: #e07b39; --elev-ground: #b8925f; --elev-ground-fill: rgba(184,146,95,.22); --elev-lot: rgba(85,152,231,.16); --elev-lot-line: #2a78d6; }
+  @media (prefers-color-scheme: dark) {
+    :root:where(:not([data-theme="light"])) .viz-root { --elev-divide: #e8935a; --elev-ground: #c9a878; --elev-ground-fill: rgba(201,168,120,.20); --elev-lot: rgba(85,152,231,.20); --elev-lot-line: #86b6ef; }
+  }
+  :root[data-theme="dark"] .viz-root { --elev-divide: #e8935a; --elev-ground: #c9a878; --elev-ground-fill: rgba(201,168,120,.20); --elev-lot: rgba(85,152,231,.20); --elev-lot-line: #86b6ef; }
+  .elev-axt { fill: var(--text-muted); font-size: 10px; }
+  .elev-gl { stroke: var(--grid); stroke-width: 1; }
+  .elev-note { fill: var(--text-secondary); font-size: 10.5px; }
+  .elev-note-b { fill: var(--text-primary); font-size: 10.5px; font-weight: 600; }
+  .elev-src { font-size: 11.5px; color: var(--text-muted); margin: 8px 2px 0; }
+
+  /* ---- site-flow-schematic.html (flow-) ---- */
+  .viz-root { --flow-contour: #c3c1b2; --flow-divide: #b06a3a; --flow-exit: #c0392b; --flow-flow: #2a78d6; --flow-lot: rgba(111,143,82,.10); --flow-lot-line: #6f8f52; --flow-pool: #7fb0e8; --flow-struct: #d7d1c2; --flow-struct-line: #8c8676; --flow-swale-new: #e07b39; --flow-swale-old: #6f8f52; }
+  @media (prefers-color-scheme: dark) {
+    :root:where(:not([data-theme="light"])) .viz-root { --flow-contour: #48463f; --flow-divide: #d08a5a; --flow-exit: #e0574b; --flow-flow: #86b6ef; --flow-lot: rgba(143,174,111,.12); --flow-lot-line: #8fae6f; --flow-pool: #5f92cf; --flow-struct: #514e42; --flow-struct-line: #8a8474; --flow-swale-new: #e8935a; --flow-swale-old: #8fae6f; }
+  }
+  :root[data-theme="dark"] .viz-root { --flow-contour: #48463f; --flow-divide: #d08a5a; --flow-exit: #e0574b; --flow-flow: #86b6ef; --flow-lot: rgba(143,174,111,.12); --flow-lot-line: #8fae6f; --flow-pool: #5f92cf; --flow-struct: #514e42; --flow-struct-line: #8a8474; --flow-swale-new: #e8935a; --flow-swale-old: #8fae6f; }
+  .flow-cl { fill: var(--flow-contour); font-size: 9px; }
+  .flow-lbl { fill: var(--text-primary); font-size: 11px; }
+  .flow-lbl-b { fill: var(--text-primary); font-size: 11px; font-weight: 700; }
+  .flow-lbl-m { fill: var(--text-secondary); font-size: 10px; }
+  .flow-note { background: var(--badge-bg); border: 1px solid var(--border); border-left: 3px solid var(--accent); border-radius: 6px; padding: 10px 12px; font-size: 12.5px; line-height: 1.5; margin: 12px 0 0; }
+  .flow-note b { color: var(--text-primary); }
+  .flow-num { fill: #fff; font-size: 10px; font-weight: 700; }
+  .flow-src { font-size: 11.5px; color: var(--text-muted); margin: 12px 2px 0; }
+
+  /* ---- design-storm-frequency.html (storm-) ---- */
+  .viz-root { --storm-curve: #2a78d6; --storm-curve-dot: #5598e7; --storm-evt: rgba(224,123,57,.18); --storm-evt-line: #e07b39; --storm-rec: #c0392b; }
+  @media (prefers-color-scheme: dark) {
+    :root:where(:not([data-theme="light"])) .viz-root { --storm-curve: #86b6ef; --storm-curve-dot: #5598e7; --storm-evt: rgba(232,147,90,.20); --storm-evt-line: #e8935a; --storm-rec: #e0574b; }
+  }
+  :root[data-theme="dark"] .viz-root { --storm-curve: #86b6ef; --storm-curve-dot: #5598e7; --storm-evt: rgba(232,147,90,.20); --storm-evt-line: #e8935a; --storm-rec: #e0574b; }
+  .storm-axl { fill: var(--text-secondary); font-size: 11px; }
+  .storm-axt { fill: var(--text-muted); font-size: 10px; }
+  .storm-dot-lbl { fill: var(--text-primary); font-size: 10.5px; font-weight: 600; }
+  .storm-gl { stroke: var(--grid); stroke-width: 1; }
+  .storm-note { background: var(--badge-bg); border: 1px solid var(--border); border-left: 3px solid var(--accent); border-radius: 6px; padding: 10px 12px; font-size: 13px; line-height: 1.55; margin: 14px 0 0; }
+  .storm-note b { color: var(--text-primary); }
+  .storm-src { font-size: 11.5px; color: var(--text-muted); margin: 12px 2px 0; }
+
+  /* ---- macro-watershed-scale.html (shed-) ---- */
+  .viz-root { --shed-land: #e7e6de; --shed-land-line: #9c9a8b; --shed-river: #2a78d6; --shed-site: #e07b39; --shed-water: #7fb0e8; }
+  @media (prefers-color-scheme: dark) {
+    :root:where(:not([data-theme="light"])) .viz-root { --shed-land: #2b2b23; --shed-land-line: #54524a; --shed-river: #86b6ef; --shed-site: #e8935a; --shed-water: #3f6ea3; }
+  }
+  :root[data-theme="dark"] .viz-root { --shed-land: #2b2b23; --shed-land-line: #54524a; --shed-river: #86b6ef; --shed-site: #e8935a; --shed-water: #3f6ea3; }
+  .shed-axt { fill: var(--text-muted); font-size: 9.5px; }
+  .shed-maplbl { fill: var(--text-secondary); font-size: 11px; }
+  .shed-maplbl-b { fill: var(--text-primary); font-size: 11px; font-weight: 600; }
+  .shed-note { background: var(--badge-bg); border: 1px solid var(--border); border-left: 3px solid var(--accent); border-radius: 6px; padding: 10px 12px; font-size: 13px; line-height: 1.55; margin: 0 0 4px; }
+  .shed-note b { color: var(--text-primary); }
+  .shed-rd { fill: var(--text-secondary); font-size: 10.5px; }
+  .shed-rn { fill: var(--text-primary); font-size: 12px; font-weight: 600; }
+  .shed-src { font-size: 11.5px; color: var(--text-muted); margin: 12px 2px 0; }
+
+  /* ---- water-use-by-season.html (wuse-) ---- */
+  .viz-root { --wuse-base: #2a2a28; --wuse-excess: rgba(224,123,57,.16); --wuse-excess-line: #e07b39; --wuse-fall: #b8925f; --wuse-spring: #6f8f52; --wuse-summer: #d9a441; --wuse-winter: #5598e7; }
+  @media (prefers-color-scheme: dark) {
+    :root:where(:not([data-theme="light"])) .viz-root { --wuse-base: #e6e5df; --wuse-excess: rgba(232,147,90,.18); --wuse-excess-line: #e8935a; --wuse-fall: #c9a878; --wuse-spring: #8fae6f; --wuse-summer: #e6bd6a; --wuse-winter: #86b6ef; }
+  }
+  :root[data-theme="dark"] .viz-root { --wuse-base: #e6e5df; --wuse-excess: rgba(232,147,90,.18); --wuse-excess-line: #e8935a; --wuse-fall: #c9a878; --wuse-spring: #8fae6f; --wuse-summer: #e6bd6a; --wuse-winter: #86b6ef; }
+  .wuse-axl { fill: var(--text-secondary); font-size: 11px; }
+  .wuse-axt { fill: var(--text-muted); font-size: 10px; }
+  .wuse-dot-lbl { fill: var(--text-primary); font-size: 10.5px; font-weight: 600; }
+  .wuse-gl { stroke: var(--grid); stroke-width: 1; }
+  .wuse-legend { display: flex; flex-wrap: wrap; gap: 14px; font-size: 12px; color: var(--text-secondary); margin: 4px 2px 0; }
+  .wuse-note { background: var(--badge-bg); border: 1px solid var(--border); border-left: 3px solid var(--accent); border-radius: 6px; padding: 10px 12px; font-size: 13px; line-height: 1.55; margin: 14px 0 0; }
+  .wuse-note b { color: var(--text-primary); }
+  .wuse-seclbl { fill: var(--text-muted); font-size: 10px; font-weight: 700; letter-spacing: .03em; }
+  .wuse-src { font-size: 11.5px; color: var(--text-muted); margin: 12px 2px 0; }
+  .wuse-sw { display: inline-block; width: 11px; height: 11px; border-radius: 2px; vertical-align: -1px; margin-right: 5px; }
+  .wuse-val { fill: var(--text-primary); font-size: 10.5px; font-weight: 600; }
+</style>
+</head>
+<body>
+<!-- NAV:START -->
+<style>
+  .site-nav {
+    font-family: system-ui, -apple-system, "Segoe UI", sans-serif;
+    display: flex; flex-wrap: wrap; align-items: center; justify-content: space-between;
+    gap: 12px; padding: 14px 20px;
+    background: #fcfcfb; border-bottom: 1px solid rgba(11,11,11,0.10);
+  }
+  .site-nav__brand { font-weight: 600; font-size: 14px; color: #0b0b0b; text-decoration: none; }
+  .site-nav__links { display: flex; gap: 18px; flex-wrap: wrap; }
+  .site-nav__links a { font-size: 13px; color: #52514e; text-decoration: none; }
+  .site-nav__links a:hover { color: #0b0b0b; }
+  @media (prefers-color-scheme: dark) {
+    :root:not([data-theme="light"]) .site-nav { background: #1a1a19; border-bottom-color: rgba(255,255,255,0.10); }
+    :root:not([data-theme="light"]) .site-nav__brand { color: #ffffff; }
+    :root:not([data-theme="light"]) .site-nav__links a { color: #c3c2b7; }
+    :root:not([data-theme="light"]) .site-nav__links a:hover { color: #ffffff; }
+  }
+  :root[data-theme="dark"] .site-nav { background: #1a1a19; border-bottom-color: rgba(255,255,255,0.10); }
+  :root[data-theme="dark"] .site-nav__brand { color: #ffffff; }
+  :root[data-theme="dark"] .site-nav__links a { color: #c3c2b7; }
+  :root[data-theme="dark"] .site-nav__links a:hover { color: #ffffff; }
+</style>
+<nav class="site-nav">
+  <a class="site-nav__brand" href="index.html">Lot #86 — Site Profile</a>
+  <div class="site-nav__links">
+    <a href="base-map.html">Base Map</a>
+    <a href="sectors.html">Sectors</a>
+    <a href="zones-design.html">Zones &amp; Design</a>
+    <a href="climate.html">Climate</a>
+    <a href="water.html">Water</a>
+    <a href="sun-solar.html">Sun &amp; Solar</a>
+    <a href="flood-hazard.html">Flood &amp; Hazard</a>
+    <a href="species-inventory.html">Species Inventory</a>
+    <a href="project-plan.html">Project Plan</a>
+  </div>
+</nav>
+<!-- NAV:END -->
+<div class="viz-root"><div class="wrap">
+  <header>
+    <h1 class="section-title" style="font-size:23px;">Water</h1>
+    <p class="subhead">Eight views of water on the property — rainfall, runoff, the watershed it sits in, and the rainwater-harvesting potential across every surface.</p>
+    <div class="badge-row" id="section-nav">
+      <a class="badge" href="#precipitation">Precipitation by Month</a>
+      <a class="badge" href="#runoff">Runoff by Surface</a>
+      <a class="badge" href="#water-balance">Site Water Balance</a>
+      <a class="badge" href="#elevation">Elevation Cross-Sections</a>
+      <a class="badge" href="#flow-schematic">Site Water-Flow Schematic</a>
+      <a class="badge" href="#design-storm">Design-Storm Frequency</a>
+      <a class="badge" href="#watershed">Macro Watershed</a>
+      <a class="badge" href="#water-use">Household Water Use by Season</a>
+    </div>
+  </header>
+
+  <section class="page-section" id="precipitation">
+    <h2 class="section-title">Precipitation by Month</h2>
+    <p class="subhead">
+      Monthly precipitation normals for the design site. Rain is spread evenly across the
+      year — there is no dry season (Köppen&nbsp;"f") — so the rainwater-harvesting case
+      is not drought relief. It is (1)&nbsp;the mid-summer stretch when garden
+      evapotranspiration outpaces rainfall, and (2)&nbsp;capturing the roughly 25&nbsp;% of
+      rainfall that currently runs off the lot to the Freestone&nbsp;Avenue storm drains.
+    </p>
+
+    <div class="badge-row">
+      <span class="badge">Annual total <b>43.5&nbsp;in</b></span>
+      <span class="badge">Monthly mean <b>3.6&nbsp;in</b></span>
+      <span class="badge">Wettest <b>Jul, 4.25&nbsp;in</b></span>
+      <span class="badge">Driest <b>Feb, 2.81&nbsp;in</b></span>
+      <span class="badge">100-yr 24-hr <b>8.09&nbsp;in</b></span>
+    </div>
+
+    <div class="panel">
+      <div class="panel-title">Monthly precipitation, inches</div>
+      <div class="panel-sub">12-month normals · dashed line = monthly mean (3.6&nbsp;in) · shaded = peak garden-ET window</div>
+      <svg class="chart" id="precip-chart" viewBox="0 0 820 320" role="img"
+           aria-label="Bar chart of monthly precipitation for Portland, Connecticut. Values range from 2.81 inches in February to 4.25 inches in July; annual total 43.5 inches.">
+      </svg>
+    </div>
+
+    <p class="precip-note">
+      <b>Reading it for water design:</b> every month clears 2.8&nbsp;in, so cisterns are
+      rarely bone-dry — but July–September combine the highest air temperatures with only
+      average rain, and that is when the Zone&nbsp;3 vegetable garden runs short. A single
+      average month (~3.6&nbsp;in) sheds roughly <b>9,000&nbsp;gal</b> off the site's
+      ~2,475&nbsp;ft² of roof + pavement; the design aims to slow, spread, and sink that
+      rather than lose it to the street.
+    </p>
+
+    <p class="precip-src">
+      <b>Source:</b> monthly normals digitized from the Lesson&nbsp;1 Climate Survey
+      (PDC&nbsp;Pro Figma Slides, June&nbsp;2026; sourced there via WeatherSpark / NASA&nbsp;POWER),
+      same series used in <code>lesson-01-climate/assets/climate-survey-charts.html</code>.
+      Design-storm depth (100-yr 24-hr) from NOAA&nbsp;Atlas&nbsp;14 Vol.&nbsp;10, point
+      41.573,&nbsp;−72.634.
+    </p>
+  </section>
+
+  <section class="page-section" id="runoff">
+    <h2 class="section-title">Runoff by Surface</h2>
+    <p class="subhead">Estimated average-year runoff from every surface on the 0.43-acre lot.
+      Runoff&nbsp;=&nbsp;area&nbsp;×&nbsp;43.5&nbsp;in/yr&nbsp;×&nbsp;runoff&nbsp;coefficient. Blue&nbsp;= hard
+      (roof, pavement); green&nbsp;= permeable (turf, beds, woodland).</p>
+
+    <div class="runoff-headline">
+      <b>The lawn sheds more runoff than every roof, the driveway, and the walks combined.</b>
+      ~16,100&nbsp;ft² of turf and planting at low coefficients still produces ≈68,000&nbsp;gal/yr;
+      all ~2,500&nbsp;ft² of hard surface produces ≈61,000&nbsp;gal/yr. Building soil sponge and
+      shrinking lawn cuts runoff more than any tank.
+    </div>
+
+    <div class="panel">
+      <div class="panel-title">The share flip — area vs. runoff</div>
+      <div class="panel-sub">Permeable surfaces are 87% of the lot's area but only 53% of its runoff; hard surfaces are 13% of area but 47% of runoff.</div>
+      <svg class="chart" id="runoff-flip" viewBox="0 0 820 130" role="img" aria-label="Two stacked bars comparing area share and runoff share for hard versus permeable surfaces."></svg>
+    </div>
+
+    <div class="panel">
+      <div class="panel-title">Average-year runoff by surface</div>
+      <div class="panel-sub">gallons per year · bar label shows area and runoff coefficient (C)</div>
+      <svg class="chart" id="runoff-bars" viewBox="0 0 820 430" role="img" aria-label="Horizontal bar chart of annual runoff volume for each surface type, grouped into hard and permeable surfaces."></svg>
+      <div class="runoff-legend">
+        <span><span class="runoff-sw" style="background:var(--runoff-hard)"></span>Hard surface — ≈61,000 gal/yr total</span>
+        <span><span class="runoff-sw" style="background:var(--runoff-perm)"></span>Permeable surface — ≈68,000 gal/yr total</span>
+      </div>
+    </div>
+
+    <p class="runoff-src"><b>Source:</b> areas from the 1996 site plan, the 2016 3DEP/aerial, and the Lesson&nbsp;4 zone map;
+      rainfall from the Lesson&nbsp;1 Climate Survey; runoff coefficients per the Rational Method table
+      (ASCE Manual&nbsp;37 / WPCF Manual&nbsp;9) and the Texas Manual on Rainwater Harvesting. Full calc:
+      <code>lesson-05-water/work/rainwater-harvesting-analysis.md</code>.</p>
+  </section>
+
+  <section class="page-section" id="water-balance">
+    <h2 class="section-title">Site Water Balance</h2>
+    <p class="subhead">Where an average year's rain goes on the 0.43-acre lot. About three-quarters
+      soaks in or evaporates; the other quarter — ≈129,000&nbsp;gal — runs off, and today
+      essentially all of it leaves to the Freestone&nbsp;Avenue storm drains.</p>
+
+    <div class="panel">
+      <svg class="chart" id="wbal-chart" viewBox="0 0 970 360" role="img"
+        aria-label="Sankey diagram: 508,000 gallons per year of rainfall splits into 379,000 gallons infiltration and evapotranspiration and 129,000 gallons runoff; runoff splits into 61,000 gallons from hard surfaces and 68,000 gallons from permeable surfaces.">
+      </svg>
+    </div>
+
+    <div class="wbal-foot">
+      <b>Today:</b> ~100% of that 129,000&nbsp;gal/yr of runoff exits to the Freestone&nbsp;Avenue
+      storm drains — the site keeps almost none of it.<br>
+      <b>Design goal:</b> redirect the runoff into on-site infiltration (extend the NW drip-line
+      swale, add an SE-corner swale / rain garden, a driveway-edge strip) and build soil sponge
+      across the lawn, plus ≈4,400&nbsp;gal/yr of active harvest from the coop + shed roofs into
+      Zone-3 barrels. No large cistern is warranted.
+    </div>
+
+    <p class="wbal-src"><b>Source:</b> <code>lesson-05-water/work/rainwater-harvesting-analysis.md</code> —
+      gross rain = 18,730&nbsp;ft² × 3.625&nbsp;ft × 7.48; runoff by surface from the Rational Method
+      coefficient table; infiltration + ET taken as the balance.</p>
+  </section>
+
+  <section class="page-section" id="elevation">
+    <h2 class="section-title">Elevation Cross-Sections</h2>
+    <p class="subhead">Ground profiles through the lot, from the USGS 3DEP 1-meter DEM (NAVD88 feet).
+      Vertical scale is exaggerated to make the slope readable. Two cuts: <b>along</b> the lot
+      (street&nbsp;→&nbsp;back) and <b>across</b> it (west ridge&nbsp;→&nbsp;east low).</p>
+
+    <div class="panel">
+      <div class="panel-title">Section A — along the lot, Freestone&nbsp;Ave (S) → back (N)</div>
+      <div class="panel-sub">~9× vertical exaggeration · the lot rises ~6&nbsp;ft over ~550&nbsp;ft ≈ 1% — imperceptible on the ground; the street end is the low end</div>
+      <svg class="chart" id="elev-secA" viewBox="0 0 820 210" role="img" aria-label="Elevation profile along the lot centerline: 102 feet at the street rising gently to about 108 feet at the back."></svg>
+    </div>
+
+    <div class="panel">
+      <div class="panel-title">Section B — across the lot at mid-length, west → east</div>
+      <div class="panel-sub">~5× vertical exaggeration · a ridge crest ~240&nbsp;ft west (119&nbsp;ft) is the drainage divide; ground falls east past the lot to a ~90&nbsp;ft low</div>
+      <svg class="chart" id="elev-secB" viewBox="0 0 820 250" role="img" aria-label="Elevation profile across the lot: ridge crest 119 feet to the west, gentle fall to the lot at 105 to 108 feet, then a steep drop east to about 91 feet."></svg>
+    </div>
+
+    <p class="elev-src"><b>Source:</b> USGS 3DEP 1-m DEM sampled Aug&nbsp;2026 (National Map ImageServer);
+      cross-checked against USGS EPQS. Full transects: <code>lesson-05-water/work/watersheds-water-flow.md</code>.</p>
+  </section>
+
+  <section class="page-section" id="flow-schematic">
+    <h2 class="section-title">Site Water-Flow Schematic</h2>
+    <p class="subhead">Plan view of how water moves across the lot — from the 3DEP 1-meter DEM and the
+      Lesson&nbsp;4 zone map. A drafting guide for the Figma <b>Site Water Flow Map</b> (template p.&nbsp;61)
+      and <b>Catchment Area Map</b> (p.&nbsp;59); trace it over the real base map.</p>
+
+    <div class="panel">
+      <svg class="chart" id="flow-chart" viewBox="0 0 820 560" role="img"
+        aria-label="Plan schematic: a narrow lot fronting Freestone Avenue with a drainage divide to the west, contours falling east, sheet flow entering from the west, crossing to the south-east, and exiting at the south-east corner to the street storm drains.">
+      </svg>
+    </div>
+
+    <div class="flow-note">
+      <b>Read:</b> the ridge ~240&nbsp;ft west is the divide — water arrives from the <b>west / upslope</b>
+      side, crosses <b>east-southeast + south</b>, and exits at the <b>SE corner + frontage</b> to the
+      Freestone&nbsp;Ave storm drains (≈100% today). The existing NW swale ⑤ holds roof water back toward the
+      pool; a new SE-corner swale / rain garden ⑥ would sit in the outlet and catch the lot's whole throughput.
+    </div>
+
+    <p class="flow-src"><b>Source:</b> <code>lesson-05-water/work/watersheds-water-flow.md</code> +
+      <code>rainwater-harvesting-analysis.md</code>. Lot width exaggerated ~4× for legibility; contour
+      positions approximate (2-ft interval, NAVD88).</p>
+  </section>
+
+  <section class="page-section" id="design-storm">
+    <h2 class="section-title">Design-Storm Frequency</h2>
+    <p class="subhead">24-hour rainfall depth by return period, NOAA&nbsp;Atlas&nbsp;14 point estimate for the
+      site. The <b>2-year</b> storm sizes swales and channels; the <b>100-year</b> storm sizes overflow
+      routing. Regional context: the 1955 state record and the 2024 south-western&nbsp;CT flood.</p>
+
+    <div class="badge-row">
+      <span class="badge">2-yr 24-hr <b>3.32 in</b></span>
+      <span class="badge">10-yr <b>5.17 in</b></span>
+      <span class="badge">100-yr <b>8.09 in</b></span>
+      <span class="badge">CT record <b>12.77 in (1955)</b></span>
+    </div>
+
+    <div class="panel">
+      <svg class="chart" id="storm-chart" viewBox="0 0 820 400" role="img"
+        aria-label="Rainfall depth-frequency curve for a 24-hour storm at the site: 2.7 inches at 1 year rising to 12.6 inches at 1000 years, with the 100-year depth 8.09 inches and the 1955 Connecticut record 12.77 inches marked.">
+      </svg>
+    </div>
+
+    <div class="storm-note">
+      <b>The 100-year 24-hour storm = 8.09&nbsp;in.</b> That drops ≈94,000&nbsp;gal on the 0.43-acre lot
+      and ≈11,400&nbsp;gal off its ~2,500&nbsp;ft² of roof and pavement in a single day — the sizing case
+      for every capture feature's overflow path. The Aug&nbsp;2024 flood (local totals 10–12&nbsp;in in
+      ~12&nbsp;hr) shows the tail is not hypothetical.
+    </div>
+
+    <p class="storm-src"><b>Source:</b> NOAA Atlas&nbsp;14 Vol.&nbsp;10 PFDS, point 41.573,&nbsp;−72.634 (partial-duration series).
+      1955 record: NWS State Climate Extremes Committee. 2024 event: NWS&nbsp;NY / CT&nbsp;Public.</p>
+  </section>
+
+  <section class="page-section" id="watershed">
+    <h2 class="section-title">Macro Watershed</h2>
+    <p class="subhead">The site drains to the <b>Connecticut&nbsp;River watershed</b> — New England's largest
+      river system — through a nested set of hydrologic units. Whole watershed to parcel is about
+      <b>26&nbsp;million&nbsp;:&nbsp;1</b>.</p>
+
+    <div class="panel">
+      <div class="panel-title">Nested hydrologic units containing the parcel</div>
+      <div class="panel-sub">drainage area · bar length is log-scaled · USGS Watershed Boundary Dataset</div>
+      <svg class="chart" id="shed-staircase" viewBox="0 0 820 280" role="img"
+        aria-label="Staircase of nested watershed areas from the 11,260-square-mile Connecticut River watershed down to the 0.43-acre parcel."></svg>
+    </div>
+
+    <div class="panel">
+      <div class="panel-title">Location within the watershed</div>
+      <div class="panel-sub">Lower Connecticut River valley · east bank, opposite Middletown · ~30 river miles above Long Island Sound</div>
+      <svg class="chart" id="shed-locator" viewBox="0 0 820 300" role="img"
+        aria-label="Stylized map of Connecticut with the Connecticut River flowing south through Hartford and Middletown to Long Island Sound, and the site marked at Portland on the east bank."></svg>
+    </div>
+
+    <div class="shed-note">
+      <b>For the template's "Macro Watershed" field:</b> name = Connecticut River watershed,
+      size ≈ 11,260&nbsp;sq&nbsp;mi (7.2&nbsp;million acres), four states + Québec headwaters. A tighter
+      alternative for the map: HUC8 <b>Outlet Connecticut River</b>, ≈1,085&nbsp;sq&nbsp;mi.
+    </div>
+
+    <p class="shed-src"><b>Source:</b> USGS WBD point query at 41.573,&nbsp;−72.634; extent via Connecticut River
+      Conservancy / American Rivers. Detail: <code>lesson-05-water/work/watersheds-water-flow.md</code>.</p>
+  </section>
+
+  <section class="page-section" id="water-use">
+    <h2 class="section-title">Household Water Use by Season</h2>
+    <p class="subhead">Metered use per billing period, from four consecutive Town of Portland
+      bills with an unbroken meter trail Sep&nbsp;2024&nbsp;–&nbsp;Jun&nbsp;2026.
+      Bar width = days in the period; bar height = gallons per day. Two adults, no in-ground
+      irrigation.</p>
+
+    <div class="badge-row">
+      <span class="badge">Annual <b>≈46,000 gal/yr</b></span>
+      <span class="badge">Average <b>≈125 gal/day</b></span>
+      <span class="badge">Winter baseline <b>≈109 gal/day</b></span>
+      <span class="badge">Spring peak <b>160 gal/day</b></span>
+    </div>
+
+    <div class="panel">
+      <svg class="chart" id="wuse-chart" viewBox="0 0 900 400" role="img"
+        aria-label="Bar chart of metered household water use per billing period from September 2024 to June 2026: about 117 gallons per day in fall, 109 in winter, 141 and 160 in spring, 133 in summer. A dashed line marks the 109 gallon per day winter baseline; the area above it in the growing-season bars is the outdoor use.">
+      </svg>
+      <div class="wuse-legend">
+        <span><span class="wuse-sw" style="background:var(--wuse-winter)"></span>winter</span>
+        <span><span class="wuse-sw" style="background:var(--wuse-spring)"></span>spring</span>
+        <span><span class="wuse-sw" style="background:var(--wuse-summer)"></span>summer</span>
+        <span><span class="wuse-sw" style="background:var(--wuse-fall)"></span>fall</span>
+        <span><span class="wuse-sw" style="background:var(--wuse-excess-line)"></span>outdoor / growing-season use (above baseline)</span>
+      </div>
+    </div>
+
+    <div class="wuse-note">
+      <b>The growing-season excess is outdoor use — and it's the size of the harvest prize.</b>
+      Use sits at a <b>~109&nbsp;gal/day</b> indoor baseline all winter, then climbs to
+      133–160&nbsp;gal/day from spring through summer. That <b>≈5,000–8,000&nbsp;gal/yr</b>
+      difference — hose watering, bed prep, pool top-off — is almost exactly the
+      <b>≈4,400&nbsp;gal/yr</b> that coop&nbsp;+&nbsp;shed roof barrels could harvest into
+      Zone&nbsp;3. Because Portland bills sewer on the same metered volume, offsetting it
+      trims both lines of the bill (~$0.017/gal).
+    </div>
+
+    <p class="wuse-src"><b>Source:</b> Town of Portland Water &amp; Sewer Departments,
+      bills dated 01/15/2025, 07/17/2025, 10/17/2025, 07/17/2026 (service periods 09/24/2024–06/16/2026).
+      Meter readings in cubic feet &times; 7.48 = gallons. Two periods span an un-imaged bill but the
+      prior/current meter reads chain continuously. Scans in <code>lesson-05-water/assets/</code>.</p>
+  </section>
+</div></div>
+
+<script>
+(function(){
+  const MONTHS = ["Jan","Feb","Mar","Apr","May","Jun","Jul","Aug","Sep","Oct","Nov","Dec"];
+  const PRECIP = [3.04,2.81,3.49,3.76,3.49,3.80,4.25,3.66,3.99,4.14,3.34,3.76];
+  const NS = "http://www.w3.org/2000/svg";
+  const VB_W = 820, VB_H = 320;
+  const PAD = { l: 46, r: 16, t: 14, b: 40 };
+  const plotW = VB_W - PAD.l - PAD.r;
+  const plotH = VB_H - PAD.t - PAD.b;
+  const Y_MAX = 5;
+  const yPix = v => PAD.t + (Y_MAX - v) / Y_MAX * plotH;
+  const slotW = plotW / MONTHS.length;
+  const barW = slotW * 0.6;
+  const xCenter = i => PAD.l + (i + 0.5) * slotW;
+  const el = (n, a) => { const e = document.createElementNS(NS, n); for (const k in a) e.setAttribute(k, a[k]); return e; };
+  const svg = document.getElementById("precip-chart");
+
+  // ET band (Jul–Sep)
+  svg.appendChild(el("rect", { class: "precip-et-band", x: PAD.l + 6 * slotW, y: PAD.t, width: 3 * slotW, height: plotH }));
+  svg.appendChild(el("text", { class: "precip-et-lbl", x: PAD.l + 7.5 * slotW, y: PAD.t + 12, "text-anchor": "middle" })).textContent = "peak garden ET";
+
+  // gridlines + y labels
+  for (let v = 1; v <= Y_MAX; v++) {
+    const y = yPix(v);
+    svg.appendChild(el("line", { class: "precip-gl", x1: PAD.l, y1: y, x2: VB_W - PAD.r, y2: y }));
+    svg.appendChild(el("text", { class: "precip-ax", x: PAD.l - 8, y: y + 3.5, "text-anchor": "end" })).textContent = v + '"';
+  }
+  // baseline
+  svg.appendChild(el("line", { class: "precip-base", x1: PAD.l, y1: yPix(0), x2: VB_W - PAD.r, y2: yPix(0) }));
+
+  // bars + value + month labels
+  PRECIP.forEach((v, i) => {
+    const x = xCenter(i) - barW / 2, y = yPix(v);
+    svg.appendChild(el("rect", { x, y, width: barW, height: yPix(0) - y, rx: 2, fill: "var(--precip-series-precip)" }));
+    svg.appendChild(el("text", { class: "precip-val", x: xCenter(i), y: y - 5, "text-anchor": "middle" })).textContent = v.toFixed(2);
+    svg.appendChild(el("text", { class: "precip-ax", x: xCenter(i), y: yPix(0) + 15, "text-anchor": "middle" })).textContent = MONTHS[i];
+  });
+
+  // mean line
+  const mean = PRECIP.reduce((a, b) => a + b, 0) / PRECIP.length;
+  const my = yPix(mean);
+  svg.appendChild(el("line", { class: "precip-mean", x1: PAD.l, y1: my, x2: VB_W - PAD.r, y2: my }));
+  svg.appendChild(el("text", { class: "precip-mean-lbl", x: PAD.l + 5, y: my + 13, "text-anchor": "start" })).textContent = "monthly mean " + mean.toFixed(1) + '"';
+})();
+(function(){
+  const NS="http://www.w3.org/2000/svg";
+  const el=(n,a)=>{const e=document.createElementNS(NS,n);for(const k in a)e.setAttribute(k,a[k]);return e;};
+  const txt=(p,s,a)=>{const t=el("text",a);t.textContent=s;p.appendChild(t);return t;};
+
+  const ROWS=[
+    {name:"Lawn (Zones 1–2)",        area:7000, c:0.18, gal:34200, k:"perm"},
+    {name:"Driveway",                area:1000, c:0.90, gal:24400, k:"hard"},
+    {name:"House roof (metal)",      area:925,  c:0.95, gal:23800, k:"hard"},
+    {name:"Woodland / wild (Zone 5)",area:4640, c:0.15, gal:18900, k:"perm"},
+    {name:"Vegetable garden (Zone 3)",area:2000,c:0.15, gal:8130,  k:"perm"},
+    {name:"Ornamental beds (Zone 2)",area:2500, c:0.10, gal:6780,  k:"perm"},
+    {name:"Public sidewalk (frontage)",area:230,c:0.90, gal:5610,  k:"hard"},
+    {name:"Concrete walk to door",   area:120,  c:0.90, gal:2930,  k:"hard"},
+    {name:"Shed roof (planned 10×10)",area:100, c:0.90, gal:2440,  k:"hard"},
+    {name:"Chicken coop roof",       area:80,   c:0.90, gal:1950,  k:"hard"}
+  ];
+  const col=k=>k==="hard"?"var(--runoff-hard)":"var(--runoff-perm)";
+
+  /* ---- share-flip stacked bars ---- */
+  (function(){
+    const svg=document.getElementById("runoff-flip");
+    const hardA=2455, permA=16140, hardG=61130, permG=68010;
+    const X=120, W=660, H=26;
+    function row(y,label,a,b,ca,cb,la,lb){
+      txt(svg,label,{x:X-10,y:y+H/2+4,"text-anchor":"end",class:"runoff-lbl-b"});
+      const tot=a+b, wa=W*a/tot;
+      svg.appendChild(el("rect",{x:X,y,width:wa,height:H,fill:ca,rx:2}));
+      svg.appendChild(el("rect",{x:X+wa,y,width:W-wa,height:H,fill:cb,rx:2}));
+      txt(svg,la,{x:X+wa/2,y:y+H/2+4,"text-anchor":"middle",class:"runoff-val",fill:"#fff"});
+      txt(svg,lb,{x:X+wa+(W-wa)/2,y:y+H/2+4,"text-anchor":"middle",class:"runoff-val",fill:"#fff"});
+    }
+    row(14,"Area",hardA,permA,col("hard"),col("perm"),"13%","87%");
+    row(64,"Runoff",hardG,permG,col("hard"),col("perm"),"47%","53%");
+    txt(svg,"hard",{x:X+6,y:110,class:"runoff-axt"});
+    txt(svg,"permeable",{x:X+W-6,y:110,"text-anchor":"end",class:"runoff-axt"});
+  })();
+
+  /* ---- per-surface horizontal bars ---- */
+  (function(){
+    const svg=document.getElementById("runoff-bars");
+    const PAD={l:172,r:70,t:34,b:10};
+    const VB_W=820, rowH=34, gap=14;
+    const maxG=35000;
+    const plotW=VB_W-PAD.l-PAD.r;
+    const xW=g=>plotW*g/maxG;
+    // gridlines
+    for(let g=0;g<=maxG;g+=10000){
+      const x=PAD.l+xW(g);
+      svg.appendChild(el("line",{class:"runoff-gl",x1:x,y1:PAD.t-4,x2:x,y2:PAD.t+ROWS.length*rowH+16}));
+      if(g>0) txt(svg,(g/1000)+"k gal/yr",{x,y:PAD.t-10,"text-anchor":"middle",class:"runoff-axt"});
+    }
+    txt(svg,"sorted by runoff — hard + permeable together",{x:8,y:PAD.t-10,class:"runoff-seclbl"});
+    let y=PAD.t+6;
+    ROWS.forEach((r,i)=>{
+      txt(svg,r.name,{x:PAD.l-12,y:y+rowH/2+2,"text-anchor":"end",class:"runoff-lbl-b"});
+      svg.appendChild(el("rect",{x:PAD.l,y:y+4,width:Math.max(2,xW(r.gal)),height:rowH-14,rx:2,fill:col(r.k)}));
+      const gx=PAD.l+xW(r.gal)+8;
+      txt(svg,r.gal.toLocaleString()+" gal",{x:gx,y:y+rowH/2+2,class:"runoff-val"});
+      txt(svg,"· "+r.area.toLocaleString()+" ft² · C="+r.c.toFixed(2),{x:gx+58,y:y+rowH/2+2,class:"runoff-val-m2"});
+      y+=rowH;
+    });
+    // baseline
+    svg.appendChild(el("line",{class:"runoff-gl",x1:PAD.l,y1:PAD.t+6,x2:PAD.l,y2:y}));
+  })();
+})();
+(function(){
+  const NS="http://www.w3.org/2000/svg";
+  const el=(n,a)=>{const e=document.createElementNS(NS,n);for(const k in a)e.setAttribute(k,a[k]);return e;};
+  const txt=(p,s,a,cls)=>{const t=el("text",Object.assign({class:cls||"wbal-nlbl"},a));t.textContent=s;p.appendChild(t);return t;};
+  const svg=document.getElementById("wbal-chart");
+
+  const TOP=32, BOT=320, PH=BOT-TOP;             // plot band
+  const TOTAL=508000, s=PH/TOTAL;                // px per gallon
+  const NW=16;                                   // node width
+  const xA=150, xB=440, xC=720;
+  const gap=10;
+
+  function node(x,y,val,fill){ svg.appendChild(el("rect",{x,y,width:NW,height:val*s,fill,rx:2,opacity:.95})); }
+  function ribbon(x0,y0,x1,y1,h,fill){
+    const xm=(x0+x1)/2;
+    const d=`M ${x0} ${y0} C ${xm} ${y0}, ${xm} ${y1}, ${x1} ${y1} `+
+            `L ${x1} ${y1+h} C ${xm} ${y1+h}, ${xm} ${y0+h}, ${x0} ${y0+h} Z`;
+    svg.appendChild(el("path",{d,fill,opacity:.32}));
+  }
+
+  // Column A: rainfall (full)
+  const aH=TOTAL*s;
+  node(xA,TOP,TOTAL,"var(--wbal-rain)");
+  txt(svg,"Rainfall on site",{x:xA,y:TOP-16});
+  txt(svg,"508,000 gal/yr  ·  43.5 in on 0.43 ac",{x:xA,y:TOP-4},"wbal-nsub");
+
+  // Column B: infiltration/ET (top) + runoff (bottom)
+  const infV=379000, runV=129000;
+  const bInfY=TOP, bRunY=TOP+infV*s+gap;
+  node(xB,bInfY,infV,"var(--wbal-infil)");
+  node(xB,bRunY,runV,"var(--wbal-runoff)");
+  txt(svg,"Infiltration + evapotranspiration",{x:xB+NW+10,y:bInfY+infV*s/2-4});
+  txt(svg,"379,000 gal/yr  ·  ~75%",{x:xB+NW+10,y:bInfY+infV*s/2+12},"wbal-nsub");
+  txt(svg,"Runoff",{x:xB+NW+10,y:bRunY+runV*s/2+2});
+  txt(svg,"129,000 gal/yr  ·  ~25%",{x:xB+NW+10,y:bRunY+runV*s/2+16},"wbal-nsub");
+
+  // Column C: hard + permeable (aligned under runoff)
+  const hardV=61130, permV=68010;
+  const cHardY=bRunY, cPermY=bRunY+hardV*s;      // stacked, no gap = same total as runoff
+  node(xC,cHardY,hardV,"var(--wbal-hard)");
+  node(xC,cPermY,permV,"var(--wbal-perm)");
+  txt(svg,"Hard surfaces",{x:xC+NW+10,y:cHardY+hardV*s/2+1});
+  txt(svg,"61,000 gal/yr",{x:xC+NW+10,y:cHardY+hardV*s/2+15},"wbal-nsub");
+  txt(svg,"Permeable surfaces",{x:xC+NW+10,y:cPermY+permV*s/2+1});
+  txt(svg,"68,000 gal/yr",{x:xC+NW+10,y:cPermY+permV*s/2+15},"wbal-nsub");
+
+  // Ribbons  A -> B
+  ribbon(xA+NW, TOP,            xB, bInfY, infV*s, "var(--wbal-infil)");
+  ribbon(xA+NW, TOP+infV*s,     xB, bRunY, runV*s, "var(--wbal-runoff)");
+  // Ribbons  B(runoff) -> C
+  ribbon(xB+NW, bRunY,          xC, cHardY, hardV*s, "var(--wbal-hard)");
+  ribbon(xB+NW, bRunY+hardV*s,  xC, cPermY, permV*s, "var(--wbal-perm)");
+
+  // "to storm drains" marker off column C
+  const brace=el("path",{d:`M ${xC+NW+150} ${cHardY} L ${xC+NW+164} ${cHardY} L ${xC+NW+164} ${cPermY+permV*s} L ${xC+NW+150} ${cPermY+permV*s}`,
+    fill:"none",stroke:"var(--wbal-runoff)","stroke-width":1.5});
+  svg.appendChild(brace);
+  txt(svg,"→ storm drains",{x:xC+NW+170,y:(cHardY+cPermY+permV*s)/2-4});
+  txt(svg,"(≈100% today)",{x:xC+NW+170,y:(cHardY+cPermY+permV*s)/2+11},"wbal-nsub");
+})();
+(function(){
+  const NS="http://www.w3.org/2000/svg";
+  const el=(n,a)=>{const e=document.createElementNS(NS,n);for(const k in a)e.setAttribute(k,a[k]);return e;};
+  const txt=(p,s,a,cls)=>{const t=el("text",Object.assign({class:cls||"elev-note"},a));t.textContent=s;p.appendChild(t);return t;};
+
+  function profile(svg, opts){
+    const {pts, x0,x1, y0,y1, xmin,xmax, ymin,ymax, xticks, yticks, bands=[], marks=[], vlabel} = opts;
+    const X = v => x0 + (v-xmin)/(xmax-xmin)*(x1-x0);
+    const Y = v => y0 + (v-ymin)/(ymax-ymin)*(y1-y0);   // y1<y0 (inverted handled by caller)
+    // y gridlines + labels
+    yticks.forEach(t=>{
+      svg.appendChild(el("line",{class:"elev-gl",x1:x0,y1:Y(t),x2:x1,y2:Y(t)}));
+      txt(svg,t+" ft",{x:x0-8,y:Y(t)+3.5,"text-anchor":"end",class:"elev-axt"});
+    });
+    // x ticks
+    xticks.forEach(t=>txt(svg,t.l,{x:X(t.v),y:y0+16,"text-anchor":"middle",class:"elev-axt"}));
+    // shaded bands (vertical)
+    bands.forEach(b=>{
+      svg.appendChild(el("rect",{x:X(b.a),y:Math.min(Y(ymax),Y(ymin)),width:X(b.b)-X(b.a),
+        height:Math.abs(Y(ymax)-Y(ymin)),fill:b.fill||"var(--elev-lot)"}));
+      if(b.label) txt(svg,b.label,{x:(X(b.a)+X(b.b))/2,y:Y(ymax)+13,"text-anchor":"middle",class:"elev-note-b",fill:"var(--elev-lot-line)"});
+    });
+    // ground fill + line
+    let d="M "+X(pts[0][0])+" "+Y(ymin)+" ";
+    pts.forEach(p=>d+="L "+X(p[0]).toFixed(1)+" "+Y(p[1]).toFixed(1)+" ");
+    d+="L "+X(pts[pts.length-1][0])+" "+Y(ymin)+" Z";
+    svg.appendChild(el("path",{d,fill:"var(--elev-ground-fill)"}));
+    let dl="";
+    pts.forEach((p,i)=>dl+=(i?"L":"M")+" "+X(p[0]).toFixed(1)+" "+Y(p[1]).toFixed(1)+" ");
+    svg.appendChild(el("path",{d:dl,fill:"none",stroke:"var(--elev-ground)","stroke-width":2}));
+    // point markers
+    pts.forEach(p=>svg.appendChild(el("circle",{cx:X(p[0]),cy:Y(p[1]),r:1.6,fill:"var(--elev-ground)"})));
+    // callout marks
+    marks.forEach(m=>{
+      const px=X(m.x), py=Y(m.y);
+      svg.appendChild(el("line",{x1:px,y1:py,x2:px,y2:py-m.dy,stroke:"var(--elev-divide)","stroke-width":1,"stroke-dasharray":"3 2"}));
+      txt(svg,m.t,{x:px+(m.anchor==="end"?-4:4),y:py-m.dy-3,"text-anchor":m.anchor||"start",class:"elev-note-b"});
+      if(m.t2) txt(svg,m.t2,{x:px+(m.anchor==="end"?-4:4),y:py-m.dy+9,"text-anchor":m.anchor||"start"});
+    });
+    if(vlabel) txt(svg,vlabel,{x:x1,y:y1+2,"text-anchor":"end",class:"elev-axt"});
+  }
+
+  // ---- Section A ----
+  const A=[[0,102.4],[36,102.4],[73,103.1],[109,104.1],[146,103.4],[182,104.3],[219,105.1],
+           [255,105.6],[291,107.1],[328,107.7],[364,107.1],[401,106.6],[437,105.6],[474,107.4],
+           [510,107.8],[546,107.8]];
+  profile(document.getElementById("elev-secA"),{
+    pts:A, x0:58,x1:790, y0:150,y1:22, xmin:0,xmax:546, ymin:100,ymax:110,
+    yticks:[100,102,104,106,108,110],
+    xticks:[{v:0,l:"Freestone Ave"},{v:150,l:"150 ft"},{v:300,l:"300 ft"},{v:450,l:"450 ft"},{v:546,l:"back"}],
+    bands:[{a:0,b:546,label:"the lot (sampled centerline)"}],
+    marks:[
+      {x:0,y:102.4,dy:40,t:"street end ≈102 ft",t2:"low end — outfall to storm drains",anchor:"start"},
+      {x:510,y:107.8,dy:22,t:"back ≈108 ft",anchor:"end"}
+    ]
+  });
+
+  // ---- Section B ----
+  const B=[[-360,117.8],[-240,119.4],[-120,114.4],[-23,108.6],[23,104.5],[120,95.7],[240,91.1],[360,90.8]];
+  profile(document.getElementById("elev-secB"),{
+    pts:B, x0:58,x1:790, y0:200,y1:26, xmin:-360,xmax:360, ymin:88,ymax:122,
+    yticks:[90,95,100,105,110,115,120],
+    xticks:[{v:-360,l:"360 ft W"},{v:-180,l:"180 W"},{v:0,l:"lot"},{v:180,l:"180 E"},{v:360,l:"360 ft E"}],
+    bands:[{a:-23,b:23,label:"lot (~46 ft)"}],
+    marks:[
+      {x:-240,y:119.4,dy:18,t:"ridge crest ≈119 ft",t2:"drainage divide",anchor:"start"},
+      {x:120,y:95.7,dy:30,t:"steep fall east (~12%)",anchor:"start"},
+      {x:360,y:90.8,dy:14,t:"east low ≈91 ft",anchor:"end"}
+    ]
+  });
+})();
+(function(){
+  const NS="http://www.w3.org/2000/svg";
+  const svg=document.getElementById("flow-chart");
+  const el=(n,a)=>{const e=document.createElementNS(NS,n);for(const k in a)e.setAttribute(k,a[k]);return e;};
+  const add=e=>{svg.appendChild(e);return e;};
+  const txt=(s,a,cls)=>{const t=el("text",Object.assign({class:cls||"flow-lbl"},a));t.textContent=s;add(t);return t;};
+
+  const defs=add(el("defs"));
+  [["fl","var(--flow-flow)"],["ex","var(--flow-exit)"],["sw","var(--flow-swale-old)"]].forEach(([id,c])=>{
+    const m=el("marker",{id,markerWidth:8,markerHeight:8,refX:6,refY:3,orient:"auto"});
+    m.appendChild(el("path",{d:"M0,0 L6,3 L0,6 Z",fill:c})); defs.appendChild(m);
+  });
+  const arrow=(x1,y1,x2,y2,c,mk,w)=>add(el("line",{x1,y1,x2,y2,stroke:c,"stroke-width":w||1.8,"marker-end":`url(#${mk})`}));
+  const curve=(d,c,mk,w,dash)=>add(el("path",{d,fill:"none",stroke:c,"stroke-width":w||1.8,"marker-end":mk?`url(#${mk})`:null,"stroke-dasharray":dash||null}));
+  const marker=(x,y,n)=>{add(el("circle",{cx:x,cy:y,r:9,fill:"var(--accent)"}));txt(String(n),{x,y:y+3.5,"text-anchor":"middle",class:"flow-num"});};
+
+  // ---- contours (west high -> east low) ----
+  [[120,66],[115,116],[110,168],[105,214],[100,430],[95,520],[90,600]].forEach(([e,x])=>{
+    curve(`M ${x} 46 C ${x+12} 200, ${x-12} 380, ${x} 494`,"var(--flow-contour)",null,1);
+    txt(e+" ft",{x,y:40,"text-anchor":"middle",class:"flow-cl"});
+  });
+  curve("M 66 44 C 78 200, 54 380, 66 500","var(--flow-divide)",null,1.6,"6 4");
+  const dv=txt("drainage divide — ridge crest ≈119 ft",{x:0,y:0,class:"flow-lbl-b",fill:"var(--flow-divide)"});
+  dv.setAttribute("transform","translate(44 270) rotate(-90)"); dv.setAttribute("text-anchor","middle");
+
+  // ---- Freestone Ave ----
+  add(el("rect",{x:150,y:494,width:420,height:30,fill:"var(--flow-struct)",opacity:.45}));
+  add(el("line",{x1:150,y1:509,x2:570,y2:509,stroke:"var(--flow-struct-line)","stroke-width":1,"stroke-dasharray":"10 6"}));
+  txt("FREESTONE AVENUE",{x:360,y:517,"text-anchor":"middle",class:"flow-lbl-m","letter-spacing":"0.1em"});
+  add(el("rect",{x:395,y:496,width:16,height:6,fill:"none",stroke:"var(--flow-exit)","stroke-width":1.4})); // inlet
+
+  // ---- the lot ----
+  const LX=214,LR=384,LT=52,LB=494;
+  add(el("rect",{x:LX,y:LT,width:LR-LX,height:LB-LT,fill:"var(--flow-lot)",stroke:"var(--flow-lot-line)","stroke-width":1.8}));
+  txt("58 Freestone Ave — 0.43 ac  ·  back ≈108 ft",{x:LX,y:LT-8,class:"flow-lbl-m"});
+  txt("SE corner — low point ≈102 ft",{x:LR+10,y:LB-46,class:"flow-lbl-b",fill:"var(--flow-exit)"});
+
+  // ---- structures + numbered markers ----
+  add(el("rect",{x:236,y:372,width:118,height:96,fill:"var(--flow-struct)",stroke:"var(--flow-struct-line)","stroke-width":1.2}));   // house
+  add(el("rect",{x:236,y:352,width:52,height:20,fill:"var(--flow-struct)",stroke:"var(--flow-struct-line)","stroke-width":1}));      // addition
+  add(el("path",{d:"M 214 494 L 236 494 L 236 320 L 214 300 Z",fill:"var(--flow-struct)",opacity:.85,stroke:"var(--flow-struct-line)","stroke-width":1})); // driveway
+  add(el("circle",{cx:300,cy:290,r:22,fill:"var(--flow-pool)",opacity:.8,stroke:"var(--flow-struct-line)","stroke-width":1}));       // pool
+  add(el("rect",{x:250,y:224,width:24,height:22,fill:"var(--flow-struct)",stroke:"var(--flow-struct-line)","stroke-width":1}));      // coop
+  add(el("rect",{x:284,y:224,width:28,height:22,fill:"var(--flow-struct)",stroke:"var(--flow-struct-line)","stroke-width":1}));      // shed
+  curve("M 236 470 C 226 400, 226 340, 244 300","var(--flow-swale-old)","sw",2);                                               // existing swale
+  add(el("ellipse",{cx:372,cy:476,rx:24,ry:11,fill:"none",stroke:"var(--flow-swale-new)","stroke-width":2}));                   // proposed SE feature
+  add(el("circle",{cx:354,cy:392,r:3,fill:"var(--flow-flow)"}));                                                                // spigot
+  add(el("rect",{x:300,y:462,width:7,height:7,fill:"none",stroke:"var(--text-secondary)","stroke-width":1}));              // meter
+
+  marker(295,420,1);  // house
+  marker(224,360,2);  // driveway
+  marker(300,290,3);  // pool
+  marker(298,235,4);  // coop+shed
+  marker(228,340,5);  // existing swale
+  marker(372,476,6);  // proposed SE feature
+  marker(354,392,7);  // spigot
+  marker(303,466,8);  // meter
+
+  // ---- flow ----
+  [130,235,340,440].forEach(y=>arrow(96,y,210,y+16,"var(--flow-flow)","fl",1.7));
+  txt("sheet flow from upslope (west) yards",{x:96,y:112,class:"flow-lbl-b",fill:"var(--flow-flow)"});
+  curve("M 232 130 C 280 240, 330 350, 366 460","var(--flow-flow)","fl",2.3);
+  curve("M 240 300 C 300 380, 340 440, 368 464","var(--flow-flow)","fl",2.3);
+  curve("M 246 460 C 300 484, 340 484, 366 470","var(--flow-flow)","fl",2.3);
+  txt("across the lot: E-SE + S",{x:392,y:340,class:"flow-lbl",fill:"var(--flow-flow)"});
+  curve("M 386 486 C 396 496, 400 500, 404 500","var(--flow-exit)","ex",2.6);
+  txt("→ Freestone Ave storm drains (≈100% today)",{x:414,y:504,class:"flow-lbl-b",fill:"var(--flow-exit)"});
+
+  // ---- legend ----
+  const legX=612, legY=64;
+  add(el("rect",{x:legX,y:legY,width:200,height:262,fill:"var(--surface-1)",stroke:"var(--border)",rx:8}));
+  txt("Site elements",{x:legX+12,y:legY+20,class:"flow-lbl-b"});
+  const items=[
+    "House — metal roof, no gutters",
+    "Driveway (asphalt)",
+    "Above-ground pool",
+    "Coop + shed → gutters + barrels",
+    "Existing NW swale → pool / lawn",
+    "PROPOSED swale / rain garden (outlet)",
+    "Spigot (addition / house seam)",
+    "Meter — basement, by the panel"
+  ];
+  items.forEach((s,i)=>{
+    const y=legY+40+i*26;
+    add(el("circle",{cx:legX+18,cy:y-3,r:8,fill:"var(--accent)"}));
+    txt(String(i+1),{x:legX+18,y:y+0.5,"text-anchor":"middle",class:"flow-num"});
+    txt(s,{x:legX+34,y:y+1,class:"flow-lbl-m"});
+  });
+  // flow key
+  add(el("line",{x1:legX+12,y1:legY+250,x2:legX+34,y2:legY+250,stroke:"var(--flow-flow)","stroke-width":2.2}));
+  txt("flow path",{x:legX+40,y:legY+253,class:"flow-lbl-m"});
+  add(el("line",{x1:legX+112,y1:legY+250,x2:legX+134,y2:legY+250,stroke:"var(--flow-exit)","stroke-width":2.2}));
+  txt("exit to street",{x:legX+140,y:legY+253,class:"flow-lbl-m"});
+
+  // ---- N arrow + scale ----
+  add(el("path",{d:"M 660,376 L 660,342 M 660,342 L 654,354 M 660,342 L 666,354",stroke:"var(--text-secondary)","stroke-width":1.6,fill:"none"}));
+  txt("N",{x:660,y:392,"text-anchor":"middle",class:"flow-lbl-b"});
+  add(el("line",{x1:700,y1:366,x2:756,y2:366,stroke:"var(--text-secondary)","stroke-width":2}));
+  txt("≈ 50 ft (schematic)",{x:728,y:360,"text-anchor":"middle",class:"flow-lbl-m"});
+})();
+(function(){
+  const NS="http://www.w3.org/2000/svg";
+  const el=(n,a)=>{const e=document.createElementNS(NS,n);for(const k in a)e.setAttribute(k,a[k]);return e;};
+  const txt=(p,s,a,cls)=>{const t=el("text",Object.assign({class:cls||"storm-axt"},a));t.textContent=s;p.appendChild(t);return t;};
+  const svg=document.getElementById("storm-chart");
+
+  const DATA=[[1,2.71],[2,3.32],[5,4.33],[10,5.17],[25,6.32],[50,7.16],[100,8.09],[200,9.24],[500,11.0],[1000,12.6]];
+  const x0=66,x1=782,y0=330,y1=34, DMAX=14;
+  const L=Math.log10, span=L(1000);
+  const X=rp=>x0+L(rp)/span*(x1-x0);
+  const Y=d=>y0-d/DMAX*(y0-y1);
+
+  // y grid
+  for(let d=0;d<=DMAX;d+=2){
+    svg.appendChild(el("line",{class:"storm-gl",x1:x0,y1:Y(d),x2:x1,y2:Y(d)}));
+    txt(svg,d+' in',{x:x0-8,y:Y(d)+3.5,"text-anchor":"end"});
+  }
+  txt(svg,"24-hour rainfall depth",{x:x0-8,y:y1-12,"text-anchor":"start",class:"storm-axl"});
+  // x grid (log ticks)
+  DATA.forEach(([rp])=>{
+    svg.appendChild(el("line",{class:"storm-gl",x1:X(rp),y1:y0,x2:X(rp),y2:y1,opacity:.55}));
+    txt(svg,rp,{x:X(rp),y:y0+16,"text-anchor":"middle"});
+  });
+  txt(svg,"return period, years  (log scale)",{x:(x0+x1)/2,y:y0+34,"text-anchor":"middle",class:"storm-axl"});
+
+  // 2024 event band (local 10–12 in)
+  svg.appendChild(el("rect",{x:x0,y:Y(12),width:x1-x0,height:Y(10)-Y(12),fill:"var(--storm-evt)"}));
+  txt(svg,"Aug 2024 SW-CT flood — local 10–12 in / ~12 hr",{x:x0+6,y:Y(10)-6,"text-anchor":"start",class:"storm-dot-lbl",fill:"var(--storm-evt-line)"});
+  // 1955 record line
+  svg.appendChild(el("line",{x1:x0,y1:Y(12.77),x2:x1,y2:Y(12.77),stroke:"var(--storm-rec)","stroke-width":1.5,"stroke-dasharray":"6 4"}));
+  txt(svg,"Connecticut 24-hr record — 12.77 in, Aug 19 1955",{x:x0+4,y:Y(12.77)-5,class:"storm-dot-lbl",fill:"var(--storm-rec)"});
+
+  // curve
+  let d="";
+  DATA.forEach(([rp,dep],i)=>d+=(i?"L":"M")+" "+X(rp).toFixed(1)+" "+Y(dep).toFixed(1)+" ");
+  svg.appendChild(el("path",{d,fill:"none",stroke:"var(--storm-curve)","stroke-width":2.5}));
+  DATA.forEach(([rp,dep])=>svg.appendChild(el("circle",{cx:X(rp),cy:Y(dep),r:3,fill:"var(--storm-curve-dot)"})));
+
+  // highlight 2-yr and 100-yr
+  [[2,3.32,"2-yr · 3.32 in","swale / channel sizing"],[100,8.09,"100-yr · 8.09 in","overflow sizing"]].forEach(([rp,dep,t,t2])=>{
+    svg.appendChild(el("circle",{cx:X(rp),cy:Y(dep),r:5,fill:"none",stroke:"var(--storm-curve)","stroke-width":2}));
+    svg.appendChild(el("line",{x1:X(rp),y1:Y(dep)-8,x2:X(rp),y2:Y(dep)-30,stroke:"var(--storm-curve)","stroke-width":1}));
+    txt(svg,t,{x:X(rp),y:Y(dep)-42,"text-anchor":"middle",class:"storm-dot-lbl"});
+    txt(svg,t2,{x:X(rp),y:Y(dep)-30,"text-anchor":"middle"});
+  });
+})();
+(function(){
+  const NS="http://www.w3.org/2000/svg";
+  const el=(n,a)=>{const e=document.createElementNS(NS,n);for(const k in a)e.setAttribute(k,a[k]);return e;};
+  const txt=(p,s,a,cls)=>{const t=el("text",Object.assign({class:cls||"shed-axt"},a));t.textContent=s;p.appendChild(t);return t;};
+
+  /* ---------- staircase ---------- */
+  (function(svg){
+    const ROWS=[
+      {n:"Connecticut River watershed", d:"the whole basin · ≈11,260 sq mi", v:11260, site:false},
+      {n:"Lower Connecticut", d:"HUC6 basin · ≈5,003 sq mi", v:5003, site:false},
+      {n:"Outlet Connecticut River", d:"HUC8 subbasin · ≈1,085 sq mi", v:1085, site:false},
+      {n:"Higganum Creek–Connecticut River", d:"HUC10 watershed · ≈71 sq mi", v:71, site:false},
+      {n:"Mill Creek–Connecticut River", d:"HUC12 subwatershed · ≈51.5 sq mi", v:51.5, site:false},
+      {n:"The parcel", d:"0.43 acre  (≈0.00067 sq mi)", v:0.00067, site:true}
+    ];
+    const BX0=356, BX1=792, rowH=38, y0=18;
+    const lo=Math.log10(0.0004), hi=Math.log10(14000), span=hi-lo;
+    const L=v=>BX0+(Math.log10(v)-lo)/span*(BX1-BX0);
+    // decade ticks
+    for(let e=-3;e<=4;e++){
+      const x=L(Math.pow(10,e));
+      svg.appendChild(el("line",{class:"shed-gl",x1:x,y1:y0-4,x2:x,y2:y0+ROWS.length*rowH-6,stroke:"var(--grid)"}));
+      txt(svg,(e<0?Math.pow(10,e):Math.pow(10,e).toLocaleString()),{x,y:y0+ROWS.length*rowH+10,"text-anchor":"middle"});
+    }
+    txt(svg,"drainage area, sq mi — log scale",{x:(BX0+BX1)/2,y:y0+ROWS.length*rowH+26,"text-anchor":"middle"});
+    ROWS.forEach((r,i)=>{
+      const y=y0+i*rowH;
+      txt(svg,r.n,{x:16,y:y+15,class:"shed-rn"});
+      txt(svg,r.d,{x:16,y:y+28,class:"shed-rd"});
+      const x2=L(r.v);
+      svg.appendChild(el("rect",{x:BX0,y:y+6,width:Math.max(3,x2-BX0),height:16,rx:2,
+        fill:r.site?"var(--shed-site)":"var(--shed-river)",opacity:r.site?1:.85}));
+    });
+    // span annotation between the top bar and the parcel bar
+    const yTop=y0+6+8, yBot=y0+(ROWS.length-1)*rowH+6+8;
+    svg.appendChild(el("path",{d:`M ${BX0-10} ${yTop} L ${BX0-16} ${yTop} L ${BX0-16} ${yBot} L ${BX0-10} ${yBot}`,
+      fill:"none",stroke:"var(--accent)","stroke-width":1.2}));
+    const bt=txt(svg,"≈ 26,000,000 : 1",{x:0,y:0,class:"shed-rn",fill:"var(--accent)"});
+    bt.setAttribute("transform",`translate(${BX0-24} ${(yTop+yBot)/2}) rotate(-90)`);
+    bt.setAttribute("text-anchor","middle");
+  })(document.getElementById("shed-staircase"));
+
+  /* ---------- CT locator ---------- */
+  (function(svg){
+    // simplified Connecticut: rectangle-ish, straight top, notch at SW, wavy coast
+    const ct="M 70,58 L 560,54 L 558,150 L 552,182 "+
+             "L 500,188 L 440,184 L 380,192 L 320,186 L 260,196 L 200,190 L 158,198 "+
+             "L 158,166 L 118,164 L 118,196 L 88,192 L 74,120 Z";
+    svg.appendChild(el("path",{d:ct,fill:"var(--shed-land)",stroke:"var(--shed-land-line)","stroke-width":1.5}));
+    // Long Island Sound band, clearly below the coast
+    svg.appendChild(el("rect",{x:44,y:206,width:640,height:56,fill:"var(--shed-water)",opacity:.75,rx:2}));
+    txt(svg,"LONG ISLAND SOUND",{x:340,y:240,"text-anchor":"middle",class:"shed-maplbl",fill:"#fff","letter-spacing":"0.1em"});
+    // Connecticut River: enters north, S through Hartford, bend at Middletown, out to Sound
+    svg.appendChild(el("path",{d:"M 320,54 C 316,84 314,116 318,144 C 322,164 330,178 346,190 C 362,200 378,205 392,206",
+      fill:"none",stroke:"var(--shed-river)","stroke-width":3}));
+    txt(svg,"Connecticut River",{x:262,y:100,"text-anchor":"end",class:"shed-maplbl",fill:"var(--shed-river)"});
+    svg.appendChild(el("line",{x1:264,y1:104,x2:314,y2:118,stroke:"var(--shed-river)","stroke-width":1}));
+    // cities
+    svg.appendChild(el("circle",{cx:316,cy:118,r:2.5,fill:"var(--text-secondary)"}));
+    txt(svg,"Hartford",{x:308,y:121,"text-anchor":"end",class:"shed-maplbl"});
+    svg.appendChild(el("circle",{cx:322,cy:158,r:2.5,fill:"var(--text-secondary)"}));
+    txt(svg,"Middletown",{x:314,y:161,"text-anchor":"end",class:"shed-maplbl"});
+    // site (east bank, just east of Middletown)
+    const sx=334,sy=158;
+    svg.appendChild(el("circle",{cx:sx,cy:sy,r:6,fill:"none",stroke:"var(--shed-site)","stroke-width":2}));
+    svg.appendChild(el("circle",{cx:sx,cy:sy,r:2.6,fill:"var(--shed-site)"}));
+    svg.appendChild(el("line",{x1:sx+8,y1:sy,x2:sx+150,y2:sy-24,stroke:"var(--shed-site)","stroke-width":1}));
+    txt(svg,"Portland — the site",{x:sx+156,y:sy-27,class:"shed-maplbl-b"});
+    txt(svg,"east bank, opposite Middletown",{x:sx+156,y:sy-14,class:"shed-maplbl"});
+    txt(svg,"~30 river mi above the Sound",{x:sx+156,y:sy-1,class:"shed-maplbl"});
+    // N arrow
+    svg.appendChild(el("path",{d:"M 640,96 L 640,60 M 640,60 L 634,74 M 640,60 L 646,74",stroke:"var(--text-secondary)","stroke-width":1.6,fill:"none"}));
+    txt(svg,"N",{x:640,y:112,"text-anchor":"middle",class:"shed-maplbl-b"});
+    txt(svg,"stylized — not to scale",{x:52,y:288,class:"shed-axt"});
+  })(document.getElementById("shed-locator"));
+})();
+(function(){
+  const NS="http://www.w3.org/2000/svg";
+  const el=(n,a)=>{const e=document.createElementNS(NS,n);for(const k in a)e.setAttribute(k,a[k]);return e;};
+  const txt=(p,s,a,cls)=>{const t=el("text",Object.assign({class:cls||"wuse-axt"},a));t.textContent=s;p.appendChild(t);return t;};
+  const svg=document.getElementById("wuse-chart");
+
+  // period: startDay offset from Sep 24 2024, length in days, gal/day, season
+  const P=[
+    {s:0,   d:80,  g:117, k:"fall",   lbl:"Sep–Dec '24"},
+    {s:80,  d:102, g:109, k:"winter", lbl:"Dec '24–Mar '25"},
+    {s:182, d:79,  g:141, k:"spring", lbl:"Mar–Jun '25"},
+    {s:261, d:111, g:133, k:"summer", lbl:"Jun–Oct '25"},
+    {s:372, d:163, g:116, k:"fall",   lbl:"Oct '25–Mar '26"},
+    {s:535, d:95,  g:160, k:"spring", lbl:"Mar–Jun '26"}
+  ];
+  const col=k=>({fall:"var(--wuse-fall)",winter:"var(--wuse-winter)",spring:"var(--wuse-spring)",summer:"var(--wuse-summer)"}[k]);
+  const BASE=109;
+  const TOTALD=630, GMAX=180;
+  const x0=58,x1=858,y0=330,y1=30;
+  const X=day=>x0+day/TOTALD*(x1-x0);
+  const Y=g=>y0-g/GMAX*(y0-y1);
+
+  // y grid
+  for(let g=0;g<=GMAX;g+=30){
+    svg.appendChild(el("line",{class:"wuse-gl",x1:x0,y1:Y(g),x2:x1,y2:Y(g)}));
+    txt(svg,g,{x:x0-8,y:Y(g)+3.5,"text-anchor":"end"});
+  }
+  txt(svg,"gallons per day",{x:x0-8,y:y1-12,"text-anchor":"start",class:"wuse-axl"});
+
+  // x ticks — quarter marks
+  const ticks=[{day:7,l:"Oct '24"},{day:99,l:"Jan '25"},{day:189,l:"Apr '25"},{day:280,l:"Jul '25"},
+               {day:372,l:"Oct '25"},{day:464,l:"Jan '26"},{day:554,l:"Apr '26"}];
+  ticks.forEach(t=>{
+    svg.appendChild(el("line",{class:"wuse-gl",x1:X(t.day),y1:y0,x2:X(t.day),y2:y0+4}));
+    txt(svg,t.l,{x:X(t.day),y:y0+16,"text-anchor":"middle"});
+  });
+
+  // baseline + annual-average reference lines (drawn under the bars)
+  const AVG=125;
+  svg.appendChild(el("line",{x1:x0,y1:Y(AVG),x2:x1,y2:Y(AVG),stroke:"var(--text-muted)",
+    "stroke-width":1,"stroke-dasharray":"2 3"}));
+
+  // bars
+  P.forEach(p=>{
+    const bx=X(p.s), bw=X(p.s+p.d)-X(p.s), gap=3;
+    // base portion
+    const baseH=Y(Math.min(p.g,BASE));
+    svg.appendChild(el("rect",{x:bx+gap,y:baseH,width:bw-2*gap,height:y0-baseH,fill:col(p.k),rx:2,opacity:.92}));
+    // excess above baseline
+    if(p.g>BASE){
+      svg.appendChild(el("rect",{x:bx+gap,y:Y(p.g),width:bw-2*gap,height:Y(BASE)-Y(p.g),
+        fill:"var(--wuse-excess)",stroke:"var(--wuse-excess-line)","stroke-width":1,rx:2}));
+    }
+    txt(svg,p.g,{x:bx+bw/2,y:Y(p.g)-7,"text-anchor":"middle",class:"wuse-val"});
+    txt(svg,p.lbl,{x:bx+bw/2,y:y0+30,"text-anchor":"middle",class:"wuse-axt"});
+    txt(svg,p.d+" d",{x:bx+bw/2,y:y0+42,"text-anchor":"middle",class:"wuse-axt",opacity:.7});
+  });
+
+  // baseline line + labels (on top)
+  svg.appendChild(el("line",{x1:x0,y1:Y(BASE),x2:x1,y2:Y(BASE),stroke:"var(--wuse-base)",
+    "stroke-width":1.5,"stroke-dasharray":"6 4"}));
+  txt(svg,"winter baseline ≈ 109 gal/day (indoor only)",{x:x0+4,y:Y(BASE)+16,"text-anchor":"start",class:"wuse-dot-lbl"});
+  txt(svg,"annual avg ≈ 125",{x:x1,y:Y(AVG)-5,"text-anchor":"end",class:"wuse-axt"});
+})();
+</script>
+<!-- FOOTER:START -->
+<style>
+  .site-footer {
+    font-family: system-ui, -apple-system, "Segoe UI", sans-serif;
+    padding: 20px; text-align: center;
+    font-size: 12px; color: #898781;
+    background: #fcfcfb; border-top: 1px solid rgba(11,11,11,0.10);
+  }
+  .site-footer a { color: #52514e; }
+  @media (prefers-color-scheme: dark) {
+    :root:not([data-theme="light"]) .site-footer { background: #1a1a19; border-top-color: rgba(255,255,255,0.10); }
+    :root:not([data-theme="light"]) .site-footer a { color: #c3c2b7; }
+  }
+  :root[data-theme="dark"] .site-footer { background: #1a1a19; border-top-color: rgba(255,255,255,0.10); }
+  :root[data-theme="dark"] .site-footer a { color: #c3c2b7; }
+</style>
+<footer class="site-footer">
+  <p>Demo site for <a href="https://github.com/keser/site-toolkit">site-toolkit</a>.
+    Example data: Lot #86, 58 Freestone Avenue, Portland, CT 06480.</p>
+</footer>
+<!-- FOOTER:END -->
+</body>
+</html>

@@ -1,0 +1,17 @@
+.DS_Store
+__pycache__/
+
+# Private by default: images, PDFs, and raw media are not tracked.
+# Track a finished asset deliberately with `git add -f path/to/file`.
+*.jpg
+*.jpeg
+*.png
+*.gif
+*.heic
+*.tif
+*.tiff
+*.pdf
+*.mov
+*.mp4
+*.skp
+*.skb

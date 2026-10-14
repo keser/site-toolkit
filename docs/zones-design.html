@@ -1,0 +1,453 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Zones &amp; Design — Lot #86</title>
+<style>
+  .viz-root {
+    color-scheme: light;
+    --surface-1: #fcfcfb; --page: #f9f9f7; --text-primary: #0b0b0b;
+    --text-secondary: #52514e; --text-muted: #898781; --grid: #e1e0d9;
+    --baseline: #c3c2b7; --border: rgba(11,11,11,0.10);
+    --badge-bg: #eef0ea; --accent: #e07b39;
+  }
+  @media (prefers-color-scheme: dark) {
+    :root:where(:not([data-theme="light"])) .viz-root {
+      color-scheme: dark;
+      --surface-1: #1a1a19; --page: #0d0d0d; --text-primary: #ffffff;
+      --text-secondary: #c3c2b7; --text-muted: #898781; --grid: #2c2c2a;
+      --baseline: #383835; --border: rgba(255,255,255,0.10);
+      --badge-bg: #23261f; --accent: #e8935a;
+    }
+  }
+  :root[data-theme="dark"] .viz-root {
+    color-scheme: dark;
+    --surface-1: #1a1a19; --page: #0d0d0d; --text-primary: #ffffff;
+    --text-secondary: #c3c2b7; --text-muted: #898781; --grid: #2c2c2a;
+    --baseline: #383835; --border: rgba(255,255,255,0.10);
+    --badge-bg: #23261f; --accent: #e8935a;
+  }
+  * { box-sizing: border-box; }
+  body { margin: 0; }
+  .viz-root {
+    font-family: system-ui, -apple-system, "Segoe UI", sans-serif;
+    background: var(--page); color: var(--text-primary);
+    min-height: 100vh; padding: 32px 20px 60px;
+  }
+  .wrap { max-width: 1280px; margin: 0 auto; }
+  .section-title { font-size: 21px; font-weight: 600; margin: 0 0 6px; }
+  .subhead { color: var(--text-secondary); font-size: 14px; line-height: 1.5; margin: 0 0 12px; }
+  .badge-row { display: flex; flex-wrap: wrap; gap: 8px; margin-bottom: 20px; }
+  .badge {
+    background: var(--badge-bg); border: 1px solid var(--border); border-radius: 999px;
+    padding: 5px 12px; font-size: 12px; color: var(--text-secondary);
+    text-decoration: none;
+  }
+  .badge b { color: var(--text-primary); font-weight: 600; }
+  a.badge:hover { border-color: var(--accent); color: var(--text-primary); }
+  .panel {
+    background: var(--surface-1); border: 1px solid var(--border);
+    border-radius: 10px; padding: 16px 16px 10px;
+  }
+  .panel-title { font-size: 15px; font-weight: 600; margin: 0 0 2px; }
+  .panel-sub { font-size: 12px; color: var(--text-muted); margin: 0 0 10px; }
+  svg.chart { width: 100%; height: auto; display: block; overflow: visible; }
+  section.page-section { margin-bottom: 48px; padding-bottom: 4px; border-bottom: 1px solid var(--border); }
+  section.page-section:last-of-type { border-bottom: none; }
+
+  h3.section-head { font-size: 13px; font-weight: 600; letter-spacing: 0.04em; text-transform: uppercase; color: var(--text-muted); margin: 28px 0 12px; }
+  .photo-block { margin-bottom: 16px; }
+  .photo-block img { width: 100%; height: auto; border-radius: 12px; border: 1px solid var(--border); display: block; }
+  .photo-caption { font-size: 12.5px; color: var(--text-secondary); margin: 8px 0 0; line-height: 1.5; }
+  .photo-credit { font-size: 11px; color: var(--text-muted); margin: 2px 0 0; }
+  table.matrix-table { width: 100%; border-collapse: collapse; font-size: 12.5px; }
+  table.matrix-table th, table.matrix-table td { text-align: left; padding: 8px 10px; border-bottom: 1px solid var(--grid); vertical-align: top; }
+  table.matrix-table th { color: var(--text-muted); font-weight: 600; font-size: 11px; text-transform: uppercase; letter-spacing: 0.03em; }
+  table.matrix-table td { color: var(--text-secondary); }
+  .table-scroll { overflow-x: auto; margin-bottom: 16px; }
+  .two-col { display: grid; grid-template-columns: 1fr 1fr; gap: 24px; }
+  @media (max-width: 640px) { .two-col { grid-template-columns: 1fr; } }
+  .species-list { font-size: 13px; color: var(--text-secondary); line-height: 1.9; margin: 0; padding-left: 20px; }
+  .species-list em { color: var(--text-muted); font-style: italic; }
+  .qa-block { margin-bottom: 18px; }
+  .qa-block .q, .q { font-size: 13.5px; font-weight: 600; color: var(--text-primary); margin: 0 0 6px; }
+  .qa-block .a { font-size: 13px; color: var(--text-secondary); line-height: 1.6; margin: 0; }
+  .swot-label { font-size: 11px; font-weight: 700; text-transform: uppercase; letter-spacing: 0.04em; color: var(--text-muted); margin: 0 0 8px; }
+  .swot-list { font-size: 13px; color: var(--text-secondary); line-height: 1.7; margin: 0; padding-left: 18px; }
+</style>
+</head>
+<body>
+<!-- NAV:START -->
+<style>
+  .site-nav {
+    font-family: system-ui, -apple-system, "Segoe UI", sans-serif;
+    display: flex; flex-wrap: wrap; align-items: center; justify-content: space-between;
+    gap: 12px; padding: 14px 20px;
+    background: #fcfcfb; border-bottom: 1px solid rgba(11,11,11,0.10);
+  }
+  .site-nav__brand { font-weight: 600; font-size: 14px; color: #0b0b0b; text-decoration: none; }
+  .site-nav__links { display: flex; gap: 18px; flex-wrap: wrap; }
+  .site-nav__links a { font-size: 13px; color: #52514e; text-decoration: none; }
+  .site-nav__links a:hover { color: #0b0b0b; }
+  @media (prefers-color-scheme: dark) {
+    :root:not([data-theme="light"]) .site-nav { background: #1a1a19; border-bottom-color: rgba(255,255,255,0.10); }
+    :root:not([data-theme="light"]) .site-nav__brand { color: #ffffff; }
+    :root:not([data-theme="light"]) .site-nav__links a { color: #c3c2b7; }
+    :root:not([data-theme="light"]) .site-nav__links a:hover { color: #ffffff; }
+  }
+  :root[data-theme="dark"] .site-nav { background: #1a1a19; border-bottom-color: rgba(255,255,255,0.10); }
+  :root[data-theme="dark"] .site-nav__brand { color: #ffffff; }
+  :root[data-theme="dark"] .site-nav__links a { color: #c3c2b7; }
+  :root[data-theme="dark"] .site-nav__links a:hover { color: #ffffff; }
+</style>
+<nav class="site-nav">
+  <a class="site-nav__brand" href="index.html">Lot #86 — Site Profile</a>
+  <div class="site-nav__links">
+    <a href="base-map.html">Base Map</a>
+    <a href="sectors.html">Sectors</a>
+    <a href="zones-design.html">Zones &amp; Design</a>
+    <a href="climate.html">Climate</a>
+    <a href="water.html">Water</a>
+    <a href="sun-solar.html">Sun &amp; Solar</a>
+    <a href="flood-hazard.html">Flood &amp; Hazard</a>
+    <a href="species-inventory.html">Species Inventory</a>
+    <a href="project-plan.html">Project Plan</a>
+  </div>
+</nav>
+<!-- NAV:END -->
+<div class="viz-root">
+  <div class="wrap">
+    <header>
+      <h1 class="section-title" style="font-size:22px;">Zones &amp; Design</h1>
+      <p class="subhead">The property's permaculture zones — current conditions, the microclimates within them, and a brainstorm of proposed changes for the future.</p>
+      <div class="badge-row" id="section-nav">
+        <a class="badge" href="#current-zones">Current Zones</a>
+        <a class="badge" href="#microclimates">Microclimates</a>
+        <a class="badge" href="#brainstorm">Zones Brainstorm</a>
+      </div>
+    </header>
+
+    <section class="page-section" id="current-zones">
+      <h2 class="section-title">Current Zones</h2>
+      <p class="subhead">The five permaculture zones as they exist today — Zone 01 (most intensively used, closest to the house) through Zone 05 (least visited, wild) — with the existing-conditions matrix, photos, and a SWOT analysis of the current layout.</p>
+
+      <div class="photo-block">
+        <img src="assets/zones-design/current-zones-map.svg" alt="Placeholder: Current zones map of your project site here" width="1200" height="676">
+        <p class="photo-caption">Current Zone Map — scale 1" = 20', north -65.43°, location 41°34'22.04"N 72°38'03.90"W, elevation min 106 ft / max 114 ft. Circulation: car foot path; daily foot path house-to-driveway; daily foot path walk dog/get eggs; monthly foot path coop-to-compost; seasonal truck path camper &amp; firewood.</p>
+        <p class="photo-credit">Map created by Andrew Keser, August 2026.</p>
+      </div>
+
+      <h3 class="section-head">Zone Legend</h3>
+      <div class="table-scroll">
+        <table class="matrix-table">
+          <tr><th>Zone</th><th>Definition</th></tr>
+          <tr><td>Zone 01</td><td>House, front &amp; side yard</td></tr>
+          <tr><td>Zone 02</td><td>Flower &amp; shade gardens</td></tr>
+          <tr><td>Zone 03</td><td>Veg garden &amp; chickens</td></tr>
+          <tr><td>Zone 04</td><td>Back yard with work areas</td></tr>
+          <tr><td>Zone 05</td><td>Least maintained or visited area, primarily invasive vines</td></tr>
+        </table>
+      </div>
+
+      <h3 class="section-head">Existing Conditions</h3>
+      <div class="table-scroll">
+        <table class="matrix-table">
+          <tr><th></th><th>Zone 01</th><th>Zone 02</th><th>Zone 03</th><th>Zone 04</th><th>Zone 05</th></tr>
+          <tr><td><b>Description</b></td><td>House, front and side yards</td><td>Shade and flower gardens</td><td>Veg garden and chicken coop</td><td>Back yard and work areas</td><td>Unmaintained wild area</td></tr>
+          <tr><td><b>Frequency of visits</b></td><td>Daily</td><td>Daily</td><td>Daily</td><td>Weekly</td><td>Rarely visit prior to this course</td></tr>
+          <tr><td><b>Theme / active primary</b></td><td>Living area, home access, song bird feeding area</td><td>Ornamental flowering plants and trees</td><td>Growing vegetables &amp; herbs, chickens</td><td>Wood piles, fire pit, brick oven</td><td>Mature trees, overgrown invasive vines &amp; shrubs</td></tr>
+          <tr><td><b>Water</b></td><td>Water connection, spigot with 150ft hose</td><td>Within range of watering system</td><td>No current water connection</td><td>No water system in reach</td><td>Never watered</td></tr>
+          <tr><td><b>Structures</b></td><td>Single family home</td><td>Stone walkway, above ground pool &amp; pool deck</td><td>Chicken coop, tool shed, feed storage, fencing</td><td>Fire pit, brick oven, camper</td><td>Not applicable</td></tr>
+          <tr><td><b>Plants / plant systems</b></td><td>Ornamental flowers and shrubs, shade tree</td><td>Shade trees, perennial flowers &amp; shrubs</td><td>Herbs &amp; vegetables</td><td>Grapes, blueberries, apple trees, peach tree, lawn grass</td><td>Mature oaks, Norway spruce, eastern pine, invasive ground cover</td></tr>
+          <tr><td><b>Animals</b></td><td>Domesticated dogs &amp; cats, squirrels, birds, skunks, raccoons</td><td>Same as Zone 01</td><td>+ domesticated chickens, groundhogs, red fox</td><td>+ coyote, deer, raptor birds</td><td>Same as Zone 04</td></tr>
+          <tr><td><b>Additional considerations</b></td><td>Annual plantings in place can be replaced with perennials</td><td>Mature trees starting to compete, need to decide what stays</td><td>Overgrown property lines provide too much shade for grow beds</td><td>Willing to reduce total lawn coverage in favor of lower maintenance option</td><td>Covered in poison ivy, Virginia creeper &amp; Asiatic bittersweet</td></tr>
+        </table>
+      </div>
+
+      <h3 class="section-head">Zone Strengths</h3>
+      <div class="photo-block">
+        <img src="assets/zones-design/current-zones-strengths-1.svg" alt="Placeholder: Photos of your project site&#x27;s existing strengths here" width="1200" height="672">
+        <p class="photo-caption"><b>Zone 1 pool deck</b> creates the perfect dark, moist, shaded habitat to store hardwood logs inoculated with mushrooms.</p>
+        <p class="photo-caption"><b>Zone 5 area</b> largely unused or maintained for years. After pruning this back we will be able to produce a yield of firewood, woody material to shred and mulch for groundcover. The mulberry tree is dying back, so most of its dead or dying branches will be buried or composted to improve soil health in other zones. I plan to coppice the maples to harvest the logs and use future sprouts as source of mulch.</p>
+        <p class="photo-credit">Photos by Andrew Keser, June &amp; August 2026.</p>
+      </div>
+      <div class="photo-block">
+        <img src="assets/zones-design/current-zones-strengths-2.svg" alt="Placeholder: More photos of your project site&#x27;s existing strengths here" width="1200" height="672">
+        <p class="photo-caption"><b>Zone 1 front porch</b> is most used outdoor space with daily use. Shaded porch provides great place to relax and drink a cup of coffee while bird or people watching. Everything has grown well here over the years.</p>
+        <p class="photo-caption"><b>Zone 1 north western side</b> of the property facing south. The path between the hedgerow and the hostas along the deck is the most walked pathway on the property with daily use. To get from the back door of the house to the chicken coop, you walk from Zone 1 to Zone 3 while passing through Zone 2.</p>
+        <p class="photo-credit">Photos by Andrew Keser, June &amp; August 2026.</p>
+      </div>
+
+      <h3 class="section-head">SWOT Analysis</h3>
+      <div class="two-col">
+        <div>
+          <p class="swot-label">Strengths</p>
+          <ul class="swot-list">
+            <li>Even within .43 acres, there's still a wide range of microclimates within zones which can provide a variety of habitats or spaces to produce a yield.</li>
+            <li>For the most part, each zone is a blank slate with flexibility around what is done moving forward.</li>
+            <li>Current plantings in less than ideal zone can be transplanted to somewhere more appropriate.</li>
+          </ul>
+          <p class="swot-label" style="margin-top:18px;">Opportunities</p>
+          <ul class="swot-list">
+            <li>Utilize Zones 1 &amp; 2 more for producing yields of flowers, herbs and fruits.</li>
+            <li>Utilize microclimates in Zones 1 &amp; 2 to add diversity to plant life and habitats they provide.</li>
+            <li>Bring more intention to what's planted so everything is serving a purpose, producing a yield or habitat.</li>
+            <li>Remove non-native varieties so plants and trees that are there are providing habitat for native animals and insects.</li>
+            <li>Add features to Zone 2 so people can spend time there and enjoy the heavily shaded areas full of ornamental trees and perennial plants.</li>
+          </ul>
+        </div>
+        <div>
+          <p class="swot-label">Weaknesses</p>
+          <ul class="swot-list">
+            <li>Current plantings are more circumstantial than they are intentionally planted to utilize a zone or benefit from proximity to home.</li>
+            <li>Zones are underutilized.</li>
+            <li>Lots of invasive species (invasive to Connecticut, USA) that have grown out of control.</li>
+            <li>Poor use of Zones 1 &amp; 2, given how frequently they are visited and used.</li>
+          </ul>
+          <p class="swot-label" style="margin-top:18px;">Threats</p>
+          <ul class="swot-list">
+            <li>Invasive shrubs, vines and tree species in Zone 5 render the space unusable and dangerous to use — dead limbs could fall with strong winds, and poison ivy covers the ground where the adjacent neighbors pass through.</li>
+            <li>The weight of the Asiatic bittersweet and Virginia creeper growing on the fence in Zone 5 is already leading to structural damage.</li>
+            <li>Overgrown property lines reduce sun exposure for prime growing areas like vegetable garden and fruit trees/bushes in Zone 4.</li>
+          </ul>
+        </div>
+      </div>
+    </section>
+
+    <section class="page-section" id="microclimates">
+      <h2 class="section-title">Microclimates</h2>
+      <p class="subhead">Four distinct microclimate zones identified on the property, the known plant species already growing in them, and observations from studying how they shift with the planned clearing work.</p>
+
+      <div class="photo-block">
+        <img src="assets/zones-design/microclimates-map.svg" alt="Placeholder: Microclimate map of your project site here" width="1200" height="675">
+        <p class="photo-caption">Current Microclimate Map — scale 1" = 20', north -65.43°, location 41°34'22.04"N 72°38'03.90"W, elevation min 106 ft / max 114 ft.</p>
+        <p class="photo-credit">Map created by Andrew Keser, August 2026.</p>
+      </div>
+
+      <h3 class="section-head">Microclimate Types</h3>
+      <div class="table-scroll">
+        <table class="matrix-table">
+          <tr><th>Type</th><th>Name</th><th>Description</th></tr>
+          <tr><td>Type 01</td><td>Wet, Humid &amp; Shaded</td><td>Heavily shaded areas with dense foliage, high moisture retention.</td></tr>
+          <tr><td>Type 02</td><td>Hot, Dry, Direct Sun</td><td>Direct sun, wind exposure with dry dead soil with low water retention.</td></tr>
+          <tr><td>Type 03</td><td>Cool, Shaded &amp; Breezy</td><td>Morning sun from the east, with afternoon shade &amp; southern winds spring through fall.</td></tr>
+          <tr><td>Type 04</td><td>Hot, Direct Sun, Thermal Mass</td><td>Similar sun exposure as Type 02, but with much higher water retention from roof drip line. The boxwood hedge shades the ground through most of the day, but the home's walls provide thermal mass which could provide heat in early spring/late fall to extend growing potential.</td></tr>
+        </table>
+      </div>
+
+      <h3 class="section-head">Known Plant Species</h3>
+      <p class="subhead" style="margin-bottom:16px;">Species observed before the formal Lesson 8 iNaturalist survey (see the <a href="species-inventory.html">Species Inventory</a> page for the surveyed set — the two lists overlap heavily but were compiled differently).</p>
+      <div class="two-col">
+        <div>
+          <p class="photo-caption" style="font-weight:600; text-transform:uppercase; letter-spacing:0.03em; color:var(--text-muted);">Native (27)</p>
+          <ol class="species-list">
+            <li>Allegheny Blackberry — <em>Rubus Allegheniensis</em></li>
+            <li>American Burnweed — <em>Erechtites Hieraciifolius</em></li>
+            <li>American Elm — <em>Ulmus Americana</em></li>
+            <li>American Jumpseed — <em>Persicaria Virginiana</em></li>
+            <li>American Plantain — <em>Plantago Rugelii</em></li>
+            <li>American Pokeweed — <em>Phytolacca Americana</em></li>
+            <li>Bitternut Hickory — <em>Carya Cordiformis</em></li>
+            <li>Canada Yew — <em>Taxus Canadensis</em></li>
+            <li>Common Blue Wood Aster — <em>Symphyotrichum Cordifolium</em></li>
+            <li>Eastern American Blue Violets — <em>Boreali Americanae</em></li>
+            <li>Eastern Black Walnut — <em>Juglans Nigra</em></li>
+            <li>Eastern Poison Ivy — <em>Toxicodendron Radicans</em></li>
+            <li>Horseweed — <em>Erigeron Canadensis</em></li>
+            <li>Juniper Haircap Moss — <em>Polytrichum Juniperinum</em></li>
+            <li>Mexican Stonecrop — <em>Sedum Mexicanum</em></li>
+            <li>Northern Highbush Blueberry — <em>Vaccinium Corymbosum</em></li>
+            <li>Northern Lady Fern — <em>Athyrium Angustum</em></li>
+            <li>Northern Whitecedar — <em>Thuja Occidentalis</em></li>
+            <li>Ohio Haircap Moss — <em>Polytrichum Ohioense</em></li>
+            <li>Queen of the Prairie — <em>Filipendula Rubra</em></li>
+            <li>Riverbank Grape — <em>Vitis Riparia</em></li>
+            <li>Seductive Entodon Moss — <em>Entodon Seductrix</em></li>
+            <li>Sensitive Fern — <em>Onoclea Sensibilis</em></li>
+            <li>Thicket Creeper — <em>Parthenocissus Inserta</em></li>
+            <li>Upright Yellow Woodsorrel — <em>Oxalis stricta</em></li>
+            <li>Virginia Creeper — <em>Parthenocissus Quinquefolia</em></li>
+            <li>Wild Bergamot — <em>Monarda Fistulosa</em></li>
+          </ol>
+        </div>
+        <div>
+          <p class="photo-caption" style="font-weight:600; text-transform:uppercase; letter-spacing:0.03em; color:var(--text-muted);">Introduced (34)</p>
+          <ol class="species-list">
+            <li>Asian Bittersweet — <em>Celastrus Orbiculatus</em></li>
+            <li>Asiatic Dayflower — <em>Commelina Communis</em></li>
+            <li>Black-Eyed Susan — <em>Rudbeckia Hirta</em></li>
+            <li>Bloody Crane's-Bill — <em>Geranium Sanguineum</em></li>
+            <li>Carpet Bugle — <em>Ajuga Reptans</em></li>
+            <li>Common Chickweed — <em>Stellaria Media</em></li>
+            <li>Common Dandelion — <em>Taraxacum Officinale</em></li>
+            <li>Common Grape Hyacinth — <em>Muscari Botryoides</em></li>
+            <li>Common Lantana — <em>Lantana Camara</em></li>
+            <li>Garden Privet — <em>Ligustrum ovalifolium</em></li>
+            <li>Goatsbeard — <em>Aruncus dioicus</em></li>
+            <li>Gooseneck Loosestrife — <em>Lysimachia clethroides</em></li>
+            <li>Goutweed — <em>Aegopodium podagraria</em></li>
+            <li>Ground-Ivy — <em>Glechoma Hederacea</em></li>
+            <li>Hairy Bittercress — <em>Cardamine Hirsuta</em></li>
+            <li>Japanese Maple — <em>Acer Palmatum</em></li>
+            <li>Japanese Stiltgrass — <em>Microstegium Vimineum</em></li>
+            <li>Japanese White Pine — <em>Pinus Parviflora</em></li>
+            <li>Jerusalem Artichoke — <em>Helianthus Tuberosus</em></li>
+            <li>Koyamaki — <em>Sciadopitys Verticillata</em></li>
+            <li>Lesser Periwinkle — <em>Vinca Minor</em></li>
+            <li>Low Smartweed — <em>Persicaria Longiseta</em></li>
+            <li>Mock Strawberry — <em>Potentilla Indica</em></li>
+            <li>Norway Maple — <em>Acer Platanoides</em></li>
+            <li>Norway Spruce — <em>Picea Abies</em></li>
+            <li>Orange Day-lily — <em>Hemerocallis Fulva</em></li>
+            <li>Purple Coneflower — <em>Echinacea purpurea</em></li>
+            <li>Purple Loosestrife — <em>Lythrum salicaria</em></li>
+            <li>Scented Hosta — <em>Hosta plantaginea</em></li>
+            <li>Small-leaved Plantain Lily — <em>Hosta sieboldii</em></li>
+            <li>Sycamore Maple — <em>Acer pseudoplatanus</em></li>
+            <li>Tree-of-heaven — <em>Ailanthus altissima</em></li>
+            <li>White Clover — <em>Trifolium repens</em></li>
+            <li>Whorled Coreopsis — <em>Coreopsis verticillata</em></li>
+          </ol>
+        </div>
+      </div>
+
+      <h3 class="section-head">Observations &amp; Ideas</h3>
+      <div class="two-col">
+        <div>
+          <p class="q">What did I notice after studying microclimates on the site?</p>
+          <div class="qa-block">
+            <p class="a">Most of the clean up and maintenance projects I have planned for the site may drastically change the microclimates. For example, Zone 4 will get much more afternoon summer sun without the dense shade trees and vines along the north western property line.</p>
+          </div>
+          <div class="qa-block">
+            <p class="a">Zone 5 has lots of potential fuel and mulch. The compost pile is covered with dry brush that can be shredded and used as mulch. The Norway maples can be cut back to season and use as firewood.</p>
+          </div>
+          <div class="qa-block">
+            <p class="a">Zone 2 is currently a pass through zone. Most circulation paths go from Zone 1 to Zone 3 while walking through Zone 2. Aside from the mature decorative trees there isn't really keeping anyone in Zone 2.</p>
+          </div>
+        </div>
+        <div>
+          <p class="q">What ideas have I come with after observing microclimates?</p>
+          <div class="qa-block">
+            <p class="a">I've always wanted a reason to grow espalier fruit trees closer to the house and the pathway between the house and the pool deck could be a great fit for this.</p>
+          </div>
+          <div class="qa-block">
+            <p class="a">Instead of building a pergola or some kind of man made structure to provide shade over the pool, I could replace the hostas with vining plants like grapes, or cold hardy kiwi and passion flower. Then this space can provide some kind of fruit yield while shading the areas where people spend the most time.</p>
+          </div>
+          <div class="qa-block">
+            <p class="a">Bring more clover closer to the house instead of having it in far out zones.</p>
+          </div>
+          <div class="qa-block">
+            <p class="a">Incorporate cooking area and fire pit into zone 2 so its close enough to where people gather but far enough from any flammable structure.</p>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section class="page-section" id="brainstorm">
+      <h2 class="section-title">Zones Brainstorm</h2>
+      <p class="subhead">Proposed changes to the current zone layout — an exploratory brainstorm, not committed design decisions. Feeds the Mid-Term Site Water Design Brainstorm.</p>
+
+      <h3 class="section-head">Questions</h3>
+      <div class="qa-block">
+        <p class="q">Review your client must/nice/avoid list. How might you consider changing the zone layout to meet these needs?</p>
+        <p class="a">The overall layout can remain the same, but the ways we use them can be done more effectively so they align to current use patterns. For example, adding a seating area in the already shaded gardens of Zone 02 could offer another gathering space with good views similar to the front porch in Zone 01.</p>
+      </div>
+      <div class="qa-block">
+        <p class="q">How can you place elements in proximity to other elements to improve efficiency based on location?</p>
+        <p class="a">Reducing the distance between the house and the wood pile is a clear opportunity after this analysis. The wood pile can be moved to be next to the south eastern side of the house in Zone 01 instead of being all the way out in Zone 04. Now wood can be dropped off in our driveway, instead of down the adjacent neighbors' driveway where it has to be hauled back up to the house for burning.</p>
+      </div>
+      <div class="qa-block">
+        <p class="q">How does the site's slope and aspect influence the zoning?</p>
+        <p class="a">The lot is a gentle slope with a max elevation of 114 ft and min of 106 ft. This impacts the direction of water run off but other than that, it doesn't dictate views or paths people take. The lot is much longer than it is wide and the slope is not really noticeable unless you are actively measuring it.</p>
+      </div>
+      <div class="qa-block">
+        <p class="q">What client elements might be best placed on the edge between two zones?</p>
+        <p class="a">The edges between Zone 02 and Zones 01 and 03 have the most opportunities to expand upon what's already there or where people are already walking through or visiting. My goal is to draw people through the yard from Zone 01 through Zone 04 which can be done by placing pathways, seating areas and clearings to draw the eye towards the back of the property.</p>
+      </div>
+      <div class="qa-block">
+        <p class="q">Are there areas of the site that are far from the house that are visited frequently?</p>
+        <p class="a">Far from the house is a relatively short distance given the lot is .43 acres total, but in a practical sense, Zones 4 &amp; 5 don't require daily visits for chores or active use, but it's fairly easy to notice something out of place in those zones while standing in Zone 3. We also recently installed game cameras to track the movement of animals on the property which gives us instant access to Zones 4 &amp; 5 from anywhere.</p>
+      </div>
+      <div class="qa-block">
+        <p class="q">Do you have ideas for ways to save energy, time, and resources by adjusting the current zones?</p>
+        <p class="a">The zones will likely remain as is, but what we do within each will be adapted to amplify what's already happening. For example, Zone 02 is already used daily, but since it lacks proper seating or gathering space, there's no real reason to stay there since you're likely passing through to Zone 03. Moving the wood pile and work station closer to the house will help reduce how much transporting needs to be done. Zones 4 and 5 already have mature trees growing and producing material to mulch or chip, so I want to encourage that more to keep a steady supply of wood chips and mulch.</p>
+      </div>
+
+      <h3 class="section-head">Zone 01 — North Western Side Yard</h3>
+      <div class="photo-block">
+        <img src="assets/zones-design/brainstorm-zone1-nw-1.svg" alt="Placeholder: Zone 1 photo of your project site here" width="1200" height="677">
+        <p class="photo-caption">Remove hostas and replace with something that can provide shade for pool deck and walking path to back yard. Retain view towards backyard with clear site line to draw people back in the yard.</p>
+        <p class="photo-caption">Annual and perennial garden gets hot summer sun but this bed could be used for vining fruits that can provide shade and fruit. Generally speaking I would like to diversify from hostas to sun loving plants.</p>
+      </div>
+      <div class="photo-block">
+        <img src="assets/zones-design/brainstorm-zone1-nw-2.svg" alt="Placeholder: Another zone 1 photo of your project site here" width="1200" height="677">
+        <p class="photo-caption">Relocate hostas to Zone 4-5 in shadier microclimate and replace with grapes or other cold hardy fruits that can double as shade canopy over deck. Consider replacing boxwood hedge with some shade trees and pollinator plants.</p>
+        <p class="photo-caption">Utilize microclimate along house to grow espalier trees that can help block late afternoon sun and cool the house. Or consider replacing boxwood hedge with something that adds height and provides shade.</p>
+      </div>
+
+      <h3 class="section-head">Zone 01 — Southeastern Side Yard</h3>
+      <div class="photo-block">
+        <img src="assets/zones-design/brainstorm-zone1-se.svg" alt="Placeholder: Zone 1 photo from another side of your project site here" width="1200" height="677">
+        <p class="photo-caption">Boxwood hedge to be removed and replaced with line of willow trees to be pollarded to produce fence and mulch material. This is the lowest elevation point on the property, so I am considering a mini-swale to help collect and store storm water runoff.</p>
+        <p class="photo-caption">Former elevated deck w/entrance to home in Zone 1 now sits empty. This section of Zone 1 will be used as a drop off point for raw materials, firewood storage and work station. The long term plan is to not depend on the adjacent neighbors' driveway for wood delivery and camper load in/load out, so a truck must be able to drive through this pathway moving forward.</p>
+        <p class="photo-credit">Photos by Andrew Keser, June 2026.</p>
+      </div>
+
+      <h3 class="section-head">Brainstorm Map</h3>
+      <div class="photo-block">
+        <img src="assets/zones-design/brainstorm-map.svg" alt="Placeholder: Zones brainstorm map of your project site here" width="1200" height="676">
+        <p class="photo-caption">Zones Brainstorm Map — scale 1" = 20', north -65.43°, location 41°34'22.04"N 72°38'03.90"W, elevation min 106 ft / max 114 ft.</p>
+        <p class="photo-credit">Map created by Andrew Keser, August 2026.</p>
+      </div>
+      <div class="table-scroll">
+        <table class="matrix-table">
+          <tr><th>Zone</th><th>Proposed change</th></tr>
+          <tr><td>Zone 1</td><td>Add more shade plants to Zone 1 in areas where people spend time (deck, porch, walkway to deck). Move wood pile to behind driveway instead of Zone 4.</td></tr>
+          <tr><td>Zone 2</td><td>Add seating area, add more native plantings in ornamental shade garden. Collect and redirect water to trees.</td></tr>
+          <tr><td>Zone 3</td><td>Move shed to shaded area by coop, remove fencing and use raised beds.</td></tr>
+          <tr><td>Zone 4</td><td>Rebuild 3-bin compost system, move wood pile and work area to Zone 1.</td></tr>
+          <tr><td>Zone 5</td><td>Get invasive plants under control, pollard maples to regrow material to chip.</td></tr>
+        </table>
+      </div>
+
+      <h3 class="section-head">Proposed Future State</h3>
+      <p class="subhead">Same row structure as the <a href="#current-zones">Current Zones</a> existing-conditions matrix — read them side by side.</p>
+      <div class="table-scroll">
+        <table class="matrix-table">
+          <tr><th></th><th>Zone 01</th><th>Zone 02</th><th>Zone 03</th><th>Zone 04</th><th>Zone 05</th></tr>
+          <tr><td><b>Frequency of visits</b></td><td>Daily</td><td>Daily</td><td>Daily</td><td>Monthly</td><td>Monthly</td></tr>
+          <tr><td><b>Theme / active primary</b></td><td>Plantings provide shade, fruits, herbs and flowers to attract birds</td><td>Stop and sit or pass through</td><td>Veg garden</td><td>Fruit, berry, hops yield</td><td>Mimic nature, build habitat</td></tr>
+          <tr><td><b>Water</b></td><td>Water spigot on southeast side of house by driveway</td><td>Hose in Zone 01 reaches Zone 02</td><td>Buried hose from Zone 01 runs to Zone 03 but needs repair to avoid leak</td><td>Need to capture and direct water around trees for heavy rain events</td><td>No water access</td></tr>
+          <tr><td><b>Structures</b></td><td>No new structures</td><td>Small water feature, shaded seating</td><td>Build new shed &amp; relocate within zone</td><td>Build new compost system</td><td>No structures</td></tr>
+          <tr><td><b>Plants / plant systems</b></td><td>Guilds of native mixed perennials</td><td>Decorative shade trees and flowering shrubs</td><td>Primary veg garden in raised beds</td><td>Dwarf fruit tree orchard, shrubs and hop vines</td><td>Mature oaks, maples &amp; spruce trees</td></tr>
+          <tr><td><b>Animals</b></td><td>Attract wild song birds &amp; small mammals</td><td>Wild song birds &amp; small mammals</td><td>Keep chickens in Zone 03, protect against predators</td><td>Provide habitat for animals &amp; insects</td><td>Provide habitat for animals &amp; insects</td></tr>
+          <tr><td><b>Additional considerations</b></td><td>Least flexibility in terms of what can change aside from plantings</td><td>Add shade cover so gathering areas aren't so hot in summer afternoons</td><td>This zone will likely change the most with clean up projects this fall</td><td>Mulch the lawn in this area and fully commit to orchard production</td><td>This area is undergoing treatment to remove poison ivy &amp; bittersweet</td></tr>
+        </table>
+      </div>
+    </section>
+  </div>
+</div>
+<!-- FOOTER:START -->
+<style>
+  .site-footer {
+    font-family: system-ui, -apple-system, "Segoe UI", sans-serif;
+    padding: 20px; text-align: center;
+    font-size: 12px; color: #898781;
+    background: #fcfcfb; border-top: 1px solid rgba(11,11,11,0.10);
+  }
+  .site-footer a { color: #52514e; }
+  @media (prefers-color-scheme: dark) {
+    :root:not([data-theme="light"]) .site-footer { background: #1a1a19; border-top-color: rgba(255,255,255,0.10); }
+    :root:not([data-theme="light"]) .site-footer a { color: #c3c2b7; }
+  }
+  :root[data-theme="dark"] .site-footer { background: #1a1a19; border-top-color: rgba(255,255,255,0.10); }
+  :root[data-theme="dark"] .site-footer a { color: #c3c2b7; }
+</style>
+<footer class="site-footer">
+  <p>Demo site for <a href="https://github.com/keser/site-toolkit">site-toolkit</a>.
+    Example data: Lot #86, 58 Freestone Avenue, Portland, CT 06480.</p>
+</footer>
+<!-- FOOTER:END -->
+</body>
+</html>
