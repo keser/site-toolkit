@@ -53,6 +53,8 @@ settled.
 - Demo tasks page (`project-plan.html`) is a hand-ported snapshot of the demo site's task data.
 
 ## Working rules
-- Abstract only after something has worked on a real site, and only when a second site needs it.
+- Sections first, tools later (see README, "How work flows"). Once a lesson has worked on a real
+  site, add its structure to `template/`: headings, questions, data to collect. Generalize tools and
+  pages only when a second site actually needs them.
 - Reusable tools take a site as input. No site-specific values in shared code.
 - Never distinguish meaning by color alone.

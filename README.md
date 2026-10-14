@@ -4,9 +4,32 @@ Tools, a design language, and a workspace template for permaculture site analysi
 design. Built so the same analysis can be run on any site, not just one.
 
 **Demo:** the `docs/` folder is a published example microsite for one real property
-(Lot #86, Portland, CT — the author's own, public by his decision). It is the reference
-for what a finished site profile looks like. Images in the demo are labeled checkerboard
-placeholders, not real site imagery.
+(Lot #86, Portland, CT — the author's family home and PDC Pro course site, public by the author's
+decision). It is the reference for what a finished site profile looks like. Images in the demo
+are labeled checkerboard placeholders, not real site imagery.
+
+## How work flows
+
+The toolkit sits at the end of a three-step path:
+
+1. **Coursework** (`pdc-pro-2026`, private). Lessons for the PDC Pro certificate course, shaped by
+   its rubric and submitted as slides on Canvas.
+2. **Site plan** (`~/Code/keser/site-plans/<site>/`, private). Lesson work that's useful beyond
+   the course graduates into a site plan. There it's rewritten as project plan and site analysis,
+   not as a course deliverable. Lot 86 is the first site.
+3. **Toolkit** (this repo, public). Each graduated lesson becomes a template section that works
+   for any address.
+
+The toolkit also feeds back into steps 1 and 2. Coursework and site plans use its tools and design
+language, so the output stays consistent and maintainable as it grows. Beyond the course, the same
+assets serve new site plans, analyses and stakeholder presentations.
+
+**Sections first, tools later.** Once a lesson has worked on a real site, its structure goes into
+`template/`: headings, the questions to answer and the data to collect. Tools and pages are
+generalized only when a second site actually needs them.
+
+The whole setup is also a portfolio piece for andrewkeser.com. It documents the process of using
+AI to support this kind of workflow, and how that work draws on design-systems practice.
 
 ## What's here
 
