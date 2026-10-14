@@ -29,7 +29,7 @@ settled.
 - `design-language/` — docs and history for the shared visual system. Figma is the source of truth.
   **Design-system specs and plans for the permaculture files are authored here** (decided 2026-10-13),
   not in any site repo.
-- `template/` — copy into a new private repo for each site.
+- `template/` — copy into a new private repo for each site, at `~/Code/keser/site-plans/<site-name>/`.
 
 ## Microsite conventions (docs/)
 - Internal links stay **relative** (`climate.html`, not `/climate.html`): project-scoped Pages site.

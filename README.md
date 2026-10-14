@@ -19,7 +19,8 @@ placeholders, not real site imagery.
 
 ## Starting a new site
 
-1. Create a new private repo and copy `template/` into it.
+1. Create a new private repo at `~/Code/keser/site-plans/<site-name>/` and copy `template/` into it.
+   Every site repo lives in that one folder.
 2. Fill in `CLAUDE.md` and `site-plan/phases.md`: phases are defined per site from its design
    goals and constraints; they are not fixed.
 3. Keep private data (parcel records, survey scans, photos, utility details) out of git. The
