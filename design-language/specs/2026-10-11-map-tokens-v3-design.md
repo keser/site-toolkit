@@ -369,7 +369,22 @@ from the Ramps.
   - One `Caption Alt` run and two `Subheader` runs come from another library.
   - The `Caption Alt` run is inside a remote instance (`I53:1653;33:352`), so it can't be fixed from
     the template.
-  - The Fraunces and Inter styles (Title, Header, Subheader, Body, Quote) remain local.
+- **Display and body styles.**
+  - The library already had the Inter styles (Title – Regular, Subheader, Body LG/MD/SM) with the
+    same values, so their 73 template runs now use the library copies. That includes two runs that
+    pointed to a third library.
+  - Title – Bold (Fraunces Bold 160), Header (Fraunces SemiBold 120), and Quote (Fraunces Regular
+    100, LH 95%, LS −4%) were added to the library under the template's names. Their 11 template
+    runs were relinked after the library was published. No template text uses a local style now.
+  - The Styles page's Display section now documents all five display styles. The Medium rows in the
+    Mono section were mislabeled "Bold" and are now named correctly.
+- **Legacy styles deleted.** Thirteen template styles had no uses in the template or the course
+  deck: the New York Title/Header/Quote set, the duplicate Title 2/Subheader/Body set (two copies
+  each), and Body Small. All 13 were deleted. The template keeps 20 local styles that nothing
+  uses. They mirror the library and stay until the deck is relinked.
+- **Publishing.** Neither file offered anything to publish after the relink. Pointing text at a
+  different style isn't a library change, so the deck picks up library styles only when its own
+  text is relinked.
 
 ## Out of scope
 
