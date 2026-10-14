@@ -20,6 +20,9 @@ That hasn't been done yet.
   variables, fill styles, stroke weights, dash patterns, marker shapes, and a componentized
   Keys/Legends page. History: `specs/2026-09-28-map-design-system-design.md` and
   `specs/2026-10-10-map-tokens-v2-design.md`, with matching plans in `plans/`.
+- **Charts:** "Chart Semantic" and "Chart Neutral" collections, mirrored for the microsite in
+  `docs/assets/chart-tokens.css` and checked by `tools/check_chart_tokens.py`. History:
+  `specs/2026-10-14-chart-tokens-design.md` and its plan.
 - **Microsite:** the `.viz-root` pattern (light/dark aware, inline SVG, self-contained pages).
   See `microsite-patterns.md`.
 

@@ -43,6 +43,12 @@ settled.
   (do not prefix): `--surface-1 --page --text-primary --text-secondary --text-muted --grid
   --baseline --border --badge-bg --accent`, `.viz-root .wrap .subhead .badge-row .badge .panel
   .panel-title .panel-sub svg.chart .tooltip .data-table`.
+- **Chart colors and chart text come from `docs/assets/chart-tokens.css`.** It mirrors the PDC Pro
+  Vision chart collections; the spec is `design-language/specs/2026-10-14-chart-tokens-design.md`.
+  A new chart's prefixed variables reference `--chart-*` tokens, not raw hex, and its SVG text uses
+  `font: var(--chart-font-<role>)`. Run `python3 tools/check_chart_tokens.py page <file> <prefixes…>`
+  before committing a chart page, and `python3 tools/check_chart_tokens.py tokens` after any
+  palette change.
 - Anchor contracts: `sectors.html` links to `sun-solar.html#sun-path-charts` and `climate.html#wind`.
 - Demo tasks page (`project-plan.html`) is a hand-ported snapshot of the demo site's task data.
 

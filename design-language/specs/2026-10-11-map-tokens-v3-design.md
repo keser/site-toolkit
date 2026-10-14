@@ -1,6 +1,6 @@
 # Map Tokens v3: Color Roles, Casing Lines, Dash Set, Component Cleanup
 
-Status: built 2026-10-11 — see site-plan/plans/2026-10-11-map-tokens-v3.md; migration checklist listed there. Extends
+Status: built 2026-10-11, extended through 2026-10-14 (map keys, map migration, Slides template colors and text, deck text). Parked 2026-10-14 for the repo restructure; see **Pickup** at the end. Plan: site-plan/plans/2026-10-11-map-tokens-v3.md.
 [2026-10-10-map-tokens-v2-design.md](2026-10-10-map-tokens-v2-design.md) (built; plan
 [2026-10-10-map-tokens-v2.md](../plans/2026-10-10-map-tokens-v2.md)).
 
@@ -382,12 +382,191 @@ from the Ramps.
   deck: the New York Title/Header/Quote set, the duplicate Title 2/Subheader/Body set (two copies
   each), and Body Small. All 13 were deleted. The template keeps 20 local styles that nothing
   uses. They mirror the library and stay until the deck is relinked.
+- **Course deck relinked.** All 2,272 styled runs in the course deck now use PDC Pro Vision styles.
+  - **Local copies.** 264 runs used the deck's own copies of the template styles. They map the same
+    way as the template. The three `Caption – LG – Bold` copies without forced caps went to
+    `Mono/32/Bold` rather than Mono Caps.
+  - **Instance text.** About 1,670 runs sit inside template components (`slide-header`,
+    `table-body-cell`, `caption`, `item-label`, `Pill`). They are overridden in the deck.
+    - The template's components already use these styles, but the template offered nothing to
+      publish.
+    - The overrides match the template, so a later template update won't conflict.
+  - **Header.** 16 Header runs were New York Medium and are now the library Header (Fraunces
+    SemiBold). The plugin can't load New York, an Apple system font, so the switch used a
+    node-level `setTextStyleIdAsync`. That call doesn't need the old font loaded. Every Header
+    still fits on one line.
+  - **Inter 20px body.** Seven runs moved to Body – SM (24). The library has no 20px body style.
+  - **Not covered.** About 2,300 unstyled text nodes, mostly labels in the pasted maps, are left
+    for a separate pass.
+  - **Local styles deleted.** After the relink, the deck's 46 local styles and the template's 20 were unused. All were deleted. Neither file has local text styles now; all text styles come from PDC Pro Vision.
 - **Publishing.** Neither file offered anything to publish after the relink. Pointing text at a
   different style isn't a library change, so the deck picks up library styles only when its own
   text is relinked.
 
 ## Out of scope
 
-- Re-pointing `Chart Categorical` to Color Roles.
+- ~~Re-pointing `Chart Categorical` to Color Roles.~~ Closed 2026-10-14: kept on Ramps for its Dark mode; see `2026-10-14-chart-tokens-design.md`.
 - Scanning map pages other than Keys.
 - Per-tier dash scaling (still open from v2).
+- **Base map cleanup (deferred 2026-10-14).** Andrew is holding off on base map edits; it's cleanup
+  work, not a blocker.
+- **`map-scale` variants (deferred 2026-10-14).** There's one scale for now. A variant gets added
+  when a future map zooms in on a single zone at a larger scale.
+
+## Compact key rows (2026-10-14)
+
+`map-key-row` (`480:889`) gained a `Size` axis (`SM`, `Default`) across all three Swatch Types.
+Andrew built the SM variant, which has a smaller title and body, for content-dense keys such as
+Sector Compass and Soil Brainstorm. He switched the keys that need it himself.
+
+## Open-items pass (2026-10-14)
+
+- **Marker numbers.** The Square (`641:1200`) and Hexagon (`641:1208`) text layers in
+  `map-site-marker` now bind to `Number#473:0`, as Circle already did.
+  - Before binding, the script recorded the text on all 16 Square instances (6 on Keys, 10 on Soil).
+    It wrote that text back through the property afterward.
+- **Dot cap.** `map-line-sample` gained `Cap=Dot` (`1317:4939`), Standard/Fine with
+  `CIRCLE_FILLED` ends. It covers the only filled-circle line on the maps: the 2px dashed
+  electrical-wire and water-connection lines.
+  - The set uses an auto-flow grid, so the variant was appended as a new fifth row rather than
+    placed in a column.
+  - Water Brainstorm's "underground water line" key row uses it.
+  - The Styles page's Line Treatments grid has a new "Fine [2,2] · Dot" row (`1323:12`). The
+    dots scale with stroke weight and overwhelm the line from lg up, which is why the component
+    has Dot only at Standard.
+- **Site Water Flow key** (`1188:3545`).
+  - The width went from 1478 to 978. It stays two columns like the other keys, with rows switched
+    to `Size=SM`, so the key ends above the house's WM marker.
+  - The "water meter/connection point" row is now two rows: WM "Water meter" with the original
+    body, and WC "Connection point" with the body hidden. That matches the two markers on the map.
+  - The map instance carried size and per-row `Size` overrides. Both were reset to match.
+- **Visual check of 8 migrated maps.** Zones (both), Contour Practice and Water Brainstorm were
+  clean. Fixes:
+  - Water Brainstorm now clips its content. Its `water-access` overlay ran 38px past the left edge.
+    Site Water Flow and Catchment already clipped.
+  - In the Catchment key, the "theoretical catchment" row was the only SM row. It's back to Default.
+  - The "cross east-southeast" caption moved 158px left so it clears the Catchment key.
+  - **Open (Andrew).** On the Soil maps, the legend's extra LOCATION column pushes "SEPTEMBER 2026"
+    past the frame: about 170px on Brainstorm and 40px on Sample.
+- **Caption consolidated into the library.**
+  - The template's `caption` instances now use the library's `caption` (`640:4373`). Dark became
+    Shade, the closest match (charcoal, square corners). Light became White.
+  - The deck's 203 caption instances were swapped the same way.
+  - The template's two caption sets (`37:317`, and the unused `51:586`) were deleted.
+  - The library's text layer is named `caption text` and the template's was `text`, so text was
+    saved and restored around each swap. Wrapping didn't carry over: 14 fixed-width deck captions
+    had their text set back to fill and wrap.
+  - Four empty caption instances on template slide `29:2452` had no text layer before the swap.
+  - Four deck captions that hug their text overflow the image frame they sit in by 8–21px. This
+    was unchanged by the swap (same padding and style).
+  - Pill, label, table cells, item-label, slide header/footer and icons stay template-only
+    (Andrew, 2026-10-14).
+- **Deck maps stay snapshots** (Andrew, 2026-10-14). The course deck is a dated record of submitted
+  work. Live map components are for new and client decks.
+  - The deck's `map-legend`, map key, `north-indicator` and Sector Diagram instances already link
+    to the current library components. Their names are stale only because the deck hasn't accepted
+    library updates, which happens in the Libraries panel, per component.
+  - `north-alt` (3 instances) points to a component no longer in the library.
+- **Deck unstyled text.** 390 runs that exactly matched a library style (family, weight, size,
+  line height, tracking, case) were bound. About 1,900 runs don't match and stay unstyled. The
+  largest group is 527 JetBrains Mono Thin 20 caps runs inside template components; the library
+  has no Thin.
+
+## Deck slide text (2026-10-14)
+
+Andrew's rule: the course deck, not the template, is the source of truth for slide layouts in use.
+Text on course slides gets a style, with a new one created where needed. Content inside template
+components can wait.
+
+- **JetBrains Mono Thin.** All 527 runs are the `div` layer of the template's `slide-header`, the
+  "|" separators in each slide header. They're template content, so they're deferred.
+- **New library styles:**
+  - `Body/Body – XS`: Inter Regular 16/20, −4%.
+  - `Body/Body – XS Bold`: Inter Bold 16/20, −4%. The plant list was at 0% tracking, so it tightens
+    slightly to match the Body family.
+  - `Mono/16/Bold Italic`: JetBrains Mono Bold Italic 16/20. It uses a fixed 20px line height,
+    not the Mono family's auto, so it sits on the same lines as Body – XS Bold in species lists.
+  - All three are documented on the Styles page.
+- **Assigned now, existing styles:**
+  - Soil-assessment questions (slides 131–149): JetBrains Mono Bold 22 → `Mono/20/Bold`, 44 runs.
+  - Slides 13–15 headings: JetBrains Mono SemiBold 32 caps → `Mono Caps/32/Bold`. Figma has no
+    JetBrains Mono SemiBold, so the change was applied at the node level.
+  - Body copy on slides 13–15 and 94, and the chart intros on slides 96–101: Inter 24 and Inter 23
+    → `Body – SM`.
+- **Assigned after publish, new styles:**
+  - Plant list (slide 66): Inter Bold 16 → `Body – XS Bold`. JetBrains Mono Bold Italic 16 and
+    Bold 16 → `Mono/16/Bold Italic`.
+    - The Bold 16 runs are the blank separator lines plus each column's first Latin name, which
+      was non-italic by mistake.
+  - Q&A answers (Inter 16) and chart source lines (Inter 17) → `Body – XS`.
+- **Assigned after publish (done 2026-10-14):** 61 runs to `Body – XS Bold` and 143 to
+  `Mono/16/Bold Italic` on slide 66, and 46 to `Body – XS`.
+  - On slide 66, the blank separator lines between species are set back to an unstyled 16px line
+    height. At 20px the 14-item column overflowed into the slide footer. They are empty
+    paragraphs, not text.
+- **Still unstyled on course slides (8 runs):**
+  - Stat callouts in JetBrains Mono Bold 56: "1 / 10" (slides 54, 84) and "247 properties"
+    (slide 54).
+  - A JetBrains Mono Bold 15 caption bar on slide 145.
+  - "Summer 2026" in Inter SemiBold 36 on the title slide.
+- **Last 8 runs (Andrew approved the suggestions, 2026-10-14):**
+  - The slide 145 caption bars, Mono Bold 15, now use `Mono/16/Bold`.
+  - "Summer 2026" on the title slide, Inter SemiBold 36, now uses `Subheader` and becomes regular
+    weight.
+  - New library style `Mono/56/Bold` (JetBrains Mono Bold 56, auto, 0%) for stat callouts, with a
+    row on the Styles page.
+    - Applied after the publish to "1 / 10" and "247 PROPERTIES" on slide 54, and to
+      "508,000 gal" and "~129,000 gal" on slide 84.
+    - Both stat values on slide 54 now hug their height (74px), so the two cards line up.
+    - "247 properties" renders in caps through a case setting, so its text is retyped in capitals
+      to keep a single non-caps style.
+- **Header dividers.** The `slide-header` "|" separators moved from JetBrains Mono Thin to
+  `Mono Caps/20/Regular`, the next weight up among the existing styles. That's 4 `div` layers in
+  the template's components and 527 runs in the deck.
+- **North indicator.** `north-alt` is deprecated: it was drawn already tilted to −65.43°, so it
+  broke when a map's orientation changed.
+  - Maps carry two `north-indicator` layers, north up and −65.43°, and Andrew turns on the one that
+    matches. Regional maps and satellite images are usually north up. Lot maps use −65.43°.
+  - The deck's three hidden `north-alt` instances (slides 52, 86, 87) were swapped to
+    `north-indicator` −65.43° and kept hidden.
+- **Andrew, 2026-10-14:** he removed the account number from slide 97. He hid the Soil maps' location
+  layer, which makes the legend fit, and accepted the library updates in the deck.
+- **Charts are treated as graphics.** Labels inside the native charts (slides 48, 50, 96–101, 14
+  sizes from 9 to 21px) stay unstyled, like the maps.
+- **Layout fixes.** On slides 13–15, the right column's `row-2` was fixed at 116 while the left
+  was 142, which clipped the last line of the right paragraph. It's now 142.
+- **Template.** Four empty caption instances on slide `29:2452` were deleted.
+- **Privacy flag.** Slide 97's source line quotes the water-utility account number, the same one
+  this repo redacts. It's left as is in the course deck for Andrew to decide.
+
+## Pickup (parked 2026-10-14)
+
+**State at park:** everything is committed and pushed to `main` (`4488966`).
+- **PDC Pro Vision (`aF9SVeTLwFN8PCEiU2OSBQ`):** published.
+- **Slides template (`KDVfc0v5jT8jKB3OK11axN`):** has no local text styles left, but shows nothing
+  to publish.
+- **Course deck (`4HO6wuq75jFhX7OuMpqPNs`):** has accepted the library updates.
+
+**Done in the library and files:**
+- **Map components:** `map-key` (12 variants), `map-key-row` (Size SM/Default),
+  `map-line-sample` (adds `Cap=Dot`, `1317:4939`), `map-site-marker` (Number bound on all shapes),
+  `map-shape-marker`, `map-region-sample`, `caption`.
+- **Text styles:** Mono and Mono Caps; Body including XS and XS Bold; Fraunces Title/Header/Quote;
+  `Mono/16/Bold Italic`; `Mono/56/Bold`.
+- **Slides:** the template and course deck use library text styles and the library caption.
+- **Map frames:** use the key instances and tokens; the base map is untouched.
+
+**Still open (nothing blocking):**
+- **Base map cleanup:** Andrew is doing this himself; deferred.
+- **`map-scale` variants:** add when a zoomed zone map needs a second scale.
+- **Live map components:** turn finished maps into library components for new and client decks.
+  The course deck stays snapshots.
+- **Species map and status pills:** the species-inventory map palette and the status pills on the
+  project-plan and species pages are unaddressed.
+
+**Restructure notes:**
+- This spec belongs to the design system, so it moves to
+  `site-toolkit/design-language/specs/`. Re-sync before rebasing `restructure/home-site`.
+- Memory note `figma_styles_page_sync` ("re-sync the Styles page after Keys-page edits") still
+  applies wherever this work continues.
+

@@ -4,6 +4,7 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>Climate Survey Charts</title>
+<link rel="stylesheet" href="assets/chart-tokens.css">
 <style>
   .viz-root {
     color-scheme: light;
@@ -15,11 +16,11 @@
     --grid:           #e1e0d9;
     --baseline:       #c3c2b7;
     --border:         rgba(11,11,11,0.10);
-    --series-high:    #e07b39;
-    --series-low:     #2a9d9d;
-    --series-precip:  #5598e7;
-    --wind-fill:      #86b6ef;
-    --wind-accent:    #2a78d6;
+    --series-high:    var(--chart-categorical-7);
+    --series-low:     var(--chart-categorical-5);
+    --series-precip:  var(--chart-water-rain);
+    --wind-fill:      color-mix(in srgb, var(--chart-categorical-1) 55%, var(--surface-1));
+    --wind-accent:    var(--chart-categorical-1);
     --band-frost:     rgba(139,195,74,0.16);
     --band-frost-line:#7cb342;
     --badge-bg:       #eef0ea;
@@ -35,11 +36,11 @@
       --grid:           #2c2c2a;
       --baseline:       #383835;
       --border:         rgba(255,255,255,0.10);
-      --series-high:    #e8935a;
-      --series-low:     #3fb8b8;
-      --series-precip:  #5598e7;
-      --wind-fill:      #3987e5;
-      --wind-accent:    #86b6ef;
+      --series-high:    var(--chart-categorical-7);
+      --series-low:     var(--chart-categorical-5);
+      --series-precip:  var(--chart-water-rain);
+      --wind-fill:      color-mix(in srgb, var(--chart-categorical-1) 55%, var(--surface-1));
+      --wind-accent:    var(--chart-categorical-1);
       --band-frost:     rgba(139,195,74,0.14);
       --band-frost-line:#8bc34a;
       --badge-bg:       #23261f;
@@ -55,11 +56,11 @@
     --grid:           #2c2c2a;
     --baseline:       #383835;
     --border:         rgba(255,255,255,0.10);
-    --series-high:    #e8935a;
-    --series-low:     #3fb8b8;
-    --series-precip:  #5598e7;
-    --wind-fill:      #3987e5;
-    --wind-accent:    #86b6ef;
+    --series-high:    var(--chart-categorical-7);
+    --series-low:     var(--chart-categorical-5);
+    --series-precip:  var(--chart-water-rain);
+    --wind-fill:      color-mix(in srgb, var(--chart-categorical-1) 55%, var(--surface-1));
+    --wind-accent:    var(--chart-categorical-1);
     --band-frost:     rgba(139,195,74,0.14);
     --band-frost-line:#8bc34a;
     --badge-bg:       #23261f;
@@ -134,10 +135,10 @@
   .baseline { stroke: var(--baseline); stroke-width: 1; }
   .grid-ring { fill: none; stroke: var(--grid); stroke-width: 1; }
   .baseline-ring { fill: none; stroke: var(--baseline); stroke-width: 1; }
-  .axis-label { fill: var(--text-muted); font-size: 9.5px; }
-  .dir-label { fill: var(--text-secondary); font-size: 10px; font-weight: 600; }
-  .value-label { fill: var(--text-secondary); font-size: 9.5px; text-anchor: middle; }
-  .value-label-strong { fill: var(--text-primary); font-size: 10px; font-weight: 600; text-anchor: middle; }
+  .axis-label { fill: var(--chart-neutral-label-muted); font: var(--chart-font-label); text-transform: uppercase; }
+  .dir-label { fill: var(--chart-neutral-label-muted); font: var(--chart-font-label); text-transform: uppercase; }
+  .value-label { fill: var(--chart-neutral-label-muted); text-anchor: middle; font: var(--chart-font-label); text-transform: uppercase; }
+  .value-label-strong { fill: var(--chart-neutral-label); text-anchor: middle; font: var(--chart-font-value); }
 
   .crosshair-line { stroke: var(--text-muted); stroke-width: 1; stroke-dasharray: 2,2; pointer-events: none; opacity: 0; }
   .hover-dot { pointer-events: none; opacity: 0; }
@@ -700,7 +701,7 @@ function buildWindRosePanel({ container, title, sub, stats, sectors, pct, predom
   });
 
   const centerDay = (FROST.lastSpringDay+FROST.firstFallDay)/2;
-  const freeLbl = svgEl("text", { class: "value-label", x: xPix(centerDay), y: trackY+trackH/2+4, fill: "#fff" });
+  const freeLbl = svgEl("text", { class: "value-label", x: xPix(centerDay), y: trackY+trackH/2+4 });
   freeLbl.style.fill = "#fff";
   freeLbl.setAttribute("font-weight", "600");
   freeLbl.textContent = `${FROST.freeDays} frost-free days`;

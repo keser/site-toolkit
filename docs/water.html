@@ -4,6 +4,7 @@
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <meta charset="UTF-8">
 <title>Water — Lot #86</title>
+<link rel="stylesheet" href="assets/chart-tokens.css">
 <style>
   .viz-root {
     color-scheme: light;
@@ -57,126 +58,96 @@
   section.page-section:last-of-type { border-bottom: none; }
 
   /* ---- precipitation-by-month.html (precip-) ---- */
-  .viz-root { --precip-band-et: rgba(224,123,57,0.14); --precip-band-et-line: #e07b39; --precip-mean-line: #52514e; --precip-series-precip: #5598e7; }
-  @media (prefers-color-scheme: dark) {
-    :root:where(:not([data-theme="light"])) .viz-root { --precip-band-et: rgba(232,147,90,0.16); --precip-band-et-line: #e8935a; --precip-mean-line: #c3c2b7; --precip-series-precip: #5598e7; }
-  }
-  :root[data-theme="dark"] .viz-root { --precip-band-et: rgba(232,147,90,0.16); --precip-band-et-line: #e8935a; --precip-mean-line: #c3c2b7; --precip-series-precip: #5598e7; }
-  .precip-ax { fill: var(--text-muted); font-size: 11px; }
-  .precip-val { fill: var(--text-secondary); font-size: 10.5px; font-weight: 600; }
+  .viz-root { --precip-band-et: color-mix(in srgb, var(--chart-emphasis) 14%, transparent); --precip-band-et-line: var(--chart-emphasis); --precip-mean-line: var(--chart-neutral-reference); --precip-series-precip: var(--chart-water-rain); }
+  .precip-ax { fill: var(--chart-neutral-label-muted); font: var(--chart-font-label); text-transform: uppercase; }
+  .precip-val { fill: var(--chart-neutral-label-muted); font: var(--chart-font-value); paint-order: stroke; stroke: var(--surface-1); stroke-width: 3px; stroke-linejoin: round; }
   .precip-gl { stroke: var(--grid); stroke-width: 1; }
   .precip-base { stroke: var(--baseline); stroke-width: 1.5; }
   .precip-mean { stroke: var(--precip-mean-line); stroke-width: 1.5; stroke-dasharray: 5 4; }
-  .precip-mean-lbl { fill: var(--precip-mean-line); font-size: 10.5px; font-weight: 600; }
+  .precip-mean-lbl { fill: var(--precip-mean-line); font: var(--chart-font-note); text-transform: uppercase; }
   .precip-et-band { fill: var(--precip-band-et); }
-  .precip-et-lbl { fill: var(--precip-band-et-line); font-size: 10.5px; font-weight: 600; }
+  .precip-et-lbl { fill: var(--precip-band-et-line); font: var(--chart-font-note); text-transform: uppercase; }
   .precip-note { font-size: 12.5px; color: var(--text-secondary); line-height: 1.55; margin: 12px 2px 0; }
   .precip-src { font-size: 11.5px; color: var(--text-muted); margin: 14px 2px 0; }
 
   /* ---- runoff-by-surface.html (runoff-) ---- */
-  .viz-root { --runoff-hard: #5598e7; --runoff-hard-2: #2a78d6; --runoff-perm: #6f8f52; --runoff-perm-2: #4d6b34; }
-  @media (prefers-color-scheme: dark) {
-    :root:where(:not([data-theme="light"])) .viz-root { --runoff-hard: #5598e7; --runoff-hard-2: #86b6ef; --runoff-perm: #8fae6f; --runoff-perm-2: #a9c48c; }
-  }
-  :root[data-theme="dark"] .viz-root { --runoff-hard: #5598e7; --runoff-hard-2: #86b6ef; --runoff-perm: #8fae6f; --runoff-perm-2: #a9c48c; }
-  .runoff-axt { fill: var(--text-muted); font-size: 10px; }
+  .viz-root { --runoff-hard: var(--chart-water-rain); --runoff-hard-2: var(--chart-water-flow); --runoff-perm: var(--chart-land-permeable); --runoff-perm-2: color-mix(in srgb, var(--chart-land-permeable) 75%, var(--chart-neutral-label)); --runoff-on-bar: #1a1a19; }
+  .runoff-axt { fill: var(--chart-neutral-label-muted); font: var(--chart-font-label); text-transform: uppercase; }
   .runoff-gl { stroke: var(--grid); stroke-width: 1; }
   .runoff-headline { background: var(--badge-bg); border: 1px solid var(--border); border-left: 3px solid var(--accent); border-radius: 6px; padding: 10px 12px; font-size: 13.5px; line-height: 1.5; margin: 0 0 20px; }
   .runoff-headline b { color: var(--text-primary); }
-  .runoff-lbl { fill: var(--text-secondary); font-size: 11px; }
-  .runoff-lbl-b { fill: var(--text-primary); font-size: 11px; font-weight: 600; }
-  .runoff-legend { display: flex; gap: 16px; font-size: 12px; color: var(--text-secondary); margin: 2px 2px 0; }
-  .runoff-seclbl { fill: var(--text-muted); font-size: 10.5px; font-weight: 700; letter-spacing: .04em; }
+  .runoff-lbl { fill: var(--chart-neutral-label-muted); font: var(--chart-font-label); text-transform: uppercase; }
+  .runoff-lbl-b { fill: var(--chart-neutral-label); font: var(--chart-font-note); text-transform: uppercase; }
+  .runoff-legend { display: flex; gap: 16px; color: var(--text-secondary); margin: 2px 2px 0; font: var(--chart-font-label); text-transform: uppercase; }
+  .runoff-seclbl { fill: var(--chart-neutral-label-muted); font: var(--chart-font-label); text-transform: uppercase; }
   .runoff-sw { display: inline-block; width: 11px; height: 11px; border-radius: 2px; vertical-align: -1px; margin-right: 5px; }
-  .runoff-val { fill: var(--text-primary); font-size: 11px; font-weight: 600; }
-  .runoff-val-m2 { fill: var(--text-muted); font-size: 10px; }
+  .runoff-val { fill: var(--chart-neutral-label); font: var(--chart-font-value); }
+  .runoff-val-m2 { fill: var(--chart-neutral-label-muted); font: var(--chart-font-label); text-transform: uppercase; }
   .runoff-src { font-size: 11.5px; color: var(--text-muted); margin: 14px 2px 0; }
 
   /* ---- water-balance.html (wbal-) ---- */
-  .viz-root { --wbal-hard: #5598e7; --wbal-infil: #6f8f52; --wbal-node: #c3c2b7; --wbal-perm: #8fae6f; --wbal-rain: #7fb0e8; --wbal-runoff: #e07b39; }
-  @media (prefers-color-scheme: dark) {
-    :root:where(:not([data-theme="light"])) .viz-root { --wbal-hard: #5598e7; --wbal-infil: #8fae6f; --wbal-node: #4a4a46; --wbal-perm: #a9c48c; --wbal-rain: #5f92cf; --wbal-runoff: #e8935a; }
-  }
-  :root[data-theme="dark"] .viz-root { --wbal-hard: #5598e7; --wbal-infil: #8fae6f; --wbal-node: #4a4a46; --wbal-perm: #a9c48c; --wbal-rain: #5f92cf; --wbal-runoff: #e8935a; }
+  .viz-root { --wbal-hard: var(--chart-water-flow); --wbal-infil: var(--chart-land-permeable); --wbal-node: var(--chart-neutral-reference); --wbal-perm: color-mix(in srgb, var(--chart-land-permeable) 60%, var(--chart-neutral-surface)); --wbal-rain: var(--chart-water-rain); --wbal-runoff: var(--chart-emphasis); }
   .wbal-foot { background: var(--badge-bg); border: 1px solid var(--border); border-left: 3px solid var(--accent); border-radius: 6px; padding: 11px 12px; font-size: 13px; line-height: 1.55; margin: 16px 0 0; }
   .wbal-foot b { color: var(--text-primary); }
-  .wbal-nlbl { fill: var(--text-primary); font-size: 12px; font-weight: 600; }
-  .wbal-nsub { fill: var(--text-secondary); font-size: 10.5px; }
+  .wbal-nlbl { fill: var(--chart-neutral-label); font: var(--chart-font-note); text-transform: uppercase; }
+  .wbal-nsub { fill: var(--chart-neutral-label-muted); font: var(--chart-font-label); text-transform: uppercase; }
   .wbal-src { font-size: 11.5px; color: var(--text-muted); margin: 14px 2px 0; }
 
   /* ---- elevation-sections.html (elev-) ---- */
-  .viz-root { --elev-divide: #e07b39; --elev-ground: #b8925f; --elev-ground-fill: rgba(184,146,95,.22); --elev-lot: rgba(85,152,231,.16); --elev-lot-line: #2a78d6; }
-  @media (prefers-color-scheme: dark) {
-    :root:where(:not([data-theme="light"])) .viz-root { --elev-divide: #e8935a; --elev-ground: #c9a878; --elev-ground-fill: rgba(201,168,120,.20); --elev-lot: rgba(85,152,231,.20); --elev-lot-line: #86b6ef; }
-  }
-  :root[data-theme="dark"] .viz-root { --elev-divide: #e8935a; --elev-ground: #c9a878; --elev-ground-fill: rgba(201,168,120,.20); --elev-lot: rgba(85,152,231,.20); --elev-lot-line: #86b6ef; }
-  .elev-axt { fill: var(--text-muted); font-size: 10px; }
+  .viz-root { --elev-divide: var(--chart-emphasis); --elev-ground: var(--chart-land-ground); --elev-ground-fill: var(--chart-neutral-surface); --elev-lot: color-mix(in srgb, var(--chart-categorical-1) 16%, transparent); --elev-lot-line: var(--chart-categorical-1); }
+  .elev-axt { fill: var(--chart-neutral-label-muted); font: var(--chart-font-label); text-transform: uppercase; }
   .elev-gl { stroke: var(--grid); stroke-width: 1; }
-  .elev-note { fill: var(--text-secondary); font-size: 10.5px; }
-  .elev-note-b { fill: var(--text-primary); font-size: 10.5px; font-weight: 600; }
+  .elev-note { fill: var(--chart-neutral-label-muted); font: var(--chart-font-note); text-transform: uppercase; }
+  .elev-note-b { fill: var(--chart-neutral-label); font: var(--chart-font-note); text-transform: uppercase; }
   .elev-src { font-size: 11.5px; color: var(--text-muted); margin: 8px 2px 0; }
 
   /* ---- site-flow-schematic.html (flow-) ---- */
-  .viz-root { --flow-contour: #c3c1b2; --flow-divide: #b06a3a; --flow-exit: #c0392b; --flow-flow: #2a78d6; --flow-lot: rgba(111,143,82,.10); --flow-lot-line: #6f8f52; --flow-pool: #7fb0e8; --flow-struct: #d7d1c2; --flow-struct-line: #8c8676; --flow-swale-new: #e07b39; --flow-swale-old: #6f8f52; }
-  @media (prefers-color-scheme: dark) {
-    :root:where(:not([data-theme="light"])) .viz-root { --flow-contour: #48463f; --flow-divide: #d08a5a; --flow-exit: #e0574b; --flow-flow: #86b6ef; --flow-lot: rgba(143,174,111,.12); --flow-lot-line: #8fae6f; --flow-pool: #5f92cf; --flow-struct: #514e42; --flow-struct-line: #8a8474; --flow-swale-new: #e8935a; --flow-swale-old: #8fae6f; }
-  }
-  :root[data-theme="dark"] .viz-root { --flow-contour: #48463f; --flow-divide: #d08a5a; --flow-exit: #e0574b; --flow-flow: #86b6ef; --flow-lot: rgba(143,174,111,.12); --flow-lot-line: #8fae6f; --flow-pool: #5f92cf; --flow-struct: #514e42; --flow-struct-line: #8a8474; --flow-swale-new: #e8935a; --flow-swale-old: #8fae6f; }
-  .flow-cl { fill: var(--flow-contour); font-size: 9px; }
-  .flow-lbl { fill: var(--text-primary); font-size: 11px; }
-  .flow-lbl-b { fill: var(--text-primary); font-size: 11px; font-weight: 700; }
-  .flow-lbl-m { fill: var(--text-secondary); font-size: 10px; }
+  .viz-root { --flow-contour: var(--chart-neutral-axis); --flow-divide: var(--chart-neutral-reference); --flow-exit: var(--chart-alert); --flow-flow: var(--chart-water-flow); --flow-lot: color-mix(in srgb, var(--chart-land-permeable) 10%, transparent); --flow-lot-line: var(--chart-land-permeable); --flow-pool: var(--chart-water-rain); --flow-struct: var(--chart-neutral-surface); --flow-struct-line: var(--chart-land-ground); --flow-swale-new: var(--chart-emphasis); --flow-swale-old: var(--chart-land-permeable); --flow-num-fg: #fff; }
+  .flow-cl { fill: var(--flow-contour); font: var(--chart-font-label); text-transform: uppercase; }
+  .flow-lbl { fill: var(--chart-neutral-label); font: var(--chart-font-label); text-transform: uppercase; }
+  .flow-lbl-b { fill: var(--chart-neutral-label); font: var(--chart-font-note); text-transform: uppercase; }
+  .flow-lbl-m { fill: var(--chart-neutral-label-muted); font: var(--chart-font-label); text-transform: uppercase; }
   .flow-note { background: var(--badge-bg); border: 1px solid var(--border); border-left: 3px solid var(--accent); border-radius: 6px; padding: 10px 12px; font-size: 12.5px; line-height: 1.5; margin: 12px 0 0; }
   .flow-note b { color: var(--text-primary); }
-  .flow-num { fill: #fff; font-size: 10px; font-weight: 700; }
+  .flow-num { fill: var(--flow-num-fg); font: var(--chart-font-value); }
   .flow-src { font-size: 11.5px; color: var(--text-muted); margin: 12px 2px 0; }
 
   /* ---- design-storm-frequency.html (storm-) ---- */
-  .viz-root { --storm-curve: #2a78d6; --storm-curve-dot: #5598e7; --storm-evt: rgba(224,123,57,.18); --storm-evt-line: #e07b39; --storm-rec: #c0392b; }
-  @media (prefers-color-scheme: dark) {
-    :root:where(:not([data-theme="light"])) .viz-root { --storm-curve: #86b6ef; --storm-curve-dot: #5598e7; --storm-evt: rgba(232,147,90,.20); --storm-evt-line: #e8935a; --storm-rec: #e0574b; }
-  }
-  :root[data-theme="dark"] .viz-root { --storm-curve: #86b6ef; --storm-curve-dot: #5598e7; --storm-evt: rgba(232,147,90,.20); --storm-evt-line: #e8935a; --storm-rec: #e0574b; }
-  .storm-axl { fill: var(--text-secondary); font-size: 11px; }
-  .storm-axt { fill: var(--text-muted); font-size: 10px; }
-  .storm-dot-lbl { fill: var(--text-primary); font-size: 10.5px; font-weight: 600; }
+  .viz-root { --storm-curve: var(--chart-water-flow); --storm-curve-dot: var(--chart-water-rain); --storm-evt: color-mix(in srgb, var(--chart-emphasis) 18%, transparent); --storm-evt-line: var(--chart-emphasis); --storm-rec: var(--chart-alert); }
+  .storm-axl { fill: var(--chart-neutral-label-muted); font: var(--chart-font-label); text-transform: uppercase; }
+  .storm-axt { fill: var(--chart-neutral-label-muted); font: var(--chart-font-label); text-transform: uppercase; }
+  .storm-dot-lbl { fill: var(--chart-neutral-label); font: var(--chart-font-value); }
+  .storm-ann { font: var(--chart-font-note); text-transform: uppercase; }
   .storm-gl { stroke: var(--grid); stroke-width: 1; }
   .storm-note { background: var(--badge-bg); border: 1px solid var(--border); border-left: 3px solid var(--accent); border-radius: 6px; padding: 10px 12px; font-size: 13px; line-height: 1.55; margin: 14px 0 0; }
   .storm-note b { color: var(--text-primary); }
   .storm-src { font-size: 11.5px; color: var(--text-muted); margin: 12px 2px 0; }
 
   /* ---- macro-watershed-scale.html (shed-) ---- */
-  .viz-root { --shed-land: #e7e6de; --shed-land-line: #9c9a8b; --shed-river: #2a78d6; --shed-site: #e07b39; --shed-water: #7fb0e8; }
-  @media (prefers-color-scheme: dark) {
-    :root:where(:not([data-theme="light"])) .viz-root { --shed-land: #2b2b23; --shed-land-line: #54524a; --shed-river: #86b6ef; --shed-site: #e8935a; --shed-water: #3f6ea3; }
-  }
-  :root[data-theme="dark"] .viz-root { --shed-land: #2b2b23; --shed-land-line: #54524a; --shed-river: #86b6ef; --shed-site: #e8935a; --shed-water: #3f6ea3; }
-  .shed-axt { fill: var(--text-muted); font-size: 9.5px; }
-  .shed-maplbl { fill: var(--text-secondary); font-size: 11px; }
-  .shed-maplbl-b { fill: var(--text-primary); font-size: 11px; font-weight: 600; }
+  .viz-root { --shed-land: var(--chart-neutral-surface); --shed-land-line: var(--chart-land-ground); --shed-river: var(--chart-water-flow); --shed-site: var(--chart-emphasis); --shed-water: var(--chart-water-rain); --shed-on-water: #1a1a19; }
+  .shed-axt { fill: var(--chart-neutral-label-muted); font: var(--chart-font-label); text-transform: uppercase; }
+  .shed-maplbl { fill: var(--chart-neutral-label-muted); font: var(--chart-font-label); text-transform: uppercase; }
+  .shed-maplbl-b { fill: var(--chart-neutral-label); font: var(--chart-font-note); text-transform: uppercase; }
   .shed-note { background: var(--badge-bg); border: 1px solid var(--border); border-left: 3px solid var(--accent); border-radius: 6px; padding: 10px 12px; font-size: 13px; line-height: 1.55; margin: 0 0 4px; }
   .shed-note b { color: var(--text-primary); }
-  .shed-rd { fill: var(--text-secondary); font-size: 10.5px; }
-  .shed-rn { fill: var(--text-primary); font-size: 12px; font-weight: 600; }
+  .shed-rd { fill: var(--chart-neutral-label-muted); font: var(--chart-font-label); text-transform: uppercase; }
+  .shed-rn { fill: var(--chart-neutral-label); font: var(--chart-font-value); }
   .shed-src { font-size: 11.5px; color: var(--text-muted); margin: 12px 2px 0; }
 
   /* ---- water-use-by-season.html (wuse-) ---- */
-  .viz-root { --wuse-base: #2a2a28; --wuse-excess: rgba(224,123,57,.16); --wuse-excess-line: #e07b39; --wuse-fall: #b8925f; --wuse-spring: #6f8f52; --wuse-summer: #d9a441; --wuse-winter: #5598e7; }
-  @media (prefers-color-scheme: dark) {
-    :root:where(:not([data-theme="light"])) .viz-root { --wuse-base: #e6e5df; --wuse-excess: rgba(232,147,90,.18); --wuse-excess-line: #e8935a; --wuse-fall: #c9a878; --wuse-spring: #8fae6f; --wuse-summer: #e6bd6a; --wuse-winter: #86b6ef; }
-  }
-  :root[data-theme="dark"] .viz-root { --wuse-base: #e6e5df; --wuse-excess: rgba(232,147,90,.18); --wuse-excess-line: #e8935a; --wuse-fall: #c9a878; --wuse-spring: #8fae6f; --wuse-summer: #e6bd6a; --wuse-winter: #86b6ef; }
-  .wuse-axl { fill: var(--text-secondary); font-size: 11px; }
-  .wuse-axt { fill: var(--text-muted); font-size: 10px; }
-  .wuse-dot-lbl { fill: var(--text-primary); font-size: 10.5px; font-weight: 600; }
+  .viz-root { --wuse-base: var(--chart-neutral-reference); --wuse-excess: color-mix(in srgb, var(--chart-emphasis) 16%, transparent); --wuse-excess-line: var(--chart-emphasis); --wuse-fall: var(--chart-season-fall); --wuse-spring: var(--chart-season-spring); --wuse-summer: var(--chart-season-summer); --wuse-winter: var(--chart-season-winter); }
+  .wuse-axl { fill: var(--chart-neutral-label-muted); font: var(--chart-font-label); text-transform: uppercase; }
+  .wuse-axt { fill: var(--chart-neutral-label-muted); font: var(--chart-font-label); text-transform: uppercase; }
+  .wuse-dot-lbl { fill: var(--chart-neutral-label); font: var(--chart-font-value); }
+  .wuse-ann { fill: var(--chart-neutral-label); font: var(--chart-font-note); text-transform: uppercase; }
   .wuse-gl { stroke: var(--grid); stroke-width: 1; }
-  .wuse-legend { display: flex; flex-wrap: wrap; gap: 14px; font-size: 12px; color: var(--text-secondary); margin: 4px 2px 0; }
+  .wuse-legend { display: flex; flex-wrap: wrap; gap: 14px; color: var(--text-secondary); margin: 4px 2px 0; font: var(--chart-font-label); text-transform: uppercase; }
   .wuse-note { background: var(--badge-bg); border: 1px solid var(--border); border-left: 3px solid var(--accent); border-radius: 6px; padding: 10px 12px; font-size: 13px; line-height: 1.55; margin: 14px 0 0; }
   .wuse-note b { color: var(--text-primary); }
-  .wuse-seclbl { fill: var(--text-muted); font-size: 10px; font-weight: 700; letter-spacing: .03em; }
+  .wuse-seclbl { fill: var(--chart-neutral-label-muted); font: var(--chart-font-label); text-transform: uppercase; }
   .wuse-src { font-size: 11.5px; color: var(--text-muted); margin: 12px 2px 0; }
   .wuse-sw { display: inline-block; width: 11px; height: 11px; border-radius: 2px; vertical-align: -1px; margin-right: 5px; }
-  .wuse-val { fill: var(--text-primary); font-size: 10.5px; font-weight: 600; }
+  .wuse-val { fill: var(--chart-neutral-label); font: var(--chart-font-value); paint-order: stroke; stroke: var(--surface-1); stroke-width: 3px; stroke-linejoin: round; }
 </style>
 </head>
 <body>
@@ -368,7 +339,7 @@
       and <b>Catchment Area Map</b> (p.&nbsp;59); trace it over the real base map.</p>
 
     <div class="panel">
-      <svg class="chart" id="flow-chart" viewBox="0 0 820 560" role="img"
+      <svg class="chart" id="flow-chart" viewBox="0 0 900 560" role="img"
         aria-label="Plan schematic: a narrow lot fronting Freestone Avenue with a drainage divide to the west, contours falling east, sheet flow entering from the west, crossing to the south-east, and exiting at the south-east corner to the street storm drains.">
       </svg>
     </div>
@@ -531,7 +502,7 @@
   const mean = PRECIP.reduce((a, b) => a + b, 0) / PRECIP.length;
   const my = yPix(mean);
   svg.appendChild(el("line", { class: "precip-mean", x1: PAD.l, y1: my, x2: VB_W - PAD.r, y2: my }));
-  svg.appendChild(el("text", { class: "precip-mean-lbl", x: PAD.l + 5, y: my + 13, "text-anchor": "start" })).textContent = "monthly mean " + mean.toFixed(1) + '"';
+  svg.appendChild(el("text", { class: "precip-mean-lbl", x: PAD.l + 5, y: my - 6, "text-anchor": "start" })).textContent = "mean " + mean.toFixed(1) + '"';
 })();
 (function(){
   const NS="http://www.w3.org/2000/svg";
@@ -562,8 +533,8 @@
       const tot=a+b, wa=W*a/tot;
       svg.appendChild(el("rect",{x:X,y,width:wa,height:H,fill:ca,rx:2}));
       svg.appendChild(el("rect",{x:X+wa,y,width:W-wa,height:H,fill:cb,rx:2}));
-      txt(svg,la,{x:X+wa/2,y:y+H/2+4,"text-anchor":"middle",class:"runoff-val",fill:"#fff"});
-      txt(svg,lb,{x:X+wa+(W-wa)/2,y:y+H/2+4,"text-anchor":"middle",class:"runoff-val",fill:"#fff"});
+      txt(svg,la,{x:X+wa/2,y:y+H/2+4,"text-anchor":"middle",class:"runoff-val",style:"fill:var(--runoff-on-bar)"});
+      txt(svg,lb,{x:X+wa+(W-wa)/2,y:y+H/2+4,"text-anchor":"middle",class:"runoff-val",style:"fill:var(--runoff-on-bar)"});
     }
     row(14,"Area",hardA,permA,col("hard"),col("perm"),"13%","87%");
     row(64,"Runoff",hardG,permG,col("hard"),col("perm"),"47%","53%");
@@ -574,9 +545,9 @@
   /* ---- per-surface horizontal bars ---- */
   (function(){
     const svg=document.getElementById("runoff-bars");
-    const PAD={l:172,r:70,t:34,b:10};
+    const PAD={l:172,r:70,t:48,b:10};
     const VB_W=820, rowH=34, gap=14;
-    const maxG=35000;
+    const maxG=50000;
     const plotW=VB_W-PAD.l-PAD.r;
     const xW=g=>plotW*g/maxG;
     // gridlines
@@ -585,14 +556,16 @@
       svg.appendChild(el("line",{class:"runoff-gl",x1:x,y1:PAD.t-4,x2:x,y2:PAD.t+ROWS.length*rowH+16}));
       if(g>0) txt(svg,(g/1000)+"k gal/yr",{x,y:PAD.t-10,"text-anchor":"middle",class:"runoff-axt"});
     }
-    txt(svg,"sorted by runoff — hard + permeable together",{x:8,y:PAD.t-10,class:"runoff-seclbl"});
+    txt(svg,"sorted by runoff — hard + permeable together",{x:8,y:PAD.t-28,class:"runoff-seclbl"});
     let y=PAD.t+6;
     ROWS.forEach((r,i)=>{
       txt(svg,r.name,{x:PAD.l-12,y:y+rowH/2+2,"text-anchor":"end",class:"runoff-lbl-b"});
       svg.appendChild(el("rect",{x:PAD.l,y:y+4,width:Math.max(2,xW(r.gal)),height:rowH-14,rx:2,fill:col(r.k)}));
       const gx=PAD.l+xW(r.gal)+8;
       txt(svg,r.gal.toLocaleString()+" gal",{x:gx,y:y+rowH/2+2,class:"runoff-val"});
-      txt(svg,"· "+r.area.toLocaleString()+" ft² · C="+r.c.toFixed(2),{x:gx+58,y:y+rowH/2+2,class:"runoff-val-m2"});
+      // monospace chart font: each glyph advances 0.6em; value role is 13px
+      const valW=(r.gal.toLocaleString()+" gal").length*0.6*13;
+      txt(svg,"· "+r.area.toLocaleString()+" ft² · C="+r.c.toFixed(2),{x:gx+valW+6,y:y+rowH/2+2,class:"runoff-val-m2"});
       y+=rowH;
     });
     // baseline
@@ -679,7 +652,7 @@
     bands.forEach(b=>{
       svg.appendChild(el("rect",{x:X(b.a),y:Math.min(Y(ymax),Y(ymin)),width:X(b.b)-X(b.a),
         height:Math.abs(Y(ymax)-Y(ymin)),fill:b.fill||"var(--elev-lot)"}));
-      if(b.label) txt(svg,b.label,{x:(X(b.a)+X(b.b))/2,y:Y(ymax)+13,"text-anchor":"middle",class:"elev-note-b",fill:"var(--elev-lot-line)"});
+      if(b.label) txt(svg,b.label,{x:(X(b.a)+X(b.b))/2,y:Y(ymax)+13,"text-anchor":"middle",class:"elev-note-b",style:"fill:var(--elev-lot-line)"});
     });
     // ground fill + line
     let d="M "+X(pts[0][0])+" "+Y(ymin)+" ";
@@ -749,10 +722,10 @@
   // ---- contours (west high -> east low) ----
   [[120,66],[115,116],[110,168],[105,214],[100,430],[95,520],[90,600]].forEach(([e,x])=>{
     curve(`M ${x} 46 C ${x+12} 200, ${x-12} 380, ${x} 494`,"var(--flow-contour)",null,1);
-    txt(e+" ft",{x,y:40,"text-anchor":"middle",class:"flow-cl"});
+    txt(e+" ft",{x,y:24,"text-anchor":"middle",class:"flow-cl"});
   });
   curve("M 66 44 C 78 200, 54 380, 66 500","var(--flow-divide)",null,1.6,"6 4");
-  const dv=txt("drainage divide — ridge crest ≈119 ft",{x:0,y:0,class:"flow-lbl-b",fill:"var(--flow-divide)"});
+  const dv=txt("drainage divide — ridge crest ≈119 ft",{x:0,y:0,class:"flow-lbl-b",style:"fill:var(--flow-divide)"});
   dv.setAttribute("transform","translate(44 270) rotate(-90)"); dv.setAttribute("text-anchor","middle");
 
   // ---- Freestone Ave ----
@@ -765,7 +738,7 @@
   const LX=214,LR=384,LT=52,LB=494;
   add(el("rect",{x:LX,y:LT,width:LR-LX,height:LB-LT,fill:"var(--flow-lot)",stroke:"var(--flow-lot-line)","stroke-width":1.8}));
   txt("58 Freestone Ave — 0.43 ac  ·  back ≈108 ft",{x:LX,y:LT-8,class:"flow-lbl-m"});
-  txt("SE corner — low point ≈102 ft",{x:LR+10,y:LB-46,class:"flow-lbl-b",fill:"var(--flow-exit)"});
+  txt("SE corner — low point ≈102 ft",{x:LR+10,y:LB-46,class:"flow-lbl-b",style:"fill:var(--flow-exit)"});
 
   // ---- structures + numbered markers ----
   add(el("rect",{x:236,y:372,width:118,height:96,fill:"var(--flow-struct)",stroke:"var(--flow-struct-line)","stroke-width":1.2}));   // house
@@ -790,17 +763,17 @@
 
   // ---- flow ----
   [130,235,340,440].forEach(y=>arrow(96,y,210,y+16,"var(--flow-flow)","fl",1.7));
-  txt("sheet flow from upslope (west) yards",{x:96,y:112,class:"flow-lbl-b",fill:"var(--flow-flow)"});
+  txt("sheet flow from upslope (west) yards",{x:96,y:112,class:"flow-lbl-b",style:"fill:var(--flow-flow)"});
   curve("M 232 130 C 280 240, 330 350, 366 460","var(--flow-flow)","fl",2.3);
   curve("M 240 300 C 300 380, 340 440, 368 464","var(--flow-flow)","fl",2.3);
   curve("M 246 460 C 300 484, 340 484, 366 470","var(--flow-flow)","fl",2.3);
-  txt("across the lot: E-SE + S",{x:392,y:340,class:"flow-lbl",fill:"var(--flow-flow)"});
+  txt("across the lot: E-SE + S",{x:392,y:340,class:"flow-lbl",style:"fill:var(--flow-flow)"});
   curve("M 386 486 C 396 496, 400 500, 404 500","var(--flow-exit)","ex",2.6);
-  txt("→ Freestone Ave storm drains (≈100% today)",{x:414,y:504,class:"flow-lbl-b",fill:"var(--flow-exit)"});
+  txt("→ Freestone Ave storm drains (≈100% today)",{x:414,y:504,class:"flow-lbl-b",style:"fill:var(--flow-exit)"});
 
   // ---- legend ----
   const legX=612, legY=64;
-  add(el("rect",{x:legX,y:legY,width:200,height:262,fill:"var(--surface-1)",stroke:"var(--border)",rx:8}));
+  add(el("rect",{x:legX,y:legY,width:280,height:262,fill:"var(--surface-1)",stroke:"var(--border)",rx:8}));
   txt("Site elements",{x:legX+12,y:legY+20,class:"flow-lbl-b"});
   const items=[
     "House — metal roof, no gutters",
@@ -857,10 +830,10 @@
 
   // 2024 event band (local 10–12 in)
   svg.appendChild(el("rect",{x:x0,y:Y(12),width:x1-x0,height:Y(10)-Y(12),fill:"var(--storm-evt)"}));
-  txt(svg,"Aug 2024 SW-CT flood — local 10–12 in / ~12 hr",{x:x0+6,y:Y(10)-6,"text-anchor":"start",class:"storm-dot-lbl",fill:"var(--storm-evt-line)"});
+  txt(svg,"Aug 2024 SW-CT flood — local 10–12 in / ~12 hr",{x:x0+6,y:Y(10)-6,"text-anchor":"start",class:"storm-ann",fill:"var(--storm-evt-line)"});
   // 1955 record line
   svg.appendChild(el("line",{x1:x0,y1:Y(12.77),x2:x1,y2:Y(12.77),stroke:"var(--storm-rec)","stroke-width":1.5,"stroke-dasharray":"6 4"}));
-  txt(svg,"Connecticut 24-hr record — 12.77 in, Aug 19 1955",{x:x0+4,y:Y(12.77)-5,class:"storm-dot-lbl",fill:"var(--storm-rec)"});
+  txt(svg,"Connecticut 24-hr record — 12.77 in, Aug 19 1955",{x:x0+4,y:Y(12.77)-5,class:"storm-ann",fill:"var(--storm-rec)"});
 
   // curve
   let d="";
@@ -913,7 +886,7 @@
     const yTop=y0+6+8, yBot=y0+(ROWS.length-1)*rowH+6+8;
     svg.appendChild(el("path",{d:`M ${BX0-10} ${yTop} L ${BX0-16} ${yTop} L ${BX0-16} ${yBot} L ${BX0-10} ${yBot}`,
       fill:"none",stroke:"var(--accent)","stroke-width":1.2}));
-    const bt=txt(svg,"≈ 26,000,000 : 1",{x:0,y:0,class:"shed-rn",fill:"var(--accent)"});
+    const bt=txt(svg,"≈ 26,000,000 : 1",{x:0,y:0,class:"shed-rn",style:"fill:var(--accent)"});
     bt.setAttribute("transform",`translate(${BX0-24} ${(yTop+yBot)/2}) rotate(-90)`);
     bt.setAttribute("text-anchor","middle");
   })(document.getElementById("shed-staircase"));
@@ -927,11 +900,11 @@
     svg.appendChild(el("path",{d:ct,fill:"var(--shed-land)",stroke:"var(--shed-land-line)","stroke-width":1.5}));
     // Long Island Sound band, clearly below the coast
     svg.appendChild(el("rect",{x:44,y:206,width:640,height:56,fill:"var(--shed-water)",opacity:.75,rx:2}));
-    txt(svg,"LONG ISLAND SOUND",{x:340,y:240,"text-anchor":"middle",class:"shed-maplbl",fill:"#fff","letter-spacing":"0.1em"});
+    txt(svg,"LONG ISLAND SOUND",{x:340,y:240,"text-anchor":"middle",class:"shed-maplbl",style:"fill:var(--shed-on-water)","letter-spacing":"0.1em"});
     // Connecticut River: enters north, S through Hartford, bend at Middletown, out to Sound
     svg.appendChild(el("path",{d:"M 320,54 C 316,84 314,116 318,144 C 322,164 330,178 346,190 C 362,200 378,205 392,206",
       fill:"none",stroke:"var(--shed-river)","stroke-width":3}));
-    txt(svg,"Connecticut River",{x:262,y:100,"text-anchor":"end",class:"shed-maplbl",fill:"var(--shed-river)"});
+    txt(svg,"Connecticut River",{x:262,y:100,"text-anchor":"end",class:"shed-maplbl",style:"fill:var(--shed-river)"});
     svg.appendChild(el("line",{x1:264,y1:104,x2:314,y2:118,stroke:"var(--shed-river)","stroke-width":1}));
     // cities
     svg.appendChild(el("circle",{cx:316,cy:118,r:2.5,fill:"var(--text-secondary)"}));
@@ -1013,7 +986,7 @@
   // baseline line + labels (on top)
   svg.appendChild(el("line",{x1:x0,y1:Y(BASE),x2:x1,y2:Y(BASE),stroke:"var(--wuse-base)",
     "stroke-width":1.5,"stroke-dasharray":"6 4"}));
-  txt(svg,"winter baseline ≈ 109 gal/day (indoor only)",{x:x0+4,y:Y(BASE)+16,"text-anchor":"start",class:"wuse-dot-lbl"});
+  txt(svg,"winter baseline ≈ 109 gal/day (indoor only)",{x:x0+4,y:Y(BASE)+16,"text-anchor":"start",class:"wuse-ann"});
   txt(svg,"annual avg ≈ 125",{x:x1,y:Y(AVG)-5,"text-anchor":"end",class:"wuse-axt"});
 })();
 </script>

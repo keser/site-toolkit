@@ -4,6 +4,7 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>Sun &amp; Solar — Lot #86</title>
+<link rel="stylesheet" href="assets/chart-tokens.css">
 <style>
   .viz-root {
     color-scheme: light;
@@ -63,11 +64,7 @@
   }
 
   /* ---- sun-path-charts.html (spc-) ---- */
-  .viz-root { --spc-series-winter: #2a78d6; --spc-series-spring: #008300; --spc-series-summer: #e87ba4; --spc-series-fall: #eda100; }
-  @media (prefers-color-scheme: dark) {
-    :root:where(:not([data-theme="light"])) .viz-root { --spc-series-winter: #3987e5; --spc-series-spring: #008300; --spc-series-summer: #d55181; --spc-series-fall: #c98500; }
-  }
-  :root[data-theme="dark"] .viz-root { --spc-series-winter: #3987e5; --spc-series-spring: #008300; --spc-series-summer: #d55181; --spc-series-fall: #c98500; }
+  .viz-root { --spc-series-winter: var(--chart-season-winter); --spc-series-spring: var(--chart-season-spring); --spc-series-summer: var(--chart-season-summer); --spc-series-fall: var(--chart-season-fall); }
   header.spc-page-head { margin-bottom: 28px; }
   .spc-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 20px; }
   @media (max-width: 720px) { .spc-grid { grid-template-columns: 1fr; } }
@@ -75,12 +72,12 @@
   .spc-panel-stats b { color: var(--text-primary); font-weight: 600; }
   .spc-grid-line { stroke: var(--grid); stroke-width: 1; }
   .spc-baseline { stroke: var(--baseline); stroke-width: 1; }
-  .spc-axis-label { fill: var(--text-muted); font-size: 9.5px; }
-  .spc-axis-label-strong { fill: var(--text-secondary); font-size: 9.5px; font-weight: 600; }
+  .spc-axis-label { fill: var(--chart-neutral-label-muted); font: var(--chart-font-label); text-transform: uppercase; }
+  .spc-axis-label-strong { fill: var(--chart-neutral-label-muted); font: var(--chart-font-note); text-transform: uppercase; }
   .spc-sun-path { fill: none; stroke-width: 2; stroke-linecap: round; stroke-linejoin: round; }
   .spc-hour-dot { stroke-width: 2; }
-  .spc-direct-label { fill: var(--text-secondary); font-size: 10px; }
-  .spc-direct-label-strong { fill: var(--text-primary); font-size: 10.5px; font-weight: 600; }
+  .spc-direct-label { fill: var(--chart-neutral-label-muted); font: var(--chart-font-label); text-transform: uppercase; }
+  .spc-direct-label-strong { fill: var(--chart-neutral-label); font: var(--chart-font-note); text-transform: uppercase; }
   .spc-crosshair-line { stroke: var(--text-muted); stroke-width: 1; stroke-dasharray: 2,2; pointer-events: none; opacity: 0; }
   .spc-hover-dot { pointer-events: none; opacity: 0; }
   .spc-hit-layer { fill: transparent; cursor: crosshair; }
@@ -96,23 +93,19 @@
   footer.spc-notes { margin-top: 22px; font-size: 12px; color: var(--text-muted); line-height: 1.6; }
 
   /* ---- sun-path-3d.html (sp3d-) ---- */
-  .viz-root { --sp3d-series-winter: #2a78d6; --sp3d-series-spring: #008300; --sp3d-series-summer: #e87ba4; --sp3d-series-fall: #eda100; --sp3d-ground: #e9e6dc; --sp3d-ground-ring: #c9c5b6; }
-  @media (prefers-color-scheme: dark) {
-    :root:where(:not([data-theme="light"])) .viz-root { --sp3d-series-winter: #3987e5; --sp3d-series-spring: #008300; --sp3d-series-summer: #d55181; --sp3d-series-fall: #c98500; --sp3d-ground: #2a2a26; --sp3d-ground-ring: #3c3b34; }
-  }
-  :root[data-theme="dark"] .viz-root { --sp3d-series-winter: #3987e5; --sp3d-series-spring: #008300; --sp3d-series-summer: #d55181; --sp3d-series-fall: #c98500; --sp3d-ground: #2a2a26; --sp3d-ground-ring: #3c3b34; }
+  .viz-root { --sp3d-series-winter: var(--chart-season-winter); --sp3d-series-spring: var(--chart-season-spring); --sp3d-series-summer: var(--chart-season-summer); --sp3d-series-fall: var(--chart-season-fall); --sp3d-ground: var(--chart-neutral-surface); --sp3d-ground-ring: var(--chart-neutral-axis); }
   header.sp3d-page-head { margin-bottom: 20px; }
-  .sp3d-legend-row { display: flex; flex-wrap: wrap; gap: 16px; margin-top: 12px; font-size: 12.5px; color: var(--text-secondary); }
+  .sp3d-legend-row { display: flex; flex-wrap: wrap; gap: 16px; margin-top: 12px; color: var(--text-secondary); font: var(--chart-font-label); text-transform: uppercase; }
   .sp3d-legend-row .item { display: flex; align-items: center; gap: 6px; }
   .sp3d-legend-row .swatch { width: 14px; height: 3px; border-radius: 2px; }
   footer.sp3d-notes { margin-top: 16px; font-size: 12px; color: var(--text-muted); line-height: 1.7; }
 
   /* ---- sun-path-overlay.html (spo-) ---- */
-  .viz-root { --spo-series-winter: #2a78d6; --spo-series-spring: #008300; --spo-series-summer: #e87ba4; --spo-series-fall: #eda100; --spo-hour-grid: rgba(11,11,11,0.28); }
+  .viz-root { --spo-series-winter: var(--chart-season-winter); --spo-series-spring: var(--chart-season-spring); --spo-series-summer: var(--chart-season-summer); --spo-series-fall: var(--chart-season-fall); --spo-hour-grid: rgba(11,11,11,0.28); }
   @media (prefers-color-scheme: dark) {
-    :root:where(:not([data-theme="light"])) .viz-root { --spo-series-winter: #3987e5; --spo-series-spring: #008300; --spo-series-summer: #d55181; --spo-series-fall: #c98500; --spo-hour-grid: rgba(255,255,255,0.3); }
+    :root:where(:not([data-theme="light"])) .viz-root { --spo-hour-grid: rgba(255,255,255,0.3); }
   }
-  :root[data-theme="dark"] .viz-root { --spo-series-winter: #3987e5; --spo-series-spring: #008300; --spo-series-summer: #d55181; --spo-series-fall: #c98500; --spo-hour-grid: rgba(255,255,255,0.3); }
+  :root[data-theme="dark"] .viz-root { --spo-hour-grid: rgba(255,255,255,0.3); }
   header.spo-page-head { margin-bottom: 24px; }
   #sun-path-overlay section { margin-bottom: 28px; }
   .spo-aerial-frame { position: relative; border-radius: 8px; overflow: hidden; border: 1px solid var(--border); background: #000; }
@@ -121,17 +114,12 @@
   .spo-season-path { fill: none; stroke-width: 3; opacity: 0.92; }
   .spo-hour-dot { stroke-width: 1.5; }
   .spo-anchor-dot { fill: var(--text-primary); stroke: #fff; stroke-width: 1.5; }
-  .spo-direct-label {
-    font-size: 15px; font-weight: 700; paint-order: stroke; stroke: rgba(255,255,255,0.9);
-    stroke-width: 4px; stroke-linejoin: round;
-  }
-  .spo-compass-label {
-    font-size: 13px; font-weight: 600; fill: var(--text-primary);
-    paint-order: stroke; stroke: rgba(255,255,255,0.85); stroke-width: 4px; stroke-linejoin: round;
-  }
+  .spo-direct-label { paint-order: stroke; stroke: rgba(255,255,255,0.9);
+    stroke-width: 4px; stroke-linejoin: round; font: var(--chart-font-note); text-transform: uppercase; }
+  .spo-compass-label { fill: var(--chart-neutral-label);
+    paint-order: stroke; stroke: rgba(255,255,255,0.85); stroke-width: 4px; stroke-linejoin: round; font: var(--chart-font-note); text-transform: uppercase; }
   .spo-legend-row {
-    display: flex; flex-wrap: wrap; gap: 16px; margin-top: 14px; font-size: 12.5px; color: var(--text-secondary);
-  }
+    display: flex; flex-wrap: wrap; gap: 16px; margin-top: 14px; color: var(--text-secondary); font: var(--chart-font-label); text-transform: uppercase; }
   .spo-legend-row .item { display: flex; align-items: center; gap: 6px; }
   .spo-legend-row .swatch { width: 14px; height: 3px; border-radius: 2px; }
   .spo-legend-row .note { color: var(--text-muted); font-size: 11.5px; margin-top: 2px; }
@@ -139,21 +127,19 @@
   .spo-polar-chart-holder { flex: 1 1 460px; min-width: 300px; }
   .spo-month-line { fill: none; stroke-width: 1.75; }
   .spo-hour-line { fill: none; stroke: var(--spo-hour-grid); stroke-width: 1; }
-  .spo-hour-line-label { font-size: 9.5px; fill: var(--text-muted); }
+  .spo-hour-line-label { fill: var(--chart-neutral-label-muted); font: var(--chart-font-label); text-transform: uppercase; }
   .spo-ring-line { fill: none; stroke: var(--grid); stroke-width: 1; }
-  .spo-polar-axis-label { font-size: 10.5px; fill: var(--text-muted); }
-  .spo-polar-compass-label { font-size: 12px; font-weight: 600; fill: var(--text-secondary); }
+  .spo-polar-axis-label { fill: var(--chart-neutral-label-muted); font: var(--chart-font-label); text-transform: uppercase; }
+  .spo-polar-compass-label { fill: var(--chart-neutral-label-muted); font: var(--chart-font-note); text-transform: uppercase; }
   .spo-month-dot { r: 2.6; }
   .spo-month-legend {
     flex: 0 0 150px;
     display: grid;
     grid-template-columns: repeat(2, 1fr);
     gap: 6px 14px;
-    font-size: 12px;
     color: var(--text-secondary);
     align-content: start;
-    padding-top: 8px;
-  }
+    padding-top: 8px; font: var(--chart-font-label); text-transform: uppercase; }
   .spo-month-legend .item { display: flex; align-items: center; gap: 6px; }
   .spo-month-legend .dot { width: 8px; height: 8px; border-radius: 50%; flex: none; }
   footer.spo-notes { margin-top: 8px; font-size: 12px; color: var(--text-muted); line-height: 1.7; }
@@ -878,7 +864,8 @@ function fmtTime(t) {
   });
   // compass labels
   [[0,"N"],[90,"E"],[180,"S"],[270,"W"]].forEach(([az, dir]) => {
-    const p = polarXY(az, -8);
+    const rad = az * Math.PI / 180, rr = R + 28; // outside the hour labels (R + 12)
+    const p = { x: CX + rr * Math.sin(rad), y: CY - rr * Math.cos(rad) + 4 };
     const t = svgEl("text", { class: "spo-polar-compass-label", x: p.x, y: p.y, "text-anchor": "middle" });
     t.textContent = dir;
     svg.appendChild(t);
@@ -894,7 +881,8 @@ function fmtTime(t) {
       .forEach(([t, az]) => {
         const edge = polarXY(az, 0);
         svg.appendChild(svgEl("line", { class: "spo-hour-line", x1: CX, y1: CY, x2: edge.x, y2: edge.y }));
-        const labelPos = polarXY(az, -6);
+        const rad = az * Math.PI / 180, rr = R + 12;
+        const labelPos = { x: CX + rr * Math.sin(rad), y: CY - rr * Math.cos(rad) + 4 };
         const lbl = svgEl("text", { class: "spo-hour-line-label", x: labelPos.x, y: labelPos.y, "text-anchor": "middle" });
         lbl.textContent = fmtTime(t);
         svg.appendChild(lbl);

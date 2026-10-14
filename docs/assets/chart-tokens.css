@@ -1,0 +1,42 @@
+/* Chart tokens — mirrors PDC Pro Vision "Chart Semantic", "Chart Neutral", "Chart Categorical".
+   Source of truth: Figma library. Values copied by hand; scripts/check_chart_tokens.py guards them.
+   Spec: site-plan/specs/2026-10-14-chart-tokens-design.md */
+@import url("https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;500;700&display=swap");
+
+.viz-root {
+  --chart-season-winter: #476de7; --chart-season-spring: #698436; --chart-season-summer: #e748c1; --chart-season-fall: #b09100;
+  --chart-water-rain: #638bff; --chart-water-flow: #3353c1; --chart-water-body: #b4caff;
+  --chart-land-permeable: #698436; --chart-land-ground: #7a7975;
+  --chart-emphasis: #d75509; --chart-emphasis-fill: #fdd9c4; --chart-alert: #ad1e26;
+  --chart-neutral-grid: #e0dfdd; --chart-neutral-axis: #b1afac; --chart-neutral-reference: #605f5b; --chart-neutral-label: #2e2e2c; --chart-neutral-label-muted: #605f5b; --chart-neutral-surface: #f0f0ee;
+  --chart-categorical-1: #476de7; --chart-categorical-2: #516920; --chart-categorical-3: #e748c1; --chart-categorical-4: #907600; --chart-categorical-5: #008c81; --chart-categorical-6: #a877e5; --chart-categorical-7: #ef5c58;
+  --chart-font-family: "JetBrains Mono", ui-monospace, SFMono-Regular, Menlo, monospace;
+  --chart-font-title: 700 13px/1.2 var(--chart-font-family);
+  --chart-font-label: 400 11px/1.2 var(--chart-font-family);
+  --chart-font-value: 700 13px/1.2 var(--chart-font-family);
+  --chart-font-note: 500 11px/1.2 var(--chart-font-family);
+}
+@media (prefers-color-scheme: dark) {
+  :root:where(:not([data-theme="light"])) .viz-root {
+  --chart-season-winter: #638bff; --chart-season-spring: #849f55; --chart-season-summer: #e748c1; --chart-season-fall: #cbad42;
+  --chart-water-rain: #8cacff; --chart-water-flow: #638bff; --chart-water-body: #233c94;
+  --chart-land-permeable: #849f55; --chart-land-ground: #959490;
+  --chart-emphasis: #f66d1e; --chart-emphasis-fill: #4e1f03; --chart-alert: #ff8780;
+  --chart-neutral-grid: #474644; --chart-neutral-axis: #605f5b; --chart-neutral-reference: #b1afac; --chart-neutral-label: #e0dfdd; --chart-neutral-label-muted: #959490; --chart-neutral-surface: #2e2e2c;
+  --chart-categorical-1: #638bff; --chart-categorical-2: #849f55; --chart-categorical-3: #ca18a6; --chart-categorical-4: #b09100; --chart-categorical-5: #2ea89c; --chart-categorical-6: #8e5aca; --chart-categorical-7: #d2383b;
+  }
+}
+:root[data-theme="dark"] .viz-root {
+  --chart-season-winter: #638bff; --chart-season-spring: #849f55; --chart-season-summer: #e748c1; --chart-season-fall: #cbad42;
+  --chart-water-rain: #8cacff; --chart-water-flow: #638bff; --chart-water-body: #233c94;
+  --chart-land-permeable: #849f55; --chart-land-ground: #959490;
+  --chart-emphasis: #f66d1e; --chart-emphasis-fill: #4e1f03; --chart-alert: #ff8780;
+  --chart-neutral-grid: #474644; --chart-neutral-axis: #605f5b; --chart-neutral-reference: #b1afac; --chart-neutral-label: #e0dfdd; --chart-neutral-label-muted: #959490; --chart-neutral-surface: #2e2e2c;
+  --chart-categorical-1: #638bff; --chart-categorical-2: #849f55; --chart-categorical-3: #ca18a6; --chart-categorical-4: #b09100; --chart-categorical-5: #2ea89c; --chart-categorical-6: #8e5aca; --chart-categorical-7: #d2383b;
+}
+
+.viz-root svg text { font-family: var(--chart-font-family); }
+.chart-title { font: var(--chart-font-title); text-transform: uppercase; }
+.chart-label { font: var(--chart-font-label); text-transform: uppercase; }
+.chart-value { font: var(--chart-font-value); }
+.chart-note  { font: var(--chart-font-note); text-transform: uppercase; }
