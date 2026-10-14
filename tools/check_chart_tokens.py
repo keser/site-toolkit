@@ -11,7 +11,7 @@ from pathlib import Path
 ROOT = Path(__file__).resolve().parent.parent
 CSS = ROOT / "docs/assets/chart-tokens.css"
 
-# (light, dark), copied from site-plan/specs/2026-10-14-chart-tokens-design.md via the Ramps table
+# (light, dark), copied from design-language/specs/2026-10-14-chart-tokens-design.md via the Ramps table
 TOKENS = {
     "season-winter": ("#476de7", "#638bff"), "season-spring": ("#698436", "#849f55"),
     "season-summer": ("#e748c1", "#e748c1"), "season-fall": ("#b09100", "#cbad42"),
@@ -35,6 +35,17 @@ ALLOW_RAW = {
     "--shed-on-water",  # dark text on the translucent water fill: contrast color
 }
 RAW = re.compile(r"#[0-9a-fA-F]{3,8}\b|rgba?\(")
+# Words a token-backed value may contain once var() references are removed. Any other word is a
+# color function (hsl, oklch, …) or a named color.
+VALUE_WORDS = {"color-mix", "in", "srgb", "srgb-linear", "oklab", "transparent", "currentcolor"}
+# Page-level variables that belong to page chrome, not charts. --surface-1 and --page stay allowed:
+# value halos and separators must match the panel behind them.
+PAGE_PAINT = re.compile(r"\b(fill|stroke)[\"']?\s*:\s*[\"']?var\(--(grid|baseline|accent|text-[a-z]+)\)")
+SVG_TEXT = re.compile(r"\b(?:svgEl|el)\(\s*[\"']text[\"']\s*,\s*\{([^}]*)\}")
+
+def is_raw(val):
+    rest = re.sub(r"var\(--[a-z0-9-]+\)", "", val)
+    return bool(RAW.search(rest)) or any(w.lower() not in VALUE_WORDS for w in re.findall(r"[a-zA-Z][a-zA-Z-]*", rest))
 
 def blocks(css):
     light = re.search(r"^\.viz-root \{([^}]*)\}", css, re.M)
@@ -64,8 +75,10 @@ def check_tokens():
     return fails
 
 def check_page(path, prefixes):
+    return check_html((ROOT / path).read_text(), prefixes)
+
+def check_html(html, prefixes):
     fails = []
-    html = (ROOT / path).read_text()
     if '<link rel="stylesheet" href="assets/chart-tokens.css">' not in html:
         fails.append("chart-tokens.css link missing")
     for prefix in prefixes:
@@ -73,11 +86,18 @@ def check_page(path, prefixes):
         if not found: fails.append(f"no --{prefix}-* declarations found")
         for prop, val in found:
             if prop in ALLOW_RAW: continue
-            if RAW.search(val): fails.append(f"{prop} still raw: {val.strip()}")
-    for cls in re.findall(r"\.([a-z0-9]+-[a-z0-9-]+) \{[^}]*font-size", html):
-        if any(cls.startswith(p + "-") for p in prefixes) and re.search(rf"\.{cls} \{{[^}}]*fill:", html) \
-           and not re.search(rf"\.{cls} \{{[^}}]*font: var\(--chart-font-", html):
-            fails.append(f".{cls} is SVG text without a chart font role")
+            if is_raw(val): fails.append(f"{prop} still raw: {val.strip()}")
+    # A rule that sets both `fill` and a text property styles SVG text, prefixed or not.
+    for sel, body in re.findall(r"([^{}]+)\{([^{}]*)\}", html):
+        if re.search(r"\bfill:", body) and re.search(r"\b(font-size|font-weight|text-anchor)\s*:", body) \
+           and "font: var(--chart-font-" not in body:
+            fails.append(f"{sel.strip()} is SVG text without a chart font role")
+    line = lambda m: html.count("\n", 0, m.start()) + 1
+    for m in SVG_TEXT.finditer(html):
+        if not re.search(r"\bclass\s*:", m.group(1)):
+            fails.append(f"line {line(m)}: SVG text without a class")
+    for m in PAGE_PAINT.finditer(html):
+        fails.append(f"line {line(m)}: chart {m.group(1)} uses page variable --{m.group(2)}")
     # A `fill` presentation attribute loses to a CSS class rule that sets `fill`, so the color
     # never renders. Colored text on a classed element must pass `style:"fill:…"` instead.
     for cls, attr in re.findall(r'class:\s*"([a-z0-9-]+)"[^{}]*?[,{]\s*fill:\s*"([^"]+)"', html):

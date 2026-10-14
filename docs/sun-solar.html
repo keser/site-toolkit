@@ -70,15 +70,15 @@
   @media (max-width: 720px) { .spc-grid { grid-template-columns: 1fr; } }
   .spc-panel-stats { display: flex; flex-wrap: wrap; gap: 4px 14px; font-size: 12px; color: var(--text-secondary); margin-bottom: 8px; }
   .spc-panel-stats b { color: var(--text-primary); font-weight: 600; }
-  .spc-grid-line { stroke: var(--grid); stroke-width: 1; }
-  .spc-baseline { stroke: var(--baseline); stroke-width: 1; }
+  .spc-grid-line { stroke: var(--chart-neutral-grid); stroke-width: 1; }
+  .spc-baseline { stroke: var(--chart-neutral-axis); stroke-width: 1; }
   .spc-axis-label { fill: var(--chart-neutral-label-muted); font: var(--chart-font-label); text-transform: uppercase; }
   .spc-axis-label-strong { fill: var(--chart-neutral-label-muted); font: var(--chart-font-note); text-transform: uppercase; }
   .spc-sun-path { fill: none; stroke-width: 2; stroke-linecap: round; stroke-linejoin: round; }
   .spc-hour-dot { stroke-width: 2; }
   .spc-direct-label { fill: var(--chart-neutral-label-muted); font: var(--chart-font-label); text-transform: uppercase; }
   .spc-direct-label-strong { fill: var(--chart-neutral-label); font: var(--chart-font-note); text-transform: uppercase; }
-  .spc-crosshair-line { stroke: var(--text-muted); stroke-width: 1; stroke-dasharray: 2,2; pointer-events: none; opacity: 0; }
+  .spc-crosshair-line { stroke: var(--chart-neutral-reference); stroke-width: 1; stroke-dasharray: 2,2; pointer-events: none; opacity: 0; }
   .spc-hover-dot { pointer-events: none; opacity: 0; }
   .spc-hit-layer { fill: transparent; cursor: crosshair; }
   details.spc-table-toggle { margin-top: 28px; background: var(--surface-1); border: 1px solid var(--border); border-radius: 12px; padding: 14px 18px; }
@@ -96,6 +96,7 @@
   .viz-root { --sp3d-series-winter: var(--chart-season-winter); --sp3d-series-spring: var(--chart-season-spring); --sp3d-series-summer: var(--chart-season-summer); --sp3d-series-fall: var(--chart-season-fall); --sp3d-ground: var(--chart-neutral-surface); --sp3d-ground-ring: var(--chart-neutral-axis); }
   header.sp3d-page-head { margin-bottom: 20px; }
   .sp3d-legend-row { display: flex; flex-wrap: wrap; gap: 16px; margin-top: 12px; color: var(--text-secondary); font: var(--chart-font-label); text-transform: uppercase; }
+  .sp3d-compass-label { fill: var(--chart-neutral-label-muted); font: var(--chart-font-label); text-transform: uppercase; }
   .sp3d-legend-row .item { display: flex; align-items: center; gap: 6px; }
   .sp3d-legend-row .swatch { width: 14px; height: 3px; border-radius: 2px; }
   footer.sp3d-notes { margin-top: 16px; font-size: 12px; color: var(--text-muted); line-height: 1.7; }
@@ -113,7 +114,7 @@
   .spo-aerial-frame svg { position: absolute; inset: 0; width: 100%; height: 100%; }
   .spo-season-path { fill: none; stroke-width: 3; opacity: 0.92; }
   .spo-hour-dot { stroke-width: 1.5; }
-  .spo-anchor-dot { fill: var(--text-primary); stroke: #fff; stroke-width: 1.5; }
+  .spo-anchor-dot { fill: var(--chart-neutral-label); stroke: #fff; stroke-width: 1.5; }
   .spo-direct-label { paint-order: stroke; stroke: rgba(255,255,255,0.9);
     stroke-width: 4px; stroke-linejoin: round; font: var(--chart-font-note); text-transform: uppercase; }
   .spo-compass-label { fill: var(--chart-neutral-label);
@@ -128,7 +129,7 @@
   .spo-month-line { fill: none; stroke-width: 1.75; }
   .spo-hour-line { fill: none; stroke: var(--spo-hour-grid); stroke-width: 1; }
   .spo-hour-line-label { fill: var(--chart-neutral-label-muted); font: var(--chart-font-label); text-transform: uppercase; }
-  .spo-ring-line { fill: none; stroke: var(--grid); stroke-width: 1; }
+  .spo-ring-line { fill: none; stroke: var(--chart-neutral-grid); stroke-width: 1; }
   .spo-polar-axis-label { fill: var(--chart-neutral-label-muted); font: var(--chart-font-label); text-transform: uppercase; }
   .spo-polar-compass-label { fill: var(--chart-neutral-label-muted); font: var(--chart-font-note); text-transform: uppercase; }
   .spo-month-dot { r: 2.6; }
@@ -620,7 +621,7 @@ for (let a = 0; a < 360; a += 15) {
   const outer = project(GROUND_R * Math.sin(rad), GROUND_R * Math.cos(rad), 0);
   svg.appendChild(svgEl("line", { x1: inner.x, y1: inner.y, x2: outer.x, y2: outer.y, stroke: "var(--sp3d-ground-ring)", "stroke-width": 1.5 }));
   const labelPt = project((GROUND_R + 14) * Math.sin(rad), (GROUND_R + 14) * Math.cos(rad), 0);
-  const lbl = svgEl("text", { x: labelPt.x, y: labelPt.y + 3, "text-anchor": "middle", "font-size": 9, fill: "var(--text-muted)" });
+  const lbl = svgEl("text", { class: "sp3d-compass-label", x: labelPt.x, y: labelPt.y + 3, "text-anchor": "middle" });
   lbl.textContent = a === 0 ? "N" : a === 90 ? "E" : a === 180 ? "S" : a === 270 ? "W" : String(a) + "°";
   svg.appendChild(lbl);
 }
@@ -808,7 +809,7 @@ function fmtTime(t) {
   svg.appendChild(svgEl("circle", { class: "spo-anchor-dot", cx: ANCHOR.x, cy: ANCHOR.y, r: 5 }));
 
   // hover
-  let hoverDot = svgEl("circle", { r: 6, fill: "none", stroke: "var(--text-primary)", "stroke-width": 2, opacity: 0 });
+  let hoverDot = svgEl("circle", { r: 6, fill: "none", stroke: "var(--chart-neutral-label)", "stroke-width": 2, opacity: 0 });
   svg.appendChild(hoverDot);
   svg.addEventListener("mousemove", (evt) => {
     const rect = svg.getBoundingClientRect();
@@ -864,7 +865,7 @@ function fmtTime(t) {
   });
   // compass labels
   [[0,"N"],[90,"E"],[180,"S"],[270,"W"]].forEach(([az, dir]) => {
-    const rad = az * Math.PI / 180, rr = R + 28; // outside the hour labels (R + 12)
+    const rad = az * Math.PI / 180, rr = R + 40; // outside the hour labels (R + 12), clear of "6AM"/"6PM" near E and W
     const p = { x: CX + rr * Math.sin(rad), y: CY - rr * Math.cos(rad) + 4 };
     const t = svgEl("text", { class: "spo-polar-compass-label", x: p.x, y: p.y, "text-anchor": "middle" });
     t.textContent = dir;
@@ -911,7 +912,7 @@ function fmtTime(t) {
     });
   });
 
-  let hoverDot = svgEl("circle", { r: 5, fill: "none", stroke: "var(--text-primary)", "stroke-width": 2, opacity: 0 });
+  let hoverDot = svgEl("circle", { r: 5, fill: "none", stroke: "var(--chart-neutral-label)", "stroke-width": 2, opacity: 0 });
   svg.appendChild(hoverDot);
   svg.addEventListener("mousemove", (evt) => {
     const rect = svg.getBoundingClientRect();

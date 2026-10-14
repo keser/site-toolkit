@@ -1,6 +1,6 @@
 # Map Tokens v3: Color Roles, Casing Lines, Dash Set, Component Cleanup
 
-Status: built 2026-10-11, extended through 2026-10-14 (map keys, map migration, Slides template colors and text, deck text). Parked 2026-10-14 for the repo restructure; see **Pickup** at the end. Plan: site-plan/plans/2026-10-11-map-tokens-v3.md.
+Status: built 2026-10-11, extended through 2026-10-14 (map keys, map migration, Slides template colors and text, deck text). Parked 2026-10-14 for the repo restructure, which is now done; see **Pickup** at the end. Plan: design-language/plans/2026-10-11-map-tokens-v3.md.
 [2026-10-10-map-tokens-v2-design.md](2026-10-10-map-tokens-v2-design.md) (built; plan
 [2026-10-10-map-tokens-v2.md](../plans/2026-10-10-map-tokens-v2.md)).
 
@@ -564,9 +564,7 @@ components can wait.
 - **Species map and status pills:** the species-inventory map palette and the status pills on the
   project-plan and species pages are unaddressed.
 
-**Restructure notes:**
-- This spec belongs to the design system, so it moves to
-  `site-toolkit/design-language/specs/`. Re-sync before rebasing `restructure/home-site`.
-- Memory note `figma_styles_page_sync` ("re-sync the Styles page after Keys-page edits") still
-  applies wherever this work continues.
+**Restructure (done 2026-10-14):** this spec and its plan live in `site-toolkit/design-language/`.
+Memory note `figma_styles_page_sync` ("re-sync the Styles page after Keys-page edits") still
+applies.
 

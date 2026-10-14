@@ -21,8 +21,8 @@
     --series-precip:  var(--chart-water-rain);
     --wind-fill:      color-mix(in srgb, var(--chart-categorical-1) 55%, var(--surface-1));
     --wind-accent:    var(--chart-categorical-1);
-    --band-frost:     rgba(139,195,74,0.16);
-    --band-frost-line:#7cb342;
+    --band-frost:     color-mix(in srgb, var(--chart-land-permeable) 16%, transparent);
+    --band-frost-line:var(--chart-land-permeable);
     --badge-bg:       #eef0ea;
   }
   @media (prefers-color-scheme: dark) {
@@ -36,13 +36,6 @@
       --grid:           #2c2c2a;
       --baseline:       #383835;
       --border:         rgba(255,255,255,0.10);
-      --series-high:    var(--chart-categorical-7);
-      --series-low:     var(--chart-categorical-5);
-      --series-precip:  var(--chart-water-rain);
-      --wind-fill:      color-mix(in srgb, var(--chart-categorical-1) 55%, var(--surface-1));
-      --wind-accent:    var(--chart-categorical-1);
-      --band-frost:     rgba(139,195,74,0.14);
-      --band-frost-line:#8bc34a;
       --badge-bg:       #23261f;
     }
   }
@@ -56,13 +49,6 @@
     --grid:           #2c2c2a;
     --baseline:       #383835;
     --border:         rgba(255,255,255,0.10);
-    --series-high:    var(--chart-categorical-7);
-    --series-low:     var(--chart-categorical-5);
-    --series-precip:  var(--chart-water-rain);
-    --wind-fill:      color-mix(in srgb, var(--chart-categorical-1) 55%, var(--surface-1));
-    --wind-accent:    var(--chart-categorical-1);
-    --band-frost:     rgba(139,195,74,0.14);
-    --band-frost-line:#8bc34a;
     --badge-bg:       #23261f;
   }
 
@@ -131,16 +117,17 @@
   .legend .line { width: 14px; height: 2px; display: inline-block; }
 
   svg.chart { width: 100%; height: auto; display: block; overflow: visible; }
-  .grid-line { stroke: var(--grid); stroke-width: 1; }
-  .baseline { stroke: var(--baseline); stroke-width: 1; }
-  .grid-ring { fill: none; stroke: var(--grid); stroke-width: 1; }
-  .baseline-ring { fill: none; stroke: var(--baseline); stroke-width: 1; }
+  .grid-line { stroke: var(--chart-neutral-grid); stroke-width: 1; }
+  .baseline { stroke: var(--chart-neutral-axis); stroke-width: 1; }
+  .grid-ring { fill: none; stroke: var(--chart-neutral-grid); stroke-width: 1; }
+  .baseline-ring { fill: none; stroke: var(--chart-neutral-axis); stroke-width: 1; }
   .axis-label { fill: var(--chart-neutral-label-muted); font: var(--chart-font-label); text-transform: uppercase; }
+  .wind-ring-label { fill: var(--chart-neutral-label-muted); font: var(--chart-font-label); paint-order: stroke; stroke: var(--surface-1); stroke-width: 3px; stroke-linejoin: round; }
   .dir-label { fill: var(--chart-neutral-label-muted); font: var(--chart-font-label); text-transform: uppercase; }
   .value-label { fill: var(--chart-neutral-label-muted); text-anchor: middle; font: var(--chart-font-label); text-transform: uppercase; }
   .value-label-strong { fill: var(--chart-neutral-label); text-anchor: middle; font: var(--chart-font-value); }
 
-  .crosshair-line { stroke: var(--text-muted); stroke-width: 1; stroke-dasharray: 2,2; pointer-events: none; opacity: 0; }
+  .crosshair-line { stroke: var(--chart-neutral-reference); stroke-width: 1; stroke-dasharray: 2,2; pointer-events: none; opacity: 0; }
   .hover-dot { pointer-events: none; opacity: 0; }
   .tooltip {
     position: absolute;
@@ -556,9 +543,6 @@ function buildWindRosePanel({ container, title, sub, stats, sectors, pct, predom
   rings.forEach(ringPct => {
     const r = radiusFor(ringPct);
     svg.appendChild(svgEl("circle", { class: ringPct===Y_MAX?"baseline-ring":"grid-ring", cx: CX, cy: CY, r }));
-    const lbl = svgEl("text", { class: "axis-label", x: CX+4, y: CY-r-2, "text-anchor": "start" });
-    lbl.textContent = ringPct + "%";
-    svg.appendChild(lbl);
   });
 
   const compass8 = [["N",0],["NE",45],["E",90],["SE",135],["S",180],["SW",225],["W",270],["NW",315]];
@@ -583,6 +567,14 @@ function buildWindRosePanel({ container, title, sub, stats, sectors, pct, predom
     });
     svg.appendChild(path);
     wedges.push({path, sector, pct: p});
+  });
+
+  // ring labels sit just inside each ring, above the wedges, so bars don't hide them and the
+  // outer label clears "N"
+  rings.forEach(ringPct => {
+    const lbl = svgEl("text", { class: "wind-ring-label", x: CX+4, y: CY-radiusFor(ringPct)+11, "text-anchor": "start" });
+    lbl.textContent = ringPct + "%";
+    svg.appendChild(lbl);
   });
 
   const panel = document.createElement("div");
@@ -673,7 +665,7 @@ function buildWindRosePanel({ container, title, sub, stats, sectors, pct, predom
   const svg = svgEl("svg", { class: "chart", viewBox: `0 0 ${VB_W} ${VB_H}` });
 
   const trackY = 60, trackH = 22;
-  svg.appendChild(svgEl("rect", { x: PAD.left, y: trackY, width: plotW, height: trackH, rx: 6, fill: "var(--grid)" }));
+  svg.appendChild(svgEl("rect", { x: PAD.left, y: trackY, width: plotW, height: trackH, rx: 6, fill: "var(--chart-neutral-grid)" }));
 
   const bandX0 = xPix(FROST.lastSpringDay), bandX1 = xPix(FROST.firstFallDay);
   svg.appendChild(svgEl("rect", { x: bandX0, y: trackY, width: bandX1-bandX0, height: trackH, rx: 6, fill: "var(--band-frost-line)" }));
@@ -694,7 +686,7 @@ function buildWindRosePanel({ container, title, sub, stats, sectors, pct, predom
   // markers
   [[FROST.lastSpringDay, "Last spring frost", "Apr 14"], [FROST.firstFallDay, "First fall frost", "Oct 23"]].forEach(([day,label,date]) => {
     const x = xPix(day);
-    svg.appendChild(svgEl("line", { x1:x, x2:x, y1: trackY-10, y2: trackY+trackH+10, stroke: "var(--text-primary)", "stroke-width": 1.5 }));
+    svg.appendChild(svgEl("line", { x1:x, x2:x, y1: trackY-10, y2: trackY+trackH+10, stroke: "var(--chart-neutral-label)", "stroke-width": 1.5 }));
     const lbl = svgEl("text", { class: "value-label-strong", x, y: trackY-16 });
     lbl.textContent = `${label} · ${date}`;
     svg.appendChild(lbl);

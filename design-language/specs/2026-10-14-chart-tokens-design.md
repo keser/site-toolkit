@@ -1,7 +1,7 @@
 # Chart tokens: one palette and type for deck and microsite charts
 
 **Date:** 2026-10-14
-**Status:** Shipped 2026-10-14 (Tasks 1–9 plus a final-review fix pass, pushed at `4488966`). Parked for the repo restructure; see **Pickup** at the end. Plan: `site-plan/plans/2026-10-14-chart-tokens.md`.
+**Status:** Shipped 2026-10-14 (Tasks 1–9 plus a final-review fix pass, pushed at `4488966`). The final review's follow-ups were closed the same day in `site-toolkit`; see **Shipped** and **Pickup**. Plan: `design-language/plans/2026-10-14-chart-tokens.md`.
 **Scope:** personal project, so there's latitude to be opinionated.
 
 ## Goal
@@ -247,7 +247,9 @@ The execution ledger records the rest, summarized under Shipped.
     - contrast text: white on markers (`--flow-num-fg`), dark on the water fill
       (`--shed-on-water`)
     - dark text on bars (`--runoff-on-bar`)
-  - **Known limitation:** browsers without `color-mix` drop the translucent bands.
+  - **Known limitation:** browsers without `color-mix` (before 2023) render the translucent bands
+    black, not hidden. `color-mix` has been Baseline since May 2023, so there's no `@supports`
+    fallback.
 - **2026-10-14, Task 6:** `climate.html` now uses the tokens.
   - Besides the wind chart, the temperature and precipitation charts had unprefixed variables
     the spec missed:
@@ -281,50 +283,48 @@ The execution ledger records the rest, summarized under Shipped.
     - Slide 50's labels use `Mono Caps/16/Regular`.
     - **Exception:** slide 48 keeps its Inter 9.5–15px text. At the role sizes its four small
       sun charts had 5 overlapping labels, so the original fonts were restored.
+- **2026-10-14, follow-ups (in `site-toolkit`):** closed the final review's minor findings.
+  - **Check script:** `tools/check_chart_tokens.py` now has tests (`tools/tests/test_check_chart_tokens.py`).
+    It flags:
+    - `hsl()`, `oklch()` and named colors in prefixed variables
+    - SVG text rules without a chart font role, prefixed or not
+    - SVG text created without a class
+    - chart fills and strokes on the page variables `--grid`, `--baseline`, `--accent` and
+      `--text-*`. `--surface-1` stays allowed for halos and separators.
+  - **Page variables → tokens** (33 uses across the three pages):
+    - `--grid` → `neutral/grid` and `--baseline` → `neutral/axis`
+    - `--accent` → `emphasis` (flow markers, legend dots, watershed bracket)
+    - `--text-muted` and `--text-secondary` → `neutral/reference` (crosshairs, the water-use mean
+      line, the flow schematic's meter, arrows and scale bar)
+    - `--text-primary` → `neutral/label` (hover rings, the polar anchor dot)
+  - **Climate frost band → `land/permeable`** (Andrew's call; no new token, no library change).
+    The timeline bar is solid; the temperature band mixes 16% in both modes, where dark used 14%.
+  - **Climate:** token-backed variables are declared once. The dark blocks only redefine page
+    colors, and the tokens switch modes themselves.
+  - **sp3d:** the compass and azimuth labels use `.sp3d-compass-label` (label role, `label/muted`).
+  - **Polish:**
+    - The runoff bars' left pad is computed from the longest row label.
+    - Runoff values read "GAL", matching "FT²" and the "GAL/YR" axis.
+    - Wind-rose ring labels sit just inside each ring, above the wedges, with a surface halo.
+    - The polar compass letters moved out to R + 40, clear of "6AM" and "6PM".
+  - Checked in light and dark with headless Chrome.
 
-## Pickup (parked 2026-10-14)
+## Pickup (updated 2026-10-14)
 
-**State at park:**
-- **Figma:** the `Chart Semantic` and `Chart Neutral` collections are published in PDC Pro
-  Vision. The Styles page has a `Chart Documentation` frame (`1336:50`). Deck slides 96–101, 48
-  and 50 are bound to the tokens.
-- **Microsite:** `water.html`, `sun-solar.html` and `climate.html` link
-  `docs/assets/chart-tokens.css`.
-- **Checks:** run all four from the repo root; all pass:
+**State:** the chart tokens, the check and this spec live in `site-toolkit`. The restructure is
+done, and the final review's follow-ups are closed (see Shipped).
 
-  ```bash
-  python3 scripts/check_chart_tokens.py tokens
-  python3 scripts/check_chart_tokens.py page docs/water.html precip runoff wbal elev flow storm shed wuse
-  python3 scripts/check_chart_tokens.py page docs/sun-solar.html spc sp3d spo
-  python3 scripts/check_chart_tokens.py page docs/climate.html wind series
-  ```
+Run the checks from the repo root:
 
-**Restructure impact:** this matters before rebasing `restructure/home-site`.
-- That branch deletes `docs/` and `scripts/`, which removes `docs/assets/chart-tokens.css`,
-  `scripts/check_chart_tokens.py` and the chart edits in the three pages.
-- The shared chart palette and its check belong with the public microsite, so they should move to
-  `site-toolkit`, along with this spec and its plan.
-- The CLAUDE.md convention ("chart colors and chart text come from `chart-tokens.css`") moves with
-  them.
-- Expect modify/delete conflicts on all of these during the rebase. Copy them to the toolkit first,
-  then `git rm` them on the branch.
+```bash
+python3 -m pytest tools
+python3 tools/check_chart_tokens.py tokens
+python3 tools/check_chart_tokens.py page docs/water.html precip runoff wbal elev flow storm shed wuse
+python3 tools/check_chart_tokens.py page docs/sun-solar.html spc sp3d spo
+python3 tools/check_chart_tokens.py page docs/climate.html wind series band
+```
 
-**Open follow-ups**, all from the final review's minor findings:
-1. **Chart colors on page variables:**
-   - Chart elements still on the page's `--accent` (flow markers, legend dots, watershed bracket)
-     should move to `emphasis`.
-   - Climate's `--band-frost` and `--band-frost-line` need tokens.
-   - Gridlines still use the page's `--grid` and `--baseline`; switch them to `neutral/grid`.
-   - The sp3d azimuth and compass labels have no class and no type role.
-   - CLAUDE.md's shared-identifier list should name `--chart-*`.
-2. **Check script:**
-   - Catch `hsl()`, `oklch()` and named colors.
-   - Make the font-role check work on unprefixed text classes (climate).
-3. **`color-mix` wording:** browsers without `color-mix` render the bands black, not hidden.
-   Correct the "Known limitation" line or add an `@supports` fallback.
-4. **Polish:**
-   - Tight spots: runoff row labels at the left edge, wind-rose "N" against "12%", polar
-     "W 6PM".
-   - Unit casing in value labels ("gal" next to "FT²").
-   - Duplicate dark declarations in climate.
-
+**Still open (nothing blocking):**
+- The frost timeline's month ticks cross the "192 frost-free days" label. This predates the tokens
+  and is a chart-layout change, so it's out of scope here.
+- The species-inventory map palette, carried over from the map-tokens-v3 Pickup.

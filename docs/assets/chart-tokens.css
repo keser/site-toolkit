@@ -1,6 +1,6 @@
 /* Chart tokens — mirrors PDC Pro Vision "Chart Semantic", "Chart Neutral", "Chart Categorical".
-   Source of truth: Figma library. Values copied by hand; scripts/check_chart_tokens.py guards them.
-   Spec: site-plan/specs/2026-10-14-chart-tokens-design.md */
+   Source of truth: Figma library. Values copied by hand; tools/check_chart_tokens.py guards them.
+   Spec: design-language/specs/2026-10-14-chart-tokens-design.md */
 @import url("https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;500;700&display=swap");
 
 .viz-root {
