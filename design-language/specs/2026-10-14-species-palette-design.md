@@ -279,5 +279,48 @@ checked by `tools/palette_check.py` against `design-language/tokens/ramps.json`.
 - The CSV now has a `notes` column for management history.
 
 **Still open.**
-- Map key swatches are opaque, but the map's plant fills are 50%, so a symbol reads lighter on the
-  map than in the key.
+- ~~Map key swatches are opaque, but the map's plant fills are 50%, so a symbol reads lighter on the
+  map than in the key.~~ Closed for the layer map on 2026-10-15 (below). The status map stays at 50%.
+
+### 2026-10-15: solid layer fills, layer stacking, minimum plant size
+
+- **Problem:** at 50% fill over white, adjacent layer steps measured ΔE 4.9 (canopy–sub-canopy)
+  and 4.9 (sub-canopy–shrub), under the floor of 10. Canopy and sub-canopy symbols are both
+  circles, so color is the only cue between them, and on the map they read as one green.
+- **Explored** (minimum ΔE over normal and CVD views, adjacent pairs canopy → herbaceous):
+  - Current steps at 50%: 4.9 · 4.9 · 10.0. Fails.
+  - Current steps at 75%: 7.4 · 7.7 · 15.4. Fails.
+  - Wider steps (sage 800/600/400/200) at 75%: 15.0 · 15.3 · 15.0. Passes, but canopy becomes
+    sage/800, the `layer/stroke` value, so the stroke would need another hue, and the key would
+    still not match the map.
+  - Current steps solid: 10.7 · 10.4 · 21.0. Passes with no palette change.
+- **Chosen (Andrew, 2026-10-15):** solid layer fills, with no token changes. The 50% fills
+  existed so overlapping crowns stayed readable; drawing order replaces that. Plants are stacked
+  canopy → sub-canopy → shrub → herbaceous → groundcover → vine → root, bottom to top, so the
+  understory draws over crowns. A copy of the Lot 86 boundary (`Lot 86 boundary (above plants)`)
+  sits above the plants.
+- **Accepted costs:** where two canopy crowns overlap, only the sage/800 stroke on sage/700 separates
+  them. A tree covered by a higher layer loses its label, because labels live inside the plant
+  symbols; moving labels to their own layer belongs to the base map cleanup.
+- **Status map unchanged:** its tints are different hues and pass at 50%.
+- **Minimum plant size:** small plants were hard to read. On all three species frames, every plant
+  symbol's short side is at least 32 px; the long side keeps its length (or grows to 32), and
+  center and rotation are kept. 29 plants changed (shrub dots 20 → 32, perennial pills 40×16 →
+  40×32, GR strips 19×91 → 32×91). The Zones source map (`189:2269`) keeps its original sizes
+  until the base map cleanup.
+- **Apply script:** `species_maps_apply.py` now sets layer fills to opacity 1, picks label color
+  against the solid fill, sorts plants by layer, and redraws the boundary copy on each run. Run on
+  2026-10-15: status 55, layer 71, function 41 applied; no problems. Function badges were re-placed
+  against the new sizes.
+- **Labels on every frame:** the plant components hard-code a label color for their default fill
+  (shrub and conifer labels are white), so on the gray Function map those labels were white on light
+  gray. Components can't pick a label color by contrast, so the component was left alone; instead
+  the script re-picks every plant's label (black or white) against its final fill on all three
+  frames, including plants with no data.
+- **Badge placement:** trees (short side 60 px or more) keep the badge row centered under the label.
+  Smaller symbols try below, above, right, and left of the symbol and take the spot that covers the
+  least of other labels and badge rows (weight 6), other symbols (1), and never the legend or key
+  (20). The old rule placed every small symbol's badges to its right, crowding the north bed.
+- **The 32 px minimum is enforced by the script** on every run, so the base map cleanup can't
+  silently undo it.
+
