@@ -1,0 +1,121 @@
+{
+  "tokens": {
+    "status/native/tint": {
+      "light": "sage/400",
+      "dark": "sage/500"
+    },
+    "status/native/base": {
+      "light": "sage/600",
+      "dark": "sage/500"
+    },
+    "status/native/shade": {
+      "light": "sage/700",
+      "dark": "sage/400"
+    },
+    "status/naturalized/tint": {
+      "light": "gold/100",
+      "dark": "gold/200"
+    },
+    "status/naturalized/base": {
+      "light": "gold/500",
+      "dark": "gold/400"
+    },
+    "status/naturalized/shade": {
+      "light": "gold/700",
+      "dark": "gold/400"
+    },
+    "status/cultivated/tint": {
+      "light": "cobalt/200",
+      "dark": "cobalt/300"
+    },
+    "status/cultivated/base": {
+      "light": "cobalt/500",
+      "dark": "cobalt/400"
+    },
+    "status/cultivated/shade": {
+      "light": "cobalt/700",
+      "dark": "cobalt/400"
+    },
+    "status/invasive/tint": {
+      "light": "coral/200",
+      "dark": "coral/300"
+    },
+    "status/invasive/base": {
+      "light": "coral/500",
+      "dark": "coral/400"
+    },
+    "status/invasive/shade": {
+      "light": "coral/700",
+      "dark": "coral/400"
+    },
+    "layer/canopy": {
+      "light": "sage/700",
+      "dark": "sage/600"
+    },
+    "layer/sub-canopy": {
+      "light": "sage/600",
+      "dark": "sage/500"
+    },
+    "layer/shrub": {
+      "light": "sage/500",
+      "dark": "sage/400"
+    },
+    "layer/herbaceous": {
+      "light": "sage/300",
+      "dark": "sage/200"
+    },
+    "layer/groundcover": {
+      "light": "sage/100",
+      "dark": "sage/50"
+    },
+    "layer/vine": {
+      "light": "violet/500",
+      "dark": "violet/400"
+    },
+    "layer/root": {
+      "light": "amber/500",
+      "dark": "amber/400"
+    },
+    "layer/stroke": {
+      "light": "sage/800",
+      "dark": "sage/200"
+    }
+  },
+  "checks": {
+    "floor_de": 10,
+    "contrast_min": 3.0,
+    "distinct": [
+      [
+        "status/native/base",
+        "status/naturalized/base",
+        "status/cultivated/base",
+        "status/invasive/base"
+      ]
+    ],
+    "adjacent": [
+      [
+        "layer/canopy",
+        "layer/sub-canopy",
+        "layer/shrub",
+        "layer/herbaceous",
+        "layer/groundcover"
+      ]
+    ],
+    "edges": [
+      "status/native/shade",
+      "status/naturalized/shade",
+      "status/cultivated/shade",
+      "status/invasive/shade",
+      "layer/stroke"
+    ],
+    "surfaces": {
+      "light": [
+        "#fcfcfb",
+        "#f0f0ee"
+      ],
+      "dark": [
+        "#1a1a19"
+      ]
+    }
+  }
+}
