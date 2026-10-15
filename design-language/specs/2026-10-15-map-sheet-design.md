@@ -273,6 +273,41 @@ placeholders after every Lot 86 sheet uses `_site-legend`. Swapping an instance 
 nesting level, so per-sheet title and date overrides don't carry over and are re-applied during
 migration.
 
+### Step 3: key shell (2026-10-15)
+
+- **`map-key-shell`** (`1520:1220`, Keys page, next to the legend):
+  - `Title` text property, style `Mono/32/Bold`.
+  - One **`Rows` slot** whose preferred contents are `map-key-row`.
+  - Each sheet drops its own rows into the slot. There are no per-map variants.
+  - The slot wraps horizontally (32 column gap, 16 row gap). At the default 938 width, 421-wide rows
+    sit in two columns. Resize the shell to 485 for one column.
+  - The panel border is excluded from layout, matching the existing keys. Otherwise two 421 rows didn't fit.
+  - Panel fill, border, and title use `Sheet` colors.
+- **`map-key-row`** (`480:889`):
+  - Heading and body text bound to `Sheet` `text/primary` and `text/secondary`.
+  - The white fill on each variant's `text` frame was removed, because it showed as white boxes on a dark
+    panel. Nothing changes on light panels.
+- The old `map-key` set (16 Lot 86 variants) is untouched. It stays until each sheet migrates.
+
+### Step 4: sheet template (2026-10-15)
+
+- **New page `Map Set – Lot 86`** (`1520:8041`), after Keys. Lot 86's sheets will live here as they
+  migrate.
+- **`00 Sheet template`** (`1520:8042`): 1920 × 1080, clips, fill bound to `Sheet` `canvas`.
+  - Explicit modes: `Sheet: Light` and `Map display: Labels on`.
+  - Layers:
+    - `content`: empty, 1920 × 1080, clips, stretches
+    - `annotations`: empty, same
+    - `key`: a `map-key-shell` instance at (40, 40), pinned top left
+    - `legend`: a `_site-legend / Lot 86` instance at (0, 940), pinned bottom, stretches
+- **Using it:** duplicate the template, rename it `NN Title`, then:
+  1. Set the key's Title and drop rows into its slot.
+  2. Set the legend title, date, North, scale, and toggles.
+  3. Set the frame's `Sheet` mode (Dark over imagery) and `Map display` mode.
+  4. Fill `content` with a base map instance or a source image.
+  5. Draw in `annotations`.
+- Light and Dark were both checked by screenshot with a temporary duplicate, which was deleted.
+
 ## Decisions (2026-10-15)
 
 1. **Brainstorm maps are course-specific.** They stay in Course Specific sections, not the set.
