@@ -1,7 +1,7 @@
 # Species palette: status, layer and function maps
 
 **Date:** 2026-10-14
-**Status:** Design approved in chat 2026-10-14; spec awaiting review.
+**Status:** Built 2026-10-14. The layer map is done; the status and function maps wait for Andrew's plant data (see **Shipped**). Plan: `design-language/plans/2026-10-14-species-palette.md`.
 **Scope:** personal project, so there's latitude to be opinionated.
 **Deadline:** Lesson 07.
 
@@ -195,4 +195,74 @@ show, so function is shown as letters.
 
 ## Shipped
 
-Nothing yet.
+### 2026-10-14
+
+**Palette.** Values live in `design-language/tokens/species.json` (Ramps steps per mode) and are
+checked by `tools/palette_check.py` against `design-language/tokens/ramps.json`.
+
+| Token | Light | Dark |
+|---|---|---|
+| `status/native/tint · base · shade` | sage/400 · **sage/600** · sage/700 | sage/500 · sage/500 · sage/400 |
+| `status/naturalized/…` | gold/100 · gold/500 · gold/700 | gold/200 · gold/400 · gold/400 |
+| `status/cultivated/…` | cobalt/200 · cobalt/500 · cobalt/700 | cobalt/300 · cobalt/400 · cobalt/400 |
+| `status/invasive/…` | coral/200 · coral/500 · coral/700 | coral/300 · coral/400 · coral/400 |
+| `layer/canopy · sub-canopy · shrub · herbaceous · groundcover` | sage/700 · 600 · 500 · 300 · **100** | sage/600 · 500 · 400 · 200 · 50 |
+| `layer/vine · root · stroke` | violet/500 · amber/500 · sage/800 | violet/400 · amber/400 · sage/200 |
+
+- **Changed from the tables above, with Andrew's approval:**
+  - `status/native/base` sage/500 → sage/600. At sage/500, native and invasive had the same
+    lightness and were ΔE 4.7 apart under deuteranopia. It no longer equals the `sage/Base` role.
+  - `layer/groundcover` sage/200 → sage/100. Herbaceous and groundcover were ΔE 9.7 apart.
+- **Dark:** Shade is step 400 for every status. The rule's first guess (one step lighter, 600)
+  measured 2.5–2.8:1 on `#1a1a19`.
+- **Minimums:** Light — status pairs ΔE 13.3, adjacent layers 10.4, edge contrast 8.05:1. Dark —
+  11.9, 10.4, 5.26:1.
+
+**Figma (PDC Pro Vision).**
+- `Species` collection `VariableCollectionId:1393:12`, 20 variables, Light and Dark, all aliased
+  and scoped `ALL_FILLS`, `STROKE_COLOR`.
+- Styles page: `Species Documentation` (`1394:12`), right of Chart Documentation; the Styles
+  section widened to 10976. Rows are in meaning order (native → invasive, canopy → root), like
+  Chart Documentation, not hue order.
+- `map-key` variants: `Species – Status` (`1395:899`), `Species – Layer` (`1395:973`),
+  `Species – Function` (`1395:1067`). Function badges bind `charcoal/Shade`.
+- `Species` page (`1396:1531`) with `Species – Status` (`1397:1531`), `Species – Layer`
+  (`1397:2075`), and `Species – Function` (`1397:2664`). The species charts section (`161:142`)
+  moved there from Site Data Visualizations.
+- **Source map:** the gray-base Zones map, `Current Zone Map Base Map – August 2027` (`189:2269`).
+  The plan named `189:2268`, which is the aerial version.
+- 71 plants per frame, `plant P001`–`P071`: 15 deciduous, 18 coniferous, 1 nut tree, 12 shrub,
+  2 hedgerow, 23 perennial. Their labels are species codes (BW, NS, SM, …).
+- **`nut tree`:** its main component (`39:5767`) has no parent page but still renders. Andrew
+  chose to keep it as is until the base map cleanup.
+- **Legend:** titled per map, dated October 2026. The source Zones legend reads "current
+  Microclimate map", which looks like a copy slip on that map; it was not changed.
+
+**Plant data and apply script (private, `lot-86-site-plan`).**
+- `site-plan/data/mapped-plants.csv`, seeded with 71 rows: `label` is the species code and
+  position, `layer` is guessed from the symbol.
+- `site-plan/data/species_maps_apply.py` prints the `use_figma` script. Re-run it after editing
+  the CSV and after the base map cleanup. Two fixes beyond the plan:
+  - Binding a variable resets fill opacity to 1. The plants are 50% fills, so the script restores
+    each plant's opacity from the source map after binding.
+  - Label text is black or white by contrast with the fill composited over white at its opacity,
+    not the solid fill.
+- Seed run: layer 71 applied; status and function 71 blank; no problems. Bad rows (missing ID,
+  unknown status, layer, or letter) are reported and not applied.
+
+**Microsite.**
+- `chart-tokens.css` carries `--species-*` in all three blocks; `check_chart_tokens.py tokens`
+  checks them against `species.json`.
+- `species-inventory.html` links `chart-tokens.css` and uses the page prefix `spi`:
+  - native → `--species-status-native-shade`; introduced → `--chart-neutral-label-muted`.
+  - Taxon colors use Chart Categorical slots 1, 3, 4, 5. Slot 2 (sage) is skipped because sage
+    means native on this page.
+  - Pill and bar-label text uses `--surface-1`, so it reads in both modes (≥5.7:1).
+  - The taxon bars never rendered (`.bar-fill` was an inline span); fixed with `display: block`.
+  - Its gridlines, baseline, crosshair, and axis labels moved to chart tokens and the label role.
+
+**Still open.**
+- Andrew fills `species`, `status`, and `functions` in the CSV; then re-run the apply script and
+  screenshot the status and function maps.
+- Map key swatches are opaque, but the map's plant fills are 50%, so a symbol reads lighter on the
+  map than in the key.
