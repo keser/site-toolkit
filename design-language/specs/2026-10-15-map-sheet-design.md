@@ -82,41 +82,43 @@ sheet frame too. Both switches sit on the sheet:
 
 ### Fields
 
-| Field | Source | Notes |
+Site fields come from the property's `_site-legend` component (see **Site values** below). Sheet fields
+are typed on each sheet.
+
+| Field | Set on | Notes |
 |---|---|---|
-| Title | per sheet (text property) | Max width 360. Wraps to a second line instead of pushing the row. |
-| Scale statement + north text | `Site` variable, or per sheet for regional maps | "SCALE: 1″ = 20′ / NORTH: −65.43°" |
-| Scale bar | `map-scale` variant (below) | |
+| Title | sheet | Long titles take a manual line break if needed. |
+| Scale statement + north text | `_site-legend`; regional sheets type their own | "SCALE: 1″ = 20′ / NORTH: −65.43°" |
+| Scale bar | `map-scale` variant, exposed on the legend | `Lot`, `Garden detail`, `Regional` |
 | North indicator | `North` variant: `Rotated` or `Up` | Replaces the two stacked child layers. |
-| Location | `Site` variable | `Show location`, default off. |
-| Elevation | `Site` variable | **Two lines** ("Min: 103 ft" / "Max: 107 ft"), matching area. `Show elevation` boolean, off for regional maps. |
-| Area | `Site` variable | `Show area`, off for regional maps. |
-| Source credit | per sheet (text property) | New. `Show source`, on for regional and overlay sheets. Text comes from the sources list's Attribution column. |
-| Author | `Site` variable | |
-| Date | per sheet (text property) | Lowercase, auto width, never wraps. |
+| Location | `_site-legend` | `Show location`, default off. |
+| Elevation | `_site-legend` | **Two lines** ("Min: 103 ft" / "Max: 107 ft"), matching area. `Show elevation`, off for regional maps. |
+| Area | `_site-legend` | `Show area`, off for regional maps. |
+| Source credit | sheet | New. `Show source`, on for regional and overlay sheets. Text comes from the sources list's Attribution column. |
+| Author | `_site-legend` | |
+| Date | sheet | Lowercase, auto width, never wraps. |
 
-**Overflow fix:** two-line elevation saves about 170 px, and the 360 title width caps the worst case.
-Estimated against today's nine overflowing legends, the widest (Soil Building Goals Brainstorm,
-2110 px) drops to about 1868 px: 2110 − 170 for elevation − 72 for the title. It gets re-measured
-after the build. A build check fails if any legend's last visible child ends past 1880,
-which leaves room for the 40 px right padding.
+**Overflow fix:** two-line elevation (about −170 px) plus a 48 px gap between fields instead of 64
+(6 gaps, −96 px). A 360 px title cap was dropped: the title sits inside the shared `label` component,
+whose heading has a fixed height, so wrapping it would mean layout overrides inside a nested component
+that's also used on the maps. Measured after the build, every one of the 28 legends ends at or before
+1842 px. The build check fails any legend whose last visible child ends past 1880, which leaves room
+for the 40 px right padding.
 
-### Site variables
+### Site values
 
-A `Site` collection with string variables:
+Option B (decided 2026-10-15): each property has a local **`_site-legend`** component. It's a
+`map-legend` instance with that site's values typed once and the inner legend exposed, so North, the
+toggles, and the scale are set on each sheet. The leading underscore keeps it out of the published
+library. Every sheet in a property's file uses its `_site-legend`, so site values live in one place
+per file and stay with that property.
 
-- `scale`
-- `north`
-- `location`
-- `elevation-min`
-- `elevation-max`
-- `area-ac`
-- `area-ft2`
-- `author`
+Why not variables: a file that uses the library can't add modes to a library collection (extended
+collections, which can, appear to be Enterprise-only). Putting one mode per property in the library
+would leave every property's location in the shared file.
 
-It has one mode per property; the library has a `Lot 86` mode. Legend text binds to these variables.
-This fixes the drift the audit found, where 28 legends each carried hand-typed copies. A property's
-own Figma file sets its mode once, at the page level.
+Why not text properties: the legend's text sits inside nested `label` instances. Text properties would
+mean adding them to `label` and exposing nested properties, and `label` is also used on the maps.
 
 ### Scale
 
@@ -191,13 +193,13 @@ Thematic Design is the one existing proposal. The current dark sector duplicates
 
 ## Build order
 
-1. **Variables:** the `Site` collection with a Lot 86 mode, plus the `Sheet` and `Map display`
+1. **Variables:** the `Sheet` and `Map display`
    collections.
 2. **Legend:**
    - `North` variant
-   - bound `Site` fields
+   - `_site-legend` for Lot 86
    - two-line elevation
-   - 360 title width
+   - 48 px field gap
    - `Show elevation`, `Show area`, `Show source`
    - `map-scale` set
 3. **Key shell.**
@@ -233,39 +235,43 @@ sheet.
 **`Map display`** (`VariableCollectionId:1516:42`), modes `Labels on` and `Labels off`. It has one
 boolean, `plant-labels`, which binds to the `Vegetation` label visibility in the base map step.
 
-**`Site`** (`VariableCollectionId:1516:44`), mode `Lot 86`. Each string variable holds one legend text
-node's full content. That's because Figma binds a variable to a whole text node, not part of one.
+A third collection, **`Site`**, was created and then deleted the same day, unbound, when Andrew
+chose option B (see **Legend → Site values**).
 
-| Variable | Lot 86 |
-|---|---|
-| `legend/scale-north` | SCALE: 1” = 20’ / NORTH: -65.43° (two lines) |
-| `legend/location` | coordinates (shown only with `Show location`) |
-| `legend/elevation` | Min: 103 ft / Max: 107 ft (two lines) |
-| `legend/area` | 0.43 ac / 18,730 ft² (two lines) |
-| `legend/author` | Andrew Keser |
+### Step 2: legend (2026-10-15)
 
-This replaces the per-fact list in **Legend → Site variables** above (`elevation-min`, `area-ac`, and
-so on). The legend needs whole-node strings.
+On the Keys page:
 
-### Site values in other properties' files
+- **`map-legend` is a component set** (`1517:8947`), with `North=Rotated` (the original `168:1310`, so
+  every existing instance stayed linked) and `North=Up` (`1517:8887`).
+  - Properties: `North`, `Show location` (default off), `Show elevation`, `Show area`, `Show source`
+    (default off).
+  - The new `source` field sits before the date.
+  - Field gap is 48. Elevation is on two lines.
+- **Colors use `Sheet` variables:**
+  - 23 paints in the legend (panel fill and border, label text as instance overrides)
+  - 36 in `map-scale` and `north-indicator` (scale segments and arrow)
+  - The arrow's outer Union fill also needed binding, in the mains and in the legend's nested copies.
+    Without that, the arrow disappeared on a dark sheet.
+  - The shared `label` component wasn't touched.
+  - A temporary dark test frame was checked and deleted.
+- **`map-scale` is a component set** (`1517:9841`):
+  - `Scale=Lot` (the original `1160:2867`)
+  - `Garden detail` (0 / 5′ / 10′)
+  - `Regional` (`Mid label` and `End label` text properties, default 50 mi / 100 mi)
+  - Label frames no longer clip, so long labels stay centered on their ticks.
+  - It's exposed in both legend variants.
+- **`_site-legend / Lot 86`** (`1517:9914`): wraps a `North=Rotated` legend at 1920 × 140, exposed.
+- **All 28 existing instances:**
+  - 4 were switched to `North=Up`: the two satellite sector maps and their dark copies. They had shown the
+    north-up arrow by hand.
+  - Location is still off on all 28.
+  - Wrapped dates (fixed-width text) were set back to auto width.
 
-A file that uses the library can't add modes to a library collection. Figma's extended collections
-can, but they appear to be an Enterprise feature. So the `Site` collection can't give each property's
-own file its values. There are two options:
-
-- **A. One mode per property in the library's `Site` collection.** This works on any plan. The cost:
-  every property's location and details sit in the shared library, visible to every file that uses it.
-- **B. A local `site-legend` component in each property file.** It's a library legend instance with
-  that site's values typed once. Every sheet in the file uses `site-legend`, so the values still live
-  in one place per file and stay with that property.
-  - Under B, the library legend's fields are better as component text properties than as `Site`
-    variables.
-  - `Site` then becomes unnecessary, even for Lot 86, which would use its own `site-legend` the same way.
-
-Recommendation: **B**. It keeps each property's data in its own file, which matches how the repos
-split public and private. It also works on any Figma plan. If Andrew's plan includes extended
-collections, `Site` with a per-file extension is cleaner still. Pending Andrew's answer, `Site` stays
-as built but unbound.
+**Still to do in the legend:** the library defaults still hold Lot 86's values. They switch to neutral
+placeholders after every Lot 86 sheet uses `_site-legend`. Swapping an instance to the wrapper adds a
+nesting level, so per-sheet title and date overrides don't carry over and are re-applied during
+migration.
 
 ## Decisions (2026-10-15)
 
