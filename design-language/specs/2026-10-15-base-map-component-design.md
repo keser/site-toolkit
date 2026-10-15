@@ -1,7 +1,8 @@
 # Base map component: one grayscale base map for every property sheet
 
 **Date:** 2026-10-15
-**Status:** Draft. Waiting on Andrew's answers to **Decisions needed**. Nothing built yet.
+**Status:** Andrew answered the four open questions on 2026-10-15 (see **Decisions**). Waiting on his
+plant-by-plant marks in `base-map-reconcile.csv` before building.
 **Scope:** personal project, so there's latitude to be opinionated.
 **Builds on:** `2026-10-15-map-sheet-design.md` (the sheet's `content` layer holds this component),
 `2026-10-15-property-map-set-audit.md` (finding 2: four plant inventories).
@@ -61,18 +62,46 @@ species work. So neither is a clean superset of the other.
 
 ### Name and home
 
-`Lot 86 / base map`, in the library, on the Base Map page. Each property's own file gets its own
-`<Property> / base map`. Unlike `_site-legend`, it's **published**: open question 3 explains why.
+`Lot 86 / base map`, in the library on the Base Map page, **published**. Slides place maps as layered,
+full-screen visualizations in the same arrangement as a sheet: base layer, key, legend, and content.
+The base layer is either this drawing or a background image, such as satellite, a Google Earth aerial,
+or a photo. The Lot 86 legend is published too, renamed from `_site-legend / Lot 86` to
+`Lot 86 / site-legend`.
+
+Each other property's file gets its own `<Property> / base map` and `<Property> / site-legend`.
+
+### Layers are the emphasis controls
+
+The grayscale map is already built in named layers, and sheets already tune them. Measured 2026-10-15:
+
+| Layer | Default | Seen on sheets |
+|---|---|---|
+| `Aerial_Photo` | hidden | hidden everywhere (its image is the underlay listed in `sources.md`) |
+| `Contour lines` | 10% | 50% on the water flow map |
+| neighboring lots (with their buildings) | 25% | 25% |
+| `Lot 86` (boundary, buildings, paving, beds, utilities) | 100% | 100%; `electrical` and `water` sublayers hidden except on utility and water maps |
+| `Trees & Plants` | 100% | left out of the water flow map |
+| `Municipal Infrastructure` | 100% | moved above the overlay on the water map; `water` and `electrical` hidden by default |
+
+The component keeps these as **top-level layers with stable names**, so a sheet emphasizes or quiets
+a layer by overriding its opacity or visibility on the instance. Andrew sets these by eye per map, as
+he does now. The spec adds two things only:
+
+- **Standard opacity steps:** 100, 50, 25, and 10. Sheets pick from these, so like maps match.
+- **Boolean toggles** for the layers that are switched on and off whole: `Show plants`,
+  `Show contours`, `Show utilities` (the electrical and water sublayers), and `Show aerial`.
+
+Turning on `Show aerial` gives an aerial base for overlay sheets without leaving the drawing. A
+separate photo or satellite base still goes straight into the sheet's `content` layer instead of the
+component.
 
 ### Contents, bottom to top
 
-1. **Ground:** lot fill, paving (`stone-paver` ×7), garden beds, grass areas. Taken from the grayscale
-   map as is.
-2. **Underlay image:** the 2136 × 2059 image (Figma hash `12f7a3c6`, listed in
-   `site-plan/maps/sources.md`). Its opacity is kept as it is today. The water maps' variant
-   (`452daab3`) becomes an override on those sheets if it's still needed. That's open question 4.
-3. **Plants, canopy first:** every plant is a `Vegetation` instance named `plant P###`, ordered by
-   layer:
+1. `Aerial_Photo` (hidden)
+2. `Contour lines`
+3. neighboring lots
+4. `Lot 86`: ground, paving, beds, buildings, utilities
+5. `Trees & Plants`: every plant a `Vegetation` instance named `plant P###`, ordered by layer:
    1. canopy
    2. sub-canopy
    3. shrub
@@ -83,20 +112,20 @@ species work. So neither is a clean superset of the other.
 
    Tall plants are drawn first, so understory plants stay visible on top of them. The 32 px minimum
    short side carries over.
-4. **Structures:** `structure` ×7, utility poles, connections.
-5. **Lot 86 boundary:** above the plants. The species apply script currently re-draws it on top as a
-   workaround; this replaces that.
-
-Map labels such as road names and neighbor roles go on a separate `labels` layer at the top. That
-covers the earlier open item about moving labels into their own layer. Plant labels stay inside each
-`Vegetation` instance, because they move with the plant.
+6. `Lot 86 boundary`: a copy of the lot line above the plants, so canopy never hides it. This
+   replaces the boundary re-clone in the apply script.
+7. `Municipal Infrastructure`
+8. `labels`: map labels such as the street name and neighbor roles. This closes the earlier open item
+   about moving labels into their own layer.
 
 ### Vegetation changes
 
 - **Label visibility** binds to `Map display` `plant-labels`. Today every label is hidden by a
   per-instance override. Those overrides get cleared, so the variable decides.
-- **Label text** becomes the plant's short code from the CSV, not today's letter codes. That's open
-  question 2.
+- **Label text** is the plant ID (`P012`). The ID is the primary map label because it doubles as an
+  inventory number. Species and function codes stay in the CSV, and the key lists them per ID.
+  `P012` in 10 px mono is about 24 px wide, so it fits the 32 px minimum. The old letter codes
+  (A–EE) are dropped.
 - **Label color** follows the plant's fill. The contrast rule already in `species_maps_apply.py`
   (`textOn`) stays: species sheets override fills, so they also set label colors.
 - **The color variant** (`Color=Full Color`) stays for now. The color base map is revisited later.
@@ -109,6 +138,8 @@ covers the earlier open item about moving labels into their own layer. Plant lab
 | Species – Status / Layer / Function | plant fills and label colors (the apply script); `Labels on` |
 | Succession, Thematic Design | none; draw in `annotations` |
 | Garden detail | the instance is scaled up and cropped to the garden; `Labels on` |
+| Water maps | `Contour lines` at 50%; `Show plants` off or plants at 25% |
+| Sheets with markers and arrows | `Trees & Plants` at 25–50% so annotations stand out |
 
 Overrides are keyed by layer name inside the instance. That's why every plant is named by ID, and
 why renaming a plant later would drop its overrides on every sheet.
@@ -125,37 +156,67 @@ why renaming a plant later would drop its overrides on every sheet.
   component.
 - Badges (function map) go into the sheet's `annotations` layer.
 
+## Plant inventory key
+
+Plant IDs on the map need a lookup. The set gets an **inventory sheet**, a table generated from
+`mapped-plants.csv`, with these columns:
+
+- ID
+- species
+- species code
+- status
+- layer
+- function codes
+
+Species sheets keep their color keys, built from `map-key-shell` rows. The inventory sheet is the
+ID → species reference for every sheet with labels on. It slots into the set after the species sheets.
+
 ## Build order
 
-1. Settle the plant list (decisions 1 and 2), then update `mapped-plants.csv`.
+1. Andrew marks `lot-86-site-plan/site-plan/data/base-map-reconcile.csv`. Then `mapped-plants.csv`
+   gets new IDs for the base-map-only plants that are real.
 2. Build `Lot 86 / base map` from the grayscale map:
    - match and rename the plants
-   - add the missing plants
-   - delete the dropped ones
-   - reorder the layers
-   - bind the label variable
+   - add the CSV-only plants at their Zones positions
+   - delete the plants marked removed or duplicate
+   - reorder the plants canopy first
+   - add the boundary copy and the `labels` layer
+   - add the toggles
+   - bind the label variable and set label text to the IDs
 3. Check it against the old grayscale map with a screenshot overlay.
 4. Update `species_maps_apply.py`, then move the three species maps onto sheets.
-5. Move the remaining sheets, in the set order from the sheet spec.
+5. Build the inventory sheet.
+6. Move the remaining sheets, in the set order from the sheet spec.
 
-## Decisions needed
+## Decisions (2026-10-15)
 
-1. **Source of truth for positions.**
-   - **(a)** Base map positions, adding the 13 CSV-only plants at their Zones positions.
-   - **(b)** Zones and CSV positions, adding whichever base-map-only plants are real.
-   - **(c)** Plant by plant, using the overlay.
+1. **Positions come from the base map.** CSV IDs and attributes attach to base map plants by matching.
+   The 13 CSV-only plants are added at their Zones positions. Andrew marks the loose pairs and the
+   base-map-only plants in `base-map-reconcile.csv`.
+2. **Plant ID is the primary map label** (`P012`), for inventory. Species and function codes stay
+   associated in the CSV. A key (the inventory sheet) maps ID to species.
+3. **Published.** Slides build maps as layered full-screen visualizations from these pieces, so the
+   base map and the Lot 86 legend are published library components.
+4. **Layer emphasis is per sheet.** The two underlay images both sit in the hidden aerial layer. The
+   real per-map difference is layer opacity (contours, plants, neighboring lots) and visibility
+   (utilities, plants), which the component exposes as described in **Layers are the emphasis
+   controls**.
 
-   Recommendation: **(a)**. The base map is on 13 frames and is the drawing Andrew uses. The CSV
-   carries the IDs and attributes, and those attach to base map plants by matching. The loose pairs
-   and the 21 unmatched base map plants still need Andrew's eye on the overlay: which are real plants,
-   which are duplicates, and which have been removed from the site.
-2. **Plant labels.** On sheets with labels on, what should show: the species short code (BW for black
-   walnut, from the CSV label column's prefix), the plant ID (P001), or the base map's letter codes
-   (A–EE, whose key isn't recorded anywhere)?
-3. **How slides use library maps.** Do slide decks place these maps as library instances, or as
-   pasted copies?
-   - If they're instances, the base map and the Lot 86 legend have to be published. That means
-     `_site-legend` loses its underscore.
-   - If they're pasted and detached, unpublished is fine.
-4. **The water underlay (`452daab3`).** Is it a deliberate variant, for example with contours
-   or drainage, or an older copy of the same image?
+## Reconciliation sheet
+
+`lot-86-site-plan/site-plan/data/base-map-reconcile.csv` has 92 rows:
+
+| Kind | Rows | Meaning |
+|---|---|---|
+| `matched` | 40 | Same type, within 15 px. Pre-marked `keep`. |
+| `loose` | 18 | Paired, but 16–45 px apart or a different type |
+| `base-only` | 21 | No CSV plant within 45 px. The nearest CSV plant is listed. |
+| `csv-only` | 13 | No base map plant within 45 px |
+
+Values for the `decision` column:
+
+- `keep`: the pairing is right, or a base-only plant is real and gets a new ID
+- `same-as P###`: re-pair with a different CSV plant
+- `duplicate`: a second drawing of a plant that's already listed
+- `removed`: no longer on the site
+- `add`: a CSV-only plant to draw on the base map

@@ -82,20 +82,20 @@ sheet frame too. Both switches sit on the sheet:
 
 ### Fields
 
-Site fields come from the property's `_site-legend` component (see **Site values** below). Sheet fields
+Site fields come from the property's `site-legend` component (see **Site values** below). Sheet fields
 are typed on each sheet.
 
 | Field | Set on | Notes |
 |---|---|---|
 | Title | sheet | Long titles take a manual line break if needed. |
-| Scale statement + north text | `_site-legend`; regional sheets type their own | "SCALE: 1″ = 20′ / NORTH: −65.43°" |
+| Scale statement + north text | `site-legend`; regional sheets type their own | "SCALE: 1″ = 20′ / NORTH: −65.43°" |
 | Scale bar | `map-scale` variant, exposed on the legend | `Lot`, `Garden detail`, `Regional` |
 | North indicator | `North` variant: `Rotated` or `Up` | Replaces the two stacked child layers. |
-| Location | `_site-legend` | `Show location`, default off. |
-| Elevation | `_site-legend` | **Two lines** ("Min: 103 ft" / "Max: 107 ft"), matching area. `Show elevation`, off for regional maps. |
-| Area | `_site-legend` | `Show area`, off for regional maps. |
+| Location | `site-legend` | `Show location`, default off. |
+| Elevation | `site-legend` | **Two lines** ("Min: 103 ft" / "Max: 107 ft"), matching area. `Show elevation`, off for regional maps. |
+| Area | `site-legend` | `Show area`, off for regional maps. |
 | Source credit | sheet | New. `Show source`, on for regional and overlay sheets. Text comes from the sources list's Attribution column. |
-| Author | `_site-legend` | |
+| Author | `site-legend` | |
 | Date | sheet | Lowercase, auto width, never wraps. |
 
 **Overflow fix:** two-line elevation (about −170 px) plus a 48 px gap between fields instead of 64
@@ -107,10 +107,10 @@ for the 40 px right padding.
 
 ### Site values
 
-Option B (decided 2026-10-15): each property has a local **`_site-legend`** component. It's a
+Option B (decided 2026-10-15): each property has a local **`site-legend`** component. It's a
 `map-legend` instance with that site's values typed once and the inner legend exposed, so North, the
-toggles, and the scale are set on each sheet. The leading underscore keeps it out of the published
-library. Every sheet in a property's file uses its `_site-legend`, so site values live in one place
+toggles, and the scale are set on each sheet. It's published (renamed from `site-legend` on 2026-10-15), because slides build maps from these
+pieces too. Every sheet in a property's file uses its `site-legend`, so site values live in one place
 per file and stay with that property.
 
 Why not variables: a file that uses the library can't add modes to a library collection (extended
@@ -184,9 +184,10 @@ yet. The **Proposed** column is filled in as designs are made.
 | 16 | Species – status | property | light | Species – Status | |
 | 17 | Species – layer | property | light | Species – Layer | |
 | 18 | Species – function | property | light | Species – Function | |
-| 19 | Succession | property | light | Succession | |
-| 20 | Thematic design | property | light | — | Thematic Design |
-| 21 | Garden detail | property | light | [to make] | [to make] |
+| 19 | Plant inventory (ID → species table) | table | light | [to make] | — |
+| 20 | Succession | property | light | Succession | |
+| 21 | Thematic design | property | light | — | Thematic Design |
+| 22 | Garden detail | property | light | [to make] | [to make] |
 
 Thematic Design is the one existing proposal. The current dark sector duplicates (`155:2782`,
 `155:2916`, `169:4139`) fold into their light sheets via the `Sheet` mode.
@@ -197,7 +198,7 @@ Thematic Design is the one existing proposal. The current dark sector duplicates
    collections.
 2. **Legend:**
    - `North` variant
-   - `_site-legend` for Lot 86
+   - `site-legend` for Lot 86
    - two-line elevation
    - 48 px field gap
    - `Show elevation`, `Show area`, `Show source`
@@ -261,7 +262,7 @@ On the Keys page:
   - `Regional` (`Mid label` and `End label` text properties, default 50 mi / 100 mi)
   - Label frames no longer clip, so long labels stay centered on their ticks.
   - It's exposed in both legend variants.
-- **`_site-legend / Lot 86`** (`1517:9914`): wraps a `North=Rotated` legend at 1920 × 140, exposed.
+- **`Lot 86 / site-legend`** (`1517:9914`): wraps a `North=Rotated` legend at 1920 × 140, exposed.
 - **All 28 existing instances:**
   - 4 were switched to `North=Up`: the two satellite sector maps and their dark copies. They had shown the
     north-up arrow by hand.
@@ -269,7 +270,7 @@ On the Keys page:
   - Wrapped dates (fixed-width text) were set back to auto width.
 
 **Still to do in the legend:** the library defaults still hold Lot 86's values. They switch to neutral
-placeholders after every Lot 86 sheet uses `_site-legend`. Swapping an instance to the wrapper adds a
+placeholders after every Lot 86 sheet uses `site-legend`. Swapping an instance to the wrapper adds a
 nesting level, so per-sheet title and date overrides don't carry over and are re-applied during
 migration.
 
@@ -299,7 +300,7 @@ migration.
     - `content`: empty, 1920 × 1080, clips, stretches
     - `annotations`: empty, same
     - `key`: a `map-key-shell` instance at (40, 40), pinned top left
-    - `legend`: a `_site-legend / Lot 86` instance at (0, 940), pinned bottom, stretches
+    - `legend`: a `Lot 86 / site-legend` instance at (0, 940), pinned bottom, stretches
 - **Using it:** duplicate the template, rename it `NN Title`, then:
   1. Set the key's Title and drop rows into its slot.
   2. Set the legend title, date, North, scale, and toggles.
