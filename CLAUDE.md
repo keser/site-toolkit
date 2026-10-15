@@ -44,8 +44,9 @@ settled.
   --baseline --border --badge-bg --accent`, every `--chart-*` token, `.viz-root .wrap .subhead
   .badge-row .badge .panel .panel-title .panel-sub svg.chart .tooltip .data-table`, and the
   `.chart-title .chart-label .chart-value .chart-note` classes.
-- **Chart colors and chart text come from `docs/assets/chart-tokens.css`.** It mirrors the PDC Pro
-  Vision chart collections; the spec is `design-language/specs/2026-10-14-chart-tokens-design.md`.
+- **Chart colors and chart text come from `docs/assets/chart-tokens.css`.** It mirrors the chart
+  collections in the Site Toolkit Design Language Figma library (formerly PDC Pro Vision); the spec
+  is `design-language/specs/2026-10-14-chart-tokens-design.md`.
   A new chart's prefixed variables reference `--chart-*` tokens, not raw hex, and its SVG text uses
   `font: var(--chart-font-<role>)`. Chart fills and strokes never use the page variables
   (`--grid`, `--baseline`, `--accent`, `--text-*`); the check flags them. Run

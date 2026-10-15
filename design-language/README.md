@@ -6,8 +6,9 @@ One visual system for maps, diagrams, slides, and report pages.
 The system lives in Figma, not in this repo. This folder documents it and keeps the history of
 how it was built.
 
-- Maps and keys: PDC Pro Vision (design file) —
-  https://www.figma.com/design/aF9SVeTLwFN8PCEiU2OSBQ/PDC-Pro-Vision?node-id=168-3180
+- Maps and keys: Site Toolkit Design Language (design file; named PDC Pro Vision until
+  2026-10-15, which is the name older specs and plans use) —
+  https://www.figma.com/design/aF9SVeTLwFN8PCEiU2OSBQ/Site-Toolkit-Design-Language?node-id=168-3180
 - Slides: AKeser-PDCPro-26-Course-Template —
   https://www.figma.com/slides/4HO6wuq75jFhX7OuMpqPNs/AKeser-PDCPro-26-Course-Template?node-id=2463-5803
 

@@ -14,7 +14,7 @@ Lesson 07 needs three species maps of the demo site, each answering one question
 3. **Function:** what does each plant do for the system?
 
 Each meaning should keep one color everywhere it appears: the maps, the species charts, and the
-microsite's status pills. PDC Pro Vision is the source of truth, as it is for the map and chart
+microsite's status pills. Site Toolkit Design Language is the source of truth, as it is for the map and chart
 tokens.
 
 ## Where this sits
@@ -24,7 +24,7 @@ This is the first of four sub-projects Andrew sequenced on 2026-10-14:
 1. **Species palette (this spec)** — first, because Lesson 07 is due.
 2. Regional map style — key, footer, color rules, and `map-scale` variants for the aerial-based
    regional maps (watersheds, bioregion, hardiness zones). Its own spec.
-3. Re-point every slide map or drawing that uses the legend to the PDC Pro Vision library.
+3. Re-point every slide map or drawing that uses the legend to the Site Toolkit Design Language library.
 4. Base map cleanup — last; Andrew does it himself after Lesson 07.
 
 ## What Andrew decided (2026-10-14)
@@ -44,7 +44,7 @@ This is the first of four sub-projects Andrew sequenced on 2026-10-14:
 
 ## Token structure
 
-`Species` is a new collection in PDC Pro Vision.
+`Species` is a new collection in Site Toolkit Design Language.
 
 - **Modes:** `Light` and `Dark`, like the chart collections, so the microsite works in dark mode.
   The deck binds to `Light`.
@@ -125,7 +125,7 @@ show, so function is shown as letters.
 
 ## The three maps
 
-- **Page:** a new `Species` page in PDC Pro Vision, matching the topic pages Andrew set up.
+- **Page:** a new `Species` page in Site Toolkit Design Language, matching the topic pages Andrew set up.
   The species charts move there from `Site Data Visualizations`.
 - **Frames:** three 1920×1080 frames, `Species – Status`, `Species – Layer`, and
   `Species – Function`, each built like the Zones map: base map, plant symbols, `map-legend`
@@ -218,7 +218,7 @@ checked by `tools/palette_check.py` against `design-language/tokens/ramps.json`.
 - **Minimums:** Light — status pairs ΔE 13.3, adjacent layers 10.4, edge contrast 8.05:1. Dark —
   11.9, 10.4, 5.26:1.
 
-**Figma (PDC Pro Vision).**
+**Figma (Site Toolkit Design Language).**
 - `Species` collection `VariableCollectionId:1393:12`, 20 variables, Light and Dark, all aliased
   and scoped `ALL_FILLS`, `STROKE_COLOR`.
 - Styles page: `Species Documentation` (`1394:12`), right of Chart Documentation; the Styles

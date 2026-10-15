@@ -1,4 +1,4 @@
-/* Chart tokens — mirrors PDC Pro Vision "Chart Semantic", "Chart Neutral", "Chart Categorical",
+/* Chart tokens — mirrors Site Toolkit Design Language "Chart Semantic", "Chart Neutral", "Chart Categorical",
    and "Species" (values in design-language/tokens/species.json).
    Source of truth: Figma library. Values copied by hand; tools/check_chart_tokens.py guards them.
    Spec: design-language/specs/2026-10-14-chart-tokens-design.md */
