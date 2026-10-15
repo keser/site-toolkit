@@ -323,4 +323,10 @@ checked by `tools/palette_check.py` against `design-language/tokens/ramps.json`.
   (20). The old rule placed every small symbol's badges to its right, crowding the north bed.
 - **The 32 px minimum is enforced by the script** on every run, so the base map cleanup can't
   silently undo it.
+- **Base maps:** the same 32 px minimum (short side, center and rotation kept) was applied to the
+  `Vegetation` instances on both base maps, `Full Color + Detail Base Map` (`155:3976`) and the
+  grayscale `Base Map North @ -65.43˚` (`168:3180`): 37 plants each, mostly 32×30 perennials and
+  shrubs, plus a 23×22 shrub, three hedgerows (16–28 px thick), and three elongated perennials.
+  Colors are unchanged. Andrew uses the grayscale base map far more than the color one, which was
+  used once in a presentation; the color base map's palette will be revisited later.
 
