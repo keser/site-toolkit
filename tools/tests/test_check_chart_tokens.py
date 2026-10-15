@@ -67,3 +67,15 @@ def test_flags_page_variable_as_chart_paint_in_script():
 def test_allows_surface_as_halo_paint():
     js = 'add(el("circle", { cx: 1, cy: 2, r: 9, stroke: "var(--surface-1)" }));'
     assert check_html(page(js=js), []) == []
+
+
+from check_chart_tokens import check_species_tokens
+
+
+def test_species_token_drift_is_reported():
+    css = (".viz-root { --species-status-native-base: #000000; }\n"
+           "@media (prefers-color-scheme: dark) {\n"
+           "  :root:where(:not([data-theme=\"light\"])) .viz-root { --species-status-native-base: #000000; }\n}\n"
+           ":root[data-theme=\"dark\"] .viz-root { --species-status-native-base: #000000; }")
+    fails = check_species_tokens(css)
+    assert any("--species-status-native-base" in f for f in fails)

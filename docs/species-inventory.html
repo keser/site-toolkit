@@ -4,6 +4,7 @@
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <meta charset="UTF-8">
 <title>Species Inventory</title>
+<link rel="stylesheet" href="assets/chart-tokens.css">
 <style>
   .viz-root {
     color-scheme: light;
@@ -15,13 +16,13 @@
     --grid:           #e1e0d9;
     --baseline:       #c3c2b7;
     --border:         rgba(11,11,11,0.10);
-    --group-plantae:  #5b8c3a;
-    --group-insecta:  #d98c3d;
-    --group-mammalia: #8d6748;
-    --group-fungi:    #9b6b9e;
-    --group-other:    #7a7a7a;
-    --status-native:     #2a9d5c;
-    --status-introduced: #c9862f;
+    --spi-group-plantae: var(--chart-categorical-1);
+    --spi-group-insecta: var(--chart-categorical-3);
+    --spi-group-mammalia: var(--chart-categorical-4);
+    --spi-group-fungi: var(--chart-categorical-5);
+    --spi-group-other: var(--chart-neutral-label-muted);
+    --spi-status-native: var(--species-status-native-shade);
+    --spi-status-introduced: var(--chart-neutral-label-muted);
     --badge-bg:       #eef0ea;
     --site-fill:      #f3f4ee;
   }
@@ -36,13 +37,6 @@
       --grid:           #2c2c2a;
       --baseline:       #383835;
       --border:         rgba(255,255,255,0.10);
-      --group-plantae:  #7ab85a;
-      --group-insecta:  #e5a05c;
-      --group-mammalia: #ad8a6c;
-      --group-fungi:    #c090c4;
-      --group-other:    #9a9a9a;
-      --status-native:     #4fc47f;
-      --status-introduced: #dba14f;
       --badge-bg:       #23261f;
       --site-fill:      #1e211b;
     }
@@ -57,13 +51,6 @@
     --grid:           #2c2c2a;
     --baseline:       #383835;
     --border:         rgba(255,255,255,0.10);
-    --group-plantae:  #7ab85a;
-    --group-insecta:  #e5a05c;
-    --group-mammalia: #ad8a6c;
-    --group-fungi:    #c090c4;
-    --group-other:    #9a9a9a;
-    --status-native:     #4fc47f;
-    --status-introduced: #dba14f;
     --badge-bg:       #23261f;
     --site-fill:      #1e211b;
   }
@@ -129,12 +116,12 @@
   .legend .dot { width: 9px; height: 9px; border-radius: 50%; display: inline-block; }
 
   svg.chart { width: 100%; height: auto; display: block; overflow: visible; }
-  .grid-line { stroke: var(--grid); stroke-width: 1; }
-  .baseline { stroke: var(--baseline); stroke-width: 1; }
-  .axis-label { fill: var(--text-muted); font-size: 9.5px; }
+  .grid-line { stroke: var(--chart-neutral-grid); stroke-width: 1; }
+  .baseline { stroke: var(--chart-neutral-axis); stroke-width: 1; }
+  .axis-label { fill: var(--chart-neutral-label-muted); font: var(--chart-font-label); text-transform: uppercase; }
   .site-obs-dot { stroke: var(--surface-1); stroke-width: 1; cursor: pointer; }
 
-  .crosshair-line { stroke: var(--text-muted); stroke-width: 1; stroke-dasharray: 2,2; pointer-events: none; opacity: 0; }
+  .crosshair-line { stroke: var(--chart-neutral-reference); stroke-width: 1; stroke-dasharray: 2,2; pointer-events: none; opacity: 0; }
   .tooltip {
     position: absolute;
     pointer-events: none;
@@ -154,11 +141,11 @@
   .bar-row { display: flex; align-items: center; gap: 10px; margin: 7px 0; font-size: 12px; }
   .bar-row .bar-label { width: 78px; flex-shrink: 0; color: var(--text-secondary); }
   .bar-row .bar-track { flex: 1; background: var(--grid); border-radius: 4px; height: 12px; overflow: hidden; }
-  .bar-row .bar-fill { height: 100%; border-radius: 4px 0 0 4px; }
+  .bar-row .bar-fill { display: block; height: 100%; border-radius: 4px 0 0 4px; }
   .bar-row .bar-value { width: 30px; text-align: right; color: var(--text-primary); font-weight: 600; flex-shrink: 0; }
 
   .stack-bar { display: flex; height: 22px; border-radius: 6px; overflow: hidden; margin: 8px 0; }
-  .stack-seg { display: flex; align-items: center; justify-content: center; font-size: 11px; font-weight: 600; color: #fff; }
+  .stack-seg { display: flex; align-items: center; justify-content: center; font-size: 11px; font-weight: 600; color: var(--surface-1); }
 
   .group-heading {
     font-size: 13px; font-weight: 600; color: var(--text-primary);
@@ -182,7 +169,7 @@
   .card-pills { display: flex; flex-wrap: wrap; gap: 4px; }
   .pill {
     font-size: 9.5px; font-weight: 600; padding: 1px 6px; border-radius: 999px;
-    color: #fff;
+    color: var(--surface-1);
   }
   .pill.outline { background: transparent; border: 1px solid var(--border); color: var(--text-muted); font-weight: 500; }
   .obs-date { font-size: 10.5px; color: var(--text-muted); margin-top: 5px; }
@@ -310,8 +297,8 @@ const CATALOG = [{"common": "Brown-belted Bumble Bee", "sci": "Bombus griseocoll
 const CURVE = [["2024-04-07", 1], ["2024-04-08", 2], ["2024-04-08", 3], ["2024-04-08", 4], ["2025-06-19", 5], ["2025-08-01", 6], ["2026-04-18", 7], ["2026-04-18", 8], ["2026-05-11", 9], ["2026-05-11", 10], ["2026-06-26", 11], ["2026-06-26", 12], ["2026-06-26", 13], ["2026-06-26", 14], ["2026-06-26", 15], ["2026-06-26", 16], ["2026-06-26", 17], ["2026-06-26", 18], ["2026-06-26", 19], ["2026-06-26", 20], ["2026-06-26", 21], ["2026-06-26", 22], ["2026-06-26", 23], ["2026-06-26", 24], ["2026-06-26", 25], ["2026-06-26", 26], ["2026-06-26", 27], ["2026-06-26", 28], ["2026-06-26", 29], ["2026-06-26", 30], ["2026-06-26", 31], ["2026-06-26", 32], ["2026-06-26", 33], ["2026-06-26", 34], ["2026-06-26", 35], ["2026-06-26", 36], ["2026-06-26", 37], ["2026-06-26", 38], ["2026-06-26", 39], ["2026-06-26", 40], ["2026-06-26", 41], ["2026-06-26", 42], ["2026-06-26", 43], ["2026-06-26", 44], ["2026-06-26", 45], ["2026-06-26", 46], ["2026-06-26", 47], ["2026-06-26", 48], ["2026-06-26", 49], ["2026-06-26", 50], ["2026-06-26", 51], ["2026-06-26", 52], ["2026-06-26", 53], ["2026-06-26", 54], ["2026-06-26", 55], ["2026-06-26", 56], ["2026-06-26", 57], ["2026-06-26", 58], ["2026-06-26", 59], ["2026-06-26", 60], ["2026-06-26", 61], ["2026-06-26", 62], ["2026-06-26", 63], ["2026-07-08", 64], ["2026-07-17", 65], ["2026-07-17", 66], ["2026-08-01", 67], ["2026-08-02", 68], ["2026-08-07", 69], ["2026-08-07", 70], ["2026-08-07", 71], ["2026-08-07", 72], ["2026-08-07", 73], ["2026-09-06", 74]];
 
 const GROUP_ORDER = ["Plantae", "Insecta", "Mammalia", "Fungi"];
-const GROUP_COLOR = { Plantae: "--group-plantae", Insecta: "--group-insecta", Mammalia: "--group-mammalia", Fungi: "--group-fungi" };
-function groupColor(g) { return `var(${GROUP_COLOR[g] || "--group-other"})`; }
+const GROUP_COLOR = { Plantae: "--spi-group-plantae", Insecta: "--spi-group-insecta", Mammalia: "--spi-group-mammalia", Fungi: "--spi-group-fungi" };
+function groupColor(g) { return `var(${GROUP_COLOR[g] || "--spi-group-other"})`; }
 
 function svgEl(tag, attrs) {
   const el = document.createElementNS("http://www.w3.org/2000/svg", tag);
@@ -379,12 +366,12 @@ function fmtDate(iso) {
     <div class="panel-title">Native vs. Introduced</div>
     <div class="panel-sub">Establishment means for Connecticut, per iNaturalist</div>
     <div class="stack-bar">
-      <div class="stack-seg" style="width:${nativePct.toFixed(1)}%; background:var(--status-native);">${nativeCount}</div>
-      <div class="stack-seg" style="width:${(100-nativePct).toFixed(1)}%; background:var(--status-introduced);">${introCount}</div>
+      <div class="stack-seg" style="width:${nativePct.toFixed(1)}%; background:var(--spi-status-native);">${nativeCount}</div>
+      <div class="stack-seg" style="width:${(100-nativePct).toFixed(1)}%; background:var(--spi-status-introduced);">${introCount}</div>
     </div>
     <div class="legend">
-      <span class="swatch"><span class="dot" style="background:var(--status-native)"></span>Native (${nativePct.toFixed(0)}%)</span>
-      <span class="swatch"><span class="dot" style="background:var(--status-introduced)"></span>Introduced (${(100-nativePct).toFixed(0)}%)</span>
+      <span class="swatch"><span class="dot" style="background:var(--spi-status-native)"></span>Native (${nativePct.toFixed(0)}%)</span>
+      <span class="swatch"><span class="dot" style="background:var(--spi-status-introduced)"></span>Introduced (${(100-nativePct).toFixed(0)}%)</span>
     </div>
   `;
   container.appendChild(p2);
@@ -440,10 +427,10 @@ function fmtDate(iso) {
     const x = xPix(date);
     d += ` L ${x.toFixed(2)} ${yPix(prevV).toFixed(2)} L ${x.toFixed(2)} ${yPix(v).toFixed(2)}`;
   }
-  svg.appendChild(svgEl("path", { d, fill: "none", stroke: "var(--group-plantae)", "stroke-width": 2 }));
+  svg.appendChild(svgEl("path", { d, fill: "none", stroke: "var(--spi-group-plantae)", "stroke-width": 2 }));
 
   const areaD = d + ` L ${xPix(CURVE[CURVE.length-1][0]).toFixed(2)} ${yPix(0).toFixed(2)} Z`;
-  svg.appendChild(svgEl("path", { d: areaD, fill: "var(--group-plantae)", opacity: 0.08 }));
+  svg.appendChild(svgEl("path", { d: areaD, fill: "var(--spi-group-plantae)", opacity: 0.08 }));
 
   const hit = svgEl("rect", { class: "hit-layer", x: PAD.left, y: PAD.top, width: plotW, height: plotH });
   const crosshair = svgEl("line", { class: "crosshair-line", y1: PAD.top, y2: VB_H-PAD.bottom });
@@ -505,7 +492,7 @@ function fmtDate(iso) {
           <div class="common">${c.common}</div>
           <div class="sci">${c.sci}</div>
           <div class="card-pills">
-            <span class="pill" style="background:${c.native ? "var(--status-native)" : "var(--status-introduced)"}">${c.native ? "native" : "introduced"}</span>
+            <span class="pill" style="background:${c.native ? "var(--spi-status-native)" : "var(--spi-status-introduced)"}">${c.native ? "native" : "introduced"}</span>
             <span class="pill outline">${qualityLabel[c.quality] || c.quality}</span>
           </div>
           <div class="obs-date">${fmtDate(c.date)}</div>

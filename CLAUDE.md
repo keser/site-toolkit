@@ -51,6 +51,9 @@ settled.
   (`--grid`, `--baseline`, `--accent`, `--text-*`); the check flags them. Run
   `python3 tools/check_chart_tokens.py page <file> <prefixes…>` before committing a chart page, and
   `python3 tools/check_chart_tokens.py tokens` after any palette change.
+- **Species colors come from the `--species-*` tokens** in the same file. Their values live in
+  `design-language/tokens/species.json` (Ramps steps per mode); `check_chart_tokens.py tokens`
+  fails if the CSS drifts from it, and `tools/palette_check.py` validates the palette itself.
 - Anchor contracts: `sectors.html` links to `sun-solar.html#sun-path-charts` and `climate.html#wind`.
 - Demo tasks page (`project-plan.html`) is a hand-ported snapshot of the demo site's task data.
 

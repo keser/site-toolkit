@@ -5,11 +5,13 @@ Usage:
   python3 tools/check_chart_tokens.py tokens
   python3 tools/check_chart_tokens.py page docs/water.html precip runoff wbal elev flow storm shed wuse
 """
-import re, sys
+import json, re, sys
 from pathlib import Path
 
 ROOT = Path(__file__).resolve().parent.parent
 CSS = ROOT / "docs/assets/chart-tokens.css"
+SPECIES = ROOT / "design-language/tokens/species.json"
+RAMPS_JSON = ROOT / "design-language/tokens/ramps.json"
 
 # (light, dark), copied from design-language/specs/2026-10-14-chart-tokens-design.md via the Ramps table
 TOKENS = {
@@ -72,6 +74,23 @@ def check_tokens():
         if media.get(prop, "").lower() != d: fails.append(f"{prop} dark {media.get(prop)} ≠ {d}")
     for cls in ("chart-title", "chart-label", "chart-value", "chart-note"):
         if f".{cls}" not in css: fails.append(f"class .{cls} missing")
+    fails += check_species_tokens(css)
+    return fails
+
+def species_css_name(token):
+    return "--species-" + token.replace("/", "-")
+
+def check_species_tokens(css):
+    """--species-* values in all three blocks must equal species.json resolved through ramps.json."""
+    ramps, tokens = json.loads(RAMPS_JSON.read_text()), json.loads(SPECIES.read_text())["tokens"]
+    light, media, forced = (decls(b) for b in blocks(css))
+    fails = []
+    for token, steps in tokens.items():
+        prop = species_css_name(token)
+        want_l, want_d = ramps[steps["light"]], ramps[steps["dark"]]
+        if light.get(prop, "").lower() != want_l: fails.append(f"{prop} light {light.get(prop)} ≠ {want_l}")
+        if media.get(prop, "").lower() != want_d: fails.append(f"{prop} dark {media.get(prop)} ≠ {want_d}")
+        if forced.get(prop, "").lower() != want_d: fails.append(f"{prop} forced dark {forced.get(prop)} ≠ {want_d}")
     return fails
 
 def check_page(path, prefixes):

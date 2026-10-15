@@ -1,4 +1,5 @@
-/* Chart tokens — mirrors PDC Pro Vision "Chart Semantic", "Chart Neutral", "Chart Categorical".
+/* Chart tokens — mirrors PDC Pro Vision "Chart Semantic", "Chart Neutral", "Chart Categorical",
+   and "Species" (values in design-language/tokens/species.json).
    Source of truth: Figma library. Values copied by hand; tools/check_chart_tokens.py guards them.
    Spec: design-language/specs/2026-10-14-chart-tokens-design.md */
 @import url("https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;500;700&display=swap");
@@ -10,6 +11,7 @@
   --chart-emphasis: #d75509; --chart-emphasis-fill: #fdd9c4; --chart-alert: #ad1e26;
   --chart-neutral-grid: #e0dfdd; --chart-neutral-axis: #b1afac; --chart-neutral-reference: #605f5b; --chart-neutral-label: #2e2e2c; --chart-neutral-label-muted: #605f5b; --chart-neutral-surface: #f0f0ee;
   --chart-categorical-1: #476de7; --chart-categorical-2: #516920; --chart-categorical-3: #e748c1; --chart-categorical-4: #907600; --chart-categorical-5: #008c81; --chart-categorical-6: #a877e5; --chart-categorical-7: #ef5c58;
+  --species-status-native-tint: #849f55; --species-status-native-base: #516920; --species-status-native-shade: #3b4e13; --species-status-naturalized-tint: #f2dfa1; --species-status-naturalized-base: #907600; --species-status-naturalized-shade: #554500; --species-status-cultivated-tint: #b4caff; --species-status-cultivated-base: #476de7; --species-status-cultivated-shade: #233c94; --species-status-invasive-tint: #ffb5ae; --species-status-invasive-base: #d2383b; --species-status-invasive-shade: #841019; --species-layer-canopy: #3b4e13; --species-layer-sub-canopy: #516920; --species-layer-shrub: #698436; --species-layer-herbaceous: #a1bb78; --species-layer-groundcover: #d6e7bc; --species-layer-vine: #8e5aca; --species-layer-root: #d75509; --species-layer-stroke: #263307;
   --chart-font-family: "JetBrains Mono", ui-monospace, SFMono-Regular, Menlo, monospace;
   --chart-font-title: 700 13px/1.2 var(--chart-font-family);
   --chart-font-label: 400 11px/1.2 var(--chart-font-family);
@@ -24,6 +26,7 @@
   --chart-emphasis: #f66d1e; --chart-emphasis-fill: #4e1f03; --chart-alert: #ff8780;
   --chart-neutral-grid: #474644; --chart-neutral-axis: #605f5b; --chart-neutral-reference: #b1afac; --chart-neutral-label: #e0dfdd; --chart-neutral-label-muted: #959490; --chart-neutral-surface: #2e2e2c;
   --chart-categorical-1: #638bff; --chart-categorical-2: #849f55; --chart-categorical-3: #ca18a6; --chart-categorical-4: #b09100; --chart-categorical-5: #2ea89c; --chart-categorical-6: #8e5aca; --chart-categorical-7: #d2383b;
+  --species-status-native-tint: #698436; --species-status-native-base: #698436; --species-status-native-shade: #849f55; --species-status-naturalized-tint: #e2c975; --species-status-naturalized-base: #b09100; --species-status-naturalized-shade: #b09100; --species-status-cultivated-tint: #8cacff; --species-status-cultivated-base: #638bff; --species-status-cultivated-shade: #638bff; --species-status-invasive-tint: #ff8780; --species-status-invasive-base: #ef5c58; --species-status-invasive-shade: #ef5c58; --species-layer-canopy: #516920; --species-layer-sub-canopy: #698436; --species-layer-shrub: #849f55; --species-layer-herbaceous: #bed49c; --species-layer-groundcover: #eaf5da; --species-layer-vine: #a877e5; --species-layer-root: #f66d1e; --species-layer-stroke: #bed49c;
   }
 }
 :root[data-theme="dark"] .viz-root {
@@ -33,6 +36,7 @@
   --chart-emphasis: #f66d1e; --chart-emphasis-fill: #4e1f03; --chart-alert: #ff8780;
   --chart-neutral-grid: #474644; --chart-neutral-axis: #605f5b; --chart-neutral-reference: #b1afac; --chart-neutral-label: #e0dfdd; --chart-neutral-label-muted: #959490; --chart-neutral-surface: #2e2e2c;
   --chart-categorical-1: #638bff; --chart-categorical-2: #849f55; --chart-categorical-3: #ca18a6; --chart-categorical-4: #b09100; --chart-categorical-5: #2ea89c; --chart-categorical-6: #8e5aca; --chart-categorical-7: #d2383b;
+  --species-status-native-tint: #698436; --species-status-native-base: #698436; --species-status-native-shade: #849f55; --species-status-naturalized-tint: #e2c975; --species-status-naturalized-base: #b09100; --species-status-naturalized-shade: #b09100; --species-status-cultivated-tint: #8cacff; --species-status-cultivated-base: #638bff; --species-status-cultivated-shade: #638bff; --species-status-invasive-tint: #ff8780; --species-status-invasive-base: #ef5c58; --species-status-invasive-shade: #ef5c58; --species-layer-canopy: #516920; --species-layer-sub-canopy: #698436; --species-layer-shrub: #849f55; --species-layer-herbaceous: #bed49c; --species-layer-groundcover: #eaf5da; --species-layer-vine: #a877e5; --species-layer-root: #f66d1e; --species-layer-stroke: #bed49c;
 }
 
 .viz-root svg text { font-family: var(--chart-font-family); }
