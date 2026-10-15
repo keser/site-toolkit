@@ -207,6 +207,66 @@ Thematic Design is the one existing proposal. The current dark sector duplicates
 
 Each step is checked by screenshot and by the legend overflow check before the next.
 
+## Built
+
+### Step 1: variables (2026-10-15)
+
+Three new collections in Site Toolkit Design Language. Nothing is bound to them yet; step 2 does that.
+
+**`Sheet`** (`VariableCollectionId:1516:34`), modes `Light` and `Dark`. Every value aliases a `Ramps`
+step.
+
+| Variable | Light | Dark | Scopes | Use |
+|---|---|---|---|---|
+| `canvas` | neutral/White | neutral/Black | frame fill | sheet background |
+| `panel/fill` | neutral/White | neutral/Black | frame, shape fill | legend, key, and caption panels |
+| `panel/border` | neutral/Black | neutral/White | stroke | panel outlines |
+| `text/primary` | neutral/Black | neutral/White | text fill | titles, headings, values |
+| `text/secondary` | charcoal/800 | charcoal/200 | text fill | key row body text |
+| `mark/primary` | neutral/Black | neutral/White | fill, stroke | scale bar dark segments, north indicator |
+| `mark/inverse` | neutral/White | neutral/Black | fill, stroke | scale bar light segments |
+
+The dark panel is pure black, matching the existing `caption` Black style. It can switch to
+charcoal/800 if a softer panel reads better over imagery. The decision gets made at the first dark
+sheet.
+
+**`Map display`** (`VariableCollectionId:1516:42`), modes `Labels on` and `Labels off`. It has one
+boolean, `plant-labels`, which binds to the `Vegetation` label visibility in the base map step.
+
+**`Site`** (`VariableCollectionId:1516:44`), mode `Lot 86`. Each string variable holds one legend text
+node's full content. That's because Figma binds a variable to a whole text node, not part of one.
+
+| Variable | Lot 86 |
+|---|---|
+| `legend/scale-north` | SCALE: 1” = 20’ / NORTH: -65.43° (two lines) |
+| `legend/location` | coordinates (shown only with `Show location`) |
+| `legend/elevation` | Min: 103 ft / Max: 107 ft (two lines) |
+| `legend/area` | 0.43 ac / 18,730 ft² (two lines) |
+| `legend/author` | Andrew Keser |
+
+This replaces the per-fact list in **Legend → Site variables** above (`elevation-min`, `area-ac`, and
+so on). The legend needs whole-node strings.
+
+### Site values in other properties' files
+
+A file that uses the library can't add modes to a library collection. Figma's extended collections
+can, but they appear to be an Enterprise feature. So the `Site` collection can't give each property's
+own file its values. There are two options:
+
+- **A. One mode per property in the library's `Site` collection.** This works on any plan. The cost:
+  every property's location and details sit in the shared library, visible to every file that uses it.
+- **B. A local `site-legend` component in each property file.** It's a library legend instance with
+  that site's values typed once. Every sheet in the file uses `site-legend`, so the values still live
+  in one place per file and stay with that property.
+  - Under B, the library legend's fields are better as component text properties than as `Site`
+    variables.
+  - `Site` then becomes unnecessary, even for Lot 86, which would use its own `site-legend` the same way.
+
+Recommendation: **B**. It keeps each property's data in its own file, which matches how the repos
+split public and private. It also works on any Figma plan. If Andrew's plan includes extended
+collections, `Site` with a per-file extension is cleaner still. Pending Andrew's answer, `Site` stays
+as built but unbound.
+
 ## Decisions (2026-10-15)
 
 1. **Brainstorm maps are course-specific.** They stay in Course Specific sections, not the set.
