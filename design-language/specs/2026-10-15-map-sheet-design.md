@@ -1,7 +1,7 @@
 # Map sheet: standard canvas for the property map set
 
 **Date:** 2026-10-15
-**Status:** Draft for Andrew's review. Nothing built yet.
+**Status:** Andrew answered the open questions on 2026-10-15 (see **Decisions**). Nothing built yet.
 **Scope:** personal project, so there's latitude to be opinionated.
 **Builds on:** `2026-10-15-property-map-set-audit.md` (inventory, findings, Andrew's answers).
 
@@ -144,35 +144,50 @@ another property. Instead:
 
 ## The set
 
-The checklist of sheets in a property map set. Order follows the analysis, from regional to lot
-scale. Square brackets mark sheets that don't exist yet.
+The set is what a property owner receives: **polished sheets only**.
 
-| # | Sheet | Kind | Mode |
-|---|---|---|---|
-| 01 | [Bioregion] | regional | dark |
-| 02 | [Hardiness zone] | regional | dark |
-| 03 | Macro watershed | regional | dark |
-| 04 | State watershed | regional | dark |
-| 05 | Sector compass – community | overlay | dark |
-| 06 | Sector compass – neighborhood | overlay | dark |
-| 07 | Base map | property | light |
-| 08 | Sector compass – base map | property | light |
-| 09 | Sun paths | overlay | dark |
-| 10 | Site water flow | property | light |
-| 11 | Catchment area | property | light |
-| 12 | Contour & water flow | property | light |
-| 13 | Current zones | property | light |
-| 14 | Microclimates | property | light |
-| 15 | Zone circulation | property | light |
-| 16 | Soil sample locations | property | light |
-| 17 | Species – status | property | light |
-| 18 | Species – layer | property | light |
-| 19 | Species – function | property | light |
-| 20 | Succession | property | light |
-| 21 | Thematic design | property | light |
-| 22 | [Garden detail] | property | light |
+- **Course work stays separate.** Brainstorm and practice maps are made to meet the course rubric and
+  live in the Figma file's **Course Specific** sections. They use the same components but aren't part
+  of the set and don't follow this checklist:
+  - Water page: Contour Practice, Midterm Water Brainstorm
+  - Zones page: Zones Brainstorm
+  - Not yet in a section: Soil Brainstorm, the Resilience Brainstorm page
+- **Current and proposed.** Each lot sheet type can have a **current** version (the site as it is) and
+  a **proposed** version (the design). Rough iterations in between aren't part of the set.
+  - Numbering: `NNa` is current, `NNb` is proposed. For example, `13a Zones – current` and
+    `13b Zones – proposed`.
+  - The legend title carries the state.
+  - Regional and overlay sheets describe what exists, so they have only one version.
 
-The four brainstorm maps (water, soil, zones, resilience) are open question 1.
+Order follows the analysis, from regional to lot scale. Square brackets mark sheets that don't exist
+yet. The **Proposed** column is filled in as designs are made.
+
+| # | Sheet | Kind | Mode | Current | Proposed |
+|---|---|---|---|---|---|
+| 01 | Bioregion | regional | dark | [to make] | — |
+| 02 | Hardiness zone | regional | dark | [to make] | — |
+| 03 | Macro watershed | regional | dark | Macrowatershed | — |
+| 04 | State watershed | regional | dark | State Watershed | — |
+| 05 | Sector compass – community | overlay | dark | `129:1020` | — |
+| 06 | Sector compass – neighborhood | overlay | dark | `129:1019` | — |
+| 07 | Base map | property | light | Base Map North | — |
+| 08 | Sector compass – base map | property | light | `169:3793` | |
+| 09 | Sun paths | overlay | dark | Frame 38 | — |
+| 10 | Site water flow | property | light | Site Water Flow Map | |
+| 11 | Catchment area | property | light | Design Site Catchment Area Map | |
+| 12 | Zones | property | light | Current Zone Map | |
+| 13 | Microclimates | property | light | Microclimates | |
+| 14 | Zone circulation | property | light | Zone Circulation | |
+| 15 | Soil sample locations | property | light | Soil Sample Site | — |
+| 16 | Species – status | property | light | Species – Status | |
+| 17 | Species – layer | property | light | Species – Layer | |
+| 18 | Species – function | property | light | Species – Function | |
+| 19 | Succession | property | light | Succession | |
+| 20 | Thematic design | property | light | — | Thematic Design |
+| 21 | Garden detail | property | light | [to make] | [to make] |
+
+Thematic Design is the one existing proposal. The current dark sector duplicates (`155:2782`,
+`155:2916`, `169:4139`) fold into their light sheets via the `Sheet` mode.
 
 ## Build order
 
@@ -186,20 +201,23 @@ The four brainstorm maps (water, soil, zones, resilience) are open question 1.
    - `Show elevation`, `Show area`, `Show source`
    - `map-scale` set
 3. **Key shell.**
-4. **Sheet template:** a component or a duplicate-me frame (open question 3) with the four layers.
+4. **Sheet template:** a frame to duplicate, with the four layers. The components inside it do the
+   sharing.
 5. Then the base map component spec, then migration in the order the audit set.
 
 Each step is checked by screenshot and by the legend overflow check before the next.
 
-## Open questions for Andrew
+## Decisions (2026-10-15)
 
-1. **Brainstorm maps:** are the water, soil, zones, and resilience brainstorms part of the owner's
-   set, or class-only?
-2. **Light and dark:** do you agree with a variable mode instead of `[Dark]` duplicate frames?
-3. **Sheet template:** a component, so all sheets update together, or a frame you duplicate? A
-   component locks the four layers, but `content` and `annotations` then have to be slots, which
-   Figma supports only partly. I'd use a frame you duplicate, with the components inside it doing
-   the sharing.
-4. **Source files:** keep the git-ignored repo folder as the long-term home? If so, the originals
-   need a backup outside git. The other choice is to track them in the private repo, which would
-   change the site repo's "raw media isn't tracked" rule for this one folder.
+1. **Brainstorm maps are course-specific.** They stay in Course Specific sections, not the set.
+   Customers get polished current and proposed sheets.
+2. **Light and dark use a `Sheet` variable mode**, not `[Dark]` duplicate frames.
+3. **The sheet template is a frame to duplicate**, not a component. The legend, key, base map, and
+   variables already carry the shared parts. A sheet component would need its `content` and
+   `annotations` as slots, and Figma supports those only partly.
+4. **Source images** stay in the git-ignored `site-plan/maps/sources/` folder in each site repo, with
+   iCloud as the backup. They aren't tracked in git:
+   - A private repo has no per-GB charge, but every image version stays in history permanently.
+   - GitHub blocks files over 100 MB and recommends keeping repos small.
+   - Git LFS avoids the history growth, but it has a storage and bandwidth quota that's billed beyond
+     the free tier.
