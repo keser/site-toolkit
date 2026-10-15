@@ -79,3 +79,12 @@ def test_species_token_drift_is_reported():
            ":root[data-theme=\"dark\"] .viz-root { --species-status-native-base: #000000; }")
     fails = check_species_tokens(css)
     assert any("--species-status-native-base" in f for f in fails)
+
+
+def test_species_unknown_ramp_step_is_reported_not_raised(monkeypatch, tmp_path):
+    import check_chart_tokens as cct
+    bad = tmp_path / "species.json"
+    bad.write_text('{"tokens": {"status/native/base": {"light": "sage/750", "dark": "sage/500"}}}')
+    monkeypatch.setattr(cct, "SPECIES", bad)
+    fails = check_species_tokens("")
+    assert any("sage/750" in f for f in fails)

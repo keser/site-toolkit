@@ -87,6 +87,8 @@ def check_species_tokens(css):
     fails = []
     for token, steps in tokens.items():
         prop = species_css_name(token)
+        unknown = [steps.get(m) for m in ("light", "dark") if steps.get(m) not in ramps]
+        if unknown: fails.append(f"{prop}: unknown Ramps step {', '.join(map(str, unknown))}"); continue
         want_l, want_d = ramps[steps["light"]], ramps[steps["dark"]]
         if light.get(prop, "").lower() != want_l: fails.append(f"{prop} light {light.get(prop)} ≠ {want_l}")
         if media.get(prop, "").lower() != want_d: fails.append(f"{prop} dark {media.get(prop)} ≠ {want_d}")

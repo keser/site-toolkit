@@ -51,3 +51,14 @@ def test_low_contrast_edge_is_reported():
 def test_unknown_ramp_step_is_reported():
     p = palette({"x": {"light": "a/550", "dark": "a/500"}})
     assert any("a/550" in f for f in check(RAMPS, p))
+
+
+def test_check_naming_an_unknown_token_is_reported():
+    p = palette({"x": {"light": "a/500", "dark": "a/500"}}, distinct=[["x", "missing"]], edges=["gone"])
+    fails = check(RAMPS, p)
+    assert any("missing" in f for f in fails) and any("gone" in f for f in fails)
+
+
+def test_token_without_a_mode_is_reported():
+    p = palette({"x": {"light": "a/500"}})
+    assert any("x" in f and "dark" in f for f in check(RAMPS, p))

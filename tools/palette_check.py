@@ -51,19 +51,23 @@ def check(ramps, palette):
     for mode in ("light", "dark"):
         hexes = {}
         for name, steps in palette["tokens"].items():
-            step = steps[mode]
-            if step not in ramps: fails.append(f"{mode} {name}: unknown Ramps step {step}")
+            step = steps.get(mode)
+            if step is None: fails.append(f"{mode} {name}: no {mode} value")
+            elif step not in ramps: fails.append(f"{mode} {name}: unknown Ramps step {step}")
             else: hexes[name] = ramps[step]
+        named = {n for g in c["distinct"] + c["adjacent"] for n in g} | set(c["edges"])
+        if mode == "light":
+            fails += [f"checks name unknown token {n}" for n in sorted(named - set(palette["tokens"]))]
         pairs = [p for g in c["distinct"] for p in itertools.combinations(g, 2)]
         pairs += [p for g in c["adjacent"] for p in zip(g, g[1:])]
         for a, b in pairs:
-            if a not in hexes or b not in hexes: continue
+            if a not in hexes or b not in hexes: continue  # already reported above
             for kind in KINDS:
                 d = delta_e(hexes[a], hexes[b], kind)
                 if d < c["floor_de"]: fails.append(f"{mode} {a} vs {b}: ΔE {d:.1f} under {kind}")
         for e in c["edges"]:
             if e not in hexes: continue
-            for s in c["surfaces"][mode]:
+            for s in c["surfaces"].get(mode, []):
                 r = contrast(hexes[e], s)
                 if r < c["contrast_min"]: fails.append(f"{mode} {e} on {s}: contrast {r:.2f}")
     return fails
