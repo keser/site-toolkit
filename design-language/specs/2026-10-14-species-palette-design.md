@@ -27,6 +27,9 @@ This is the first of four sub-projects Andrew sequenced on 2026-10-14:
 3. Re-point every slide map or drawing that uses the legend to the Site Toolkit Design Language library.
 4. Base map cleanup — last; Andrew does it himself after Lesson 07.
 
+**Superseded 2026-10-15:** the property map set reorders this work: sheet template, then base map
+component, then species maps. See `2026-10-15-property-map-set-audit.md`.
+
 ## What Andrew decided (2026-10-14)
 
 - **Three maps, one per question.** Taxon group (Plantae, Insecta, …) is dropped from the maps:
