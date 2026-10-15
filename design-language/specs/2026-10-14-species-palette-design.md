@@ -1,7 +1,7 @@
 # Species palette: status, layer and function maps
 
 **Date:** 2026-10-14
-**Status:** Built 2026-10-14. The layer map is done; the status and function maps wait for Andrew's plant data (see **Shipped**). Plan: `design-language/plans/2026-10-14-species-palette.md`.
+**Status:** Built 2026-10-14; all three maps filled 2026-10-15 (see **Shipped**). Plan: `design-language/plans/2026-10-14-species-palette.md`.
 **Scope:** personal project, so there's latitude to be opinionated.
 **Deadline:** Lesson 07.
 
@@ -261,8 +261,23 @@ checked by `tools/palette_check.py` against `design-language/tokens/ramps.json`.
   - The taxon bars never rendered (`.bar-fill` was an inline span); fixed with `display: block`.
   - Its gridlines, baseline, crosshair, and axis labels moved to chart tokens and the label role.
 
+### 2026-10-15: plant data
+
+- **Source:** the Lesson 07 plant-layers sheet in `pdc-pro-2026` (status in CT, layer, functions,
+  yield, wildlife value), not iNaturalist. iNaturalist only says native or introduced and has no
+  layer or function; the sheet's status vocabulary is the same four values as the map.
+- **Matching:** symbol codes were decoded from the base map's plant legend and Andrew's
+  corrections. Generic codes (conifer → Norway spruce unless noted) follow his rules. Plants the
+  sheet lacks were set by hand. Layer is the species' mature layer, not the symbol's size.
+- **Functions:** keyword rules over the sheet's Functions, Yield / uses, and Wildlife columns map
+  to E, W, P, and B. No on-site plant matches N, D, or M.
+- **Result:** status 55 applied, 16 blank (generic perennials and unknown shrubs); layer 71;
+  function 41 plants, 64 badges. The removed hedge (P016) is hidden on the three species frames
+  only. Fungi (7 plants in the sheet) are left off the layer map by Andrew's choice.
+- **Badge placement:** symbols 60 px or wider get the badge row centered under their label;
+  smaller ones get it alongside.
+- The CSV now has a `notes` column for management history.
+
 **Still open.**
-- Andrew fills `species`, `status`, and `functions` in the CSV; then re-run the apply script and
-  screenshot the status and function maps.
 - Map key swatches are opaque, but the map's plant fills are 50%, so a symbol reads lighter on the
   map than in the key.
