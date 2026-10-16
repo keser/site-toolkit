@@ -319,8 +319,8 @@ map spec.
 
 | Sheet | Node | Content | Mode |
 |---|---|---|---|
-| `01 Bioregion` | `1558:7737` | placeholder until the source image is in `site-plan/maps/sources/` | dark |
-| `02 Hardiness zone` | `1558:8059` | placeholder, same | dark |
+| `01 Bioregion` | `1558:7737` | `bioregion.png`, filled to 1920 × 940 | dark |
+| `02 Hardiness zone` | `1558:8059` | the regional crop (NY to Cape Cod), filled to 1920 × 940 | dark |
 | `03 Macro watershed` | `1558:8264` | image; marker, caption, and the hidden watershed graphic in `annotations` | dark |
 | `04 State watershed` | `1558:8516` | same | dark |
 | `05 Sector compass – community` | `1558:8769` | satellite image from the `[Dark]` frame; sector diagram in `annotations` | dark |
@@ -349,9 +349,24 @@ In Light mode, the panel, border, and title resolve to the same white and black 
 descriptions get slightly darker (`charcoal/800`). Frames outside the Map Set page don't set a
 `Sheet` mode, so they show Light.
 
-**Still hand-built:** the watershed keys, the sun path key, the microclimate and circulation keys,
-and the resilience key are frames named "Sector Compass Key", copied from one another. They read in
-Light only.
+**Keys are all `map-key` instances now** (2026-10-16). The hand-built "Sector Compass Key" frames are
+gone from the Map Set page:
+
+- **New variants (Theme = Default):** `Macro Watershed`, `State Watershed`, `Sun Paths`,
+  `Hardiness Zone`, `Bioregion`. The watershed and sun path rows, text, and swatch paints were copied
+  from the hand-built keys.
+  - `Hardiness Zone` lists zones 5a to 7b, the zones on the regional crop. Swatch colors are sampled
+    from the map image, and ranges come from the 2023 USDA legend image.
+  - `Bioregion` has one row, the red boundary. The bioregion's name waits on the source.
+- **Existing variants used:** `Microclimates`, `Zones – Current` (zone circulation), and
+  `Resilience Brainstorm`.
+  - The `Microclimates` swatches were pale stand-ins that didn't match the map. They now use the map's
+    colors.
+  - Zone circulation keeps its own zone 05 wording ("least maintained or visited…") as an instance
+    override.
+  - Microclimates and Resilience are narrowed to 999 on their sheets, the old keys' width.
+- **Project-site markers** on 01 and 02 are placed by estimate from Portland's latitude and longitude.
+  Andrew checks them.
 
 ## Decisions (2026-10-15)
 
