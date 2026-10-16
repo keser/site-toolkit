@@ -189,10 +189,12 @@ Plant IDs on the map need a lookup. The set gets an **inventory sheet**, a table
 
 - ID
 - species
-- species code
 - status
 - layer
 - function codes
+
+There's no species-code column. The CSV's only codes are the old letter labels (`BW`, `DT`), which mix
+species and symbol types.
 
 Species sheets keep their color keys, built from `map-key-shell` rows. The inventory sheet is the
 ID → species reference for every sheet with labels on. It slots into the set after the species sheets.
@@ -276,3 +278,18 @@ function codes). No problems, and no plant under 32 px.
 
 Still the same as on the old maps: the key covers the top-left corner, including part of P001 and
 P001's function badges. The old Species page frames stay until Andrew retires them.
+
+### Plant inventory sheet (2026-10-16)
+
+`19 Plant inventory` (`1548:2324`, Map Set page) is built by `plant_inventory_apply.py` in the Lot 86
+repo, which rebuilds the table in place from the CSV:
+
+- **Content:** one panel with the key's border and fill, holding three column groups of 25 rows. Removed
+  plants aren't listed. A line under the title spells out the function codes.
+- **Type:** the Mono and Mono Caps 16 px styles, with text bound to `Sheet` `text/primary` and
+  `text/secondary`, so the table follows Light and Dark.
+- **No key layer:** the table is the key, so the sheet drops the empty key shell.
+- **Legend:** title "plant inventory", body "75 plants / not to scale". The scale bar and north arrow are
+  hidden. The date is the month of the last rebuild.
+- **Fit:** the panel ends at y = 879, above the legend at 940. Three long species names wrap to two
+  lines. Past about 85 plants, the table needs a fourth group or a second sheet.
