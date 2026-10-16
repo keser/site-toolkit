@@ -1,8 +1,8 @@
 # Base map component: one grayscale base map for every property sheet
 
 **Date:** 2026-10-15
-**Status:** Andrew answered the four open questions on 2026-10-15 (see **Decisions**). Waiting on his
-plant-by-plant marks in `base-map-reconcile.csv` before building.
+**Status:** Andrew answered the four open questions on 2026-10-15 (see **Decisions**). The plant list is
+settled (see **Plant list**). Two perennials, P053 and P054, still need a species. Ready to build.
 **Scope:** personal project, so there's latitude to be opinionated.
 **Builds on:** `2026-10-15-map-sheet-design.md` (the sheet's `content` layer holds this component),
 `2026-10-15-property-map-set-audit.md` (finding 2: four plant inventories).
@@ -51,12 +51,33 @@ Plant centers were compared in frame coordinates. Pairs had to be the same type 
   - **12 perennials:** `2693`, `2696`, `2697`, `2698`, `2699`, `2711`, `2713`, `2733`, `2735`, `2736`,
     `2739`, `2740`.
 
-A visual comparison sits on the Map Set page: frame **`TEMP plant reconciliation`** (`1522:269`). Base
-map plants are gray, labeled with their node number. CSV plants are dashed magenta outlines, labeled
-with their ID. It gets deleted once the plant list is settled.
-
 The two drawings were edited separately: the base map for most maps, the Zones drawing for the
 species work. So neither is a clean superset of the other.
+
+### Plant list (decided 2026-10-15)
+
+Marking 92 rows against a side-by-side overlay was slower than naming species on one drawing. Andrew
+chose the CSV plants instead, at their Zones drawing positions:
+
+- **The CSV is the plant list.** Most of the 12 base-map-only perennials were approximate placeholders,
+  so they're dropped.
+- **Trees are the accurate part,** and most trees agree in both drawings. Of the six base-map-only
+  trees:
+  - The big walnut (`2701`) is dropped. P001, at 200 px, is the right size and position. It stands in
+    the neighbor's yard.
+  - Four are real and join the CSV at their base map positions and sizes:
+    - P072, striped maple (`2704`), shading out the vegetable garden
+    - P073 and P074, apple trees (`2691`, `2690`)
+    - P075, peach tree (`2689`)
+  - `2681` (west edge, 120 px) is unconfirmed.
+- **Shrubs:**
+  - `2731` was a rough drawing of the blueberries, which are P010 and P014.
+  - `2730` and `2732` were blackberries, and have been removed.
+- **Species named for the 15 blanks**, including three grapes (P058, P059, and the wild grape P067, under
+  the dawn redwood), which move to the vine layer. P055 and P056 stay "unknown flowering perennial."
+  P053 and P054 are still blank.
+
+The marking sheet (`base-map-reconcile.csv`) is retired. The overlay frame (`1522:269`, Map Set page) stays until the last three plants are settled.
 
 ## Proposed component
 
@@ -173,13 +194,11 @@ ID → species reference for every sheet with labels on. It slots into the set a
 
 ## Build order
 
-1. Andrew marks `lot-86-site-plan/site-plan/data/base-map-reconcile.csv`. Then `mapped-plants.csv`
-   gets new IDs for the base-map-only plants that are real.
+1. Settle the plant list in `mapped-plants.csv` (done 2026-10-15, apart from P053, P054, and `2681`).
 2. Build `Lot 86 / base map` from the grayscale map:
-   - match and rename the plants
-   - add the CSV-only plants at their Zones positions
-   - delete the plants marked removed or duplicate
-   - reorder the plants canopy first
+   - replace its plants with the CSV plants, as `Vegetation` instances at their Zones positions
+   - keep P072–P075 at their base map positions and sizes
+   - order the plants canopy first
    - add the boundary copy and the `labels` layer
    - add the toggles
    - bind the label variable and set label text to the IDs
@@ -190,9 +209,9 @@ ID → species reference for every sheet with labels on. It slots into the set a
 
 ## Decisions (2026-10-15)
 
-1. **Positions come from the base map.** CSV IDs and attributes attach to base map plants by matching.
-   The 13 CSV-only plants are added at their Zones positions. Andrew marks the loose pairs and the
-   base-map-only plants in `base-map-reconcile.csv`.
+1. **The plant list and positions come from the CSV** (the Zones drawing), plus four base map trees.
+   This reverses the first answer, positions from the base map, which needed a plant-by-plant
+   reconciliation. See **Plant list**.
 2. **Plant ID is the primary map label** (`P012`), for inventory. Species and function codes stay
    associated in the CSV. A key (the inventory sheet) maps ID to species.
 3. **Published.** Slides build maps as layered full-screen visualizations from these pieces, so the
@@ -201,22 +220,3 @@ ID → species reference for every sheet with labels on. It slots into the set a
    real per-map difference is layer opacity (contours, plants, neighboring lots) and visibility
    (utilities, plants), which the component exposes as described in **Layers are the emphasis
    controls**.
-
-## Reconciliation sheet
-
-`lot-86-site-plan/site-plan/data/base-map-reconcile.csv` has 92 rows:
-
-| Kind | Rows | Meaning |
-|---|---|---|
-| `matched` | 40 | Same type, within 15 px. Pre-marked `keep`. |
-| `loose` | 18 | Paired, but 16–45 px apart or a different type |
-| `base-only` | 21 | No CSV plant within 45 px. The nearest CSV plant is listed. |
-| `csv-only` | 13 | No base map plant within 45 px |
-
-Values for the `decision` column:
-
-- `keep`: the pairing is right, or a base-only plant is real and gets a new ID
-- `same-as P###`: re-pair with a different CSV plant
-- `duplicate`: a second drawing of a plant that's already listed
-- `removed`: no longer on the site
-- `add`: a CSV-only plant to draw on the base map
