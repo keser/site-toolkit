@@ -188,7 +188,7 @@ yet. The **Proposed** column is filled in as designs are made.
 | 19 | Plant inventory (ID → species table) | table | light | [to make] | — |
 | 20 | Succession | property | light | Succession | |
 | 21 | Thematic design | property | light | — | Thematic Design |
-| 22 | Garden detail | property | light | [to make] | [to make] |
+| 22 | Garden detail (veg garden & chicken run) | property | light | `22 Garden detail` | [to make] |
 | 23 | Resilience brainstorm | property | light | Resilience Brainstorm page | — |
 
 Thematic Design is the one existing proposal. The current dark sector duplicates (`155:2782`,
@@ -390,6 +390,28 @@ that leans on a default would change when its file accepts the update.
 - **Map display:** two live plants in frames set to Labels on and Labels off. A plant's `Show label`
   is bound to `plant-labels` on the instance, not in the Vegetation main, so these demo instances
   carry the binding themselves.
+
+**The library legend defaults are placeholders now** (2026-10-16, Andrew's go-ahead): title
+"map title", "SCALE: 1″ = 00′ / NORTH: 0.00°", zeroed location, elevation, and area, "Author name",
+"month year". Both `map-legend` variants changed. Every Map Set legend kept Lot 86's values; the
+regional sheets show zeros only in their hidden location, elevation, and area fields. Slide legends
+that leaned on the old defaults pick up placeholders when their file accepts the update; swap them to
+`Lot 86 / site-legend`.
+
+### Step 7: garden detail (2026-10-16)
+
+`22 Garden detail` (`1589:17426`) sits between 21b and 23a (23a moved to x = 50880).
+
+- **Scale.** The lot drawing is 234 px = 40′ (5.85 px/ft). The `Garden detail` scale bar is
+  234 px = 10′, so the base map instance is rescaled 4×. The legend reads 1″ = 5′.
+- **Crop.** The garden is the hidden `Vegetable Garden` marker in the base map (`1543:747`, 198 × 236
+  at 1020, 246), the same area Succession and Zones call "veg garden & chicken run". At 4× it is
+  792 × 944, centered in the 1920 × 940 map area. The striped maple P072 shading it is in frame.
+- **Annotations:** the Succession area outline and a Thematic caption, "veg garden & chicken run".
+- **Legend:** `map-scale` = `Garden detail`; area hidden (it's the lot's area).
+- **Rescale scales strokes too**, so the lot boundary and plant outlines are 4× heavier. The beds and
+  rows aren't drawn anywhere yet; the two rectangles inside are the chicken coop. Andrew draws the
+  beds, then decides whether this sheet needs a key and whether heavy strokes should be thinned.
 
 ## Decisions (2026-10-15)
 
