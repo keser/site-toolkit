@@ -175,6 +175,7 @@ yet. The **Proposed** column is filled in as designs are made.
 | 07 | Base map | property | light | Base Map North | — |
 | 08 | Sector compass – base map | property | light | `169:3793` | |
 | 09 | Sun paths | overlay | dark | Frame 38 | — |
+| 09.1 | Sun path 3D scene | drawing | light | `scene` (`174:5469`) | — |
 | 10 | Site water flow | property | light | Site Water Flow Map | |
 | 11 | Catchment area | property | light | Design Site Catchment Area Map | |
 | 12 | Zones | property | light | Current Zone Map | |
@@ -188,6 +189,7 @@ yet. The **Proposed** column is filled in as designs are made.
 | 20 | Succession | property | light | Succession | |
 | 21 | Thematic design | property | light | — | Thematic Design |
 | 22 | Garden detail | property | light | [to make] | [to make] |
+| 23 | Resilience brainstorm | property | light | Resilience Brainstorm page | — |
 
 Thematic Design is the one existing proposal. The current dark sector duplicates (`155:2782`,
 `155:2916`, `169:4139`) fold into their light sheets via the `Sheet` mode.
@@ -308,6 +310,48 @@ migration.
   4. Fill `content` with a base map instance or a source image.
   5. Draw in `annotations`.
 - Light and Dark were both checked by screenshot with a temporary duplicate, which was deleted.
+
+### Step 5: regional, overlay, and added sheets (2026-10-16)
+
+Andrew asked for every visual in the set, including the resilience brainstorm and the 3D sun scene
+(rows 09.1 and 23). All sheets sit on the Map Set page in set order. Lot sheets are recorded in the base
+map spec.
+
+| Sheet | Node | Content | Mode |
+|---|---|---|---|
+| `01 Bioregion` | `1558:7737` | placeholder until the source image is in `site-plan/maps/sources/` | dark |
+| `02 Hardiness zone` | `1558:8059` | placeholder, same | dark |
+| `03 Macro watershed` | `1558:8264` | image; marker, caption, and the hidden watershed graphic in `annotations` | dark |
+| `04 State watershed` | `1558:8516` | same | dark |
+| `05 Sector compass – community` | `1558:8769` | satellite image from the `[Dark]` frame; sector diagram in `annotations` | dark |
+| `06 Sector compass – neighborhood` | `1558:9417` | same | dark |
+| `09 Sun paths` | `1558:9974` | Frame 38's aerial, scaled 1.034× to 1920 × 868 and centered above the legend | dark |
+| `09.1 Sun path 3D scene` | `1558:10279` | the vector scene, scaled to 900 px tall | light |
+| `23a Resilience brainstorm` | `1558:10655` | base map; `Sector Regions` in `annotations` | light |
+
+**Regional legends** use the library `map-legend` (North = Up), widened to 1920:
+
+- Elevation, area, and location are hidden. Source shows its placeholder until `sources.md` has
+  attribution.
+- **The scale is hidden until it's measured from the source.** The watersheds had hand-drawn bars
+  labeled "100M" and "10M", and the north-up sector maps carried the lot's 1″ = 20′. None of them
+  can be trusted. The label body reads "north up / scale to come".
+- The 3D scene also hides north; its body reads "3d view / not to scale".
+- The hand-built scale bars and north arrows were dropped.
+
+**`map-key` follows the sheet's Light and Dark modes now.** The dark sector sheets showed white key
+panels whose row text had turned light. All 17 variants changed:
+
+- panel fill bound to `panel/fill`, border to `panel/border`, title to `text/primary`
+- 61 row descriptions carried a raw gray override (`#3A3936`). They're now bound to `text/secondary`.
+
+In Light mode, the panel, border, and title resolve to the same white and black as before. The
+descriptions get slightly darker (`charcoal/800`). Frames outside the Map Set page don't set a
+`Sheet` mode, so they show Light.
+
+**Still hand-built:** the watershed keys, the sun path key, the microclimate and circulation keys,
+and the resilience key are frames named "Sector Compass Key", copied from one another. They read in
+Light only.
 
 ## Decisions (2026-10-15)
 
