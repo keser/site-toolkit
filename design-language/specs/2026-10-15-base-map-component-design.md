@@ -2,7 +2,8 @@
 
 **Date:** 2026-10-15
 **Status:** Andrew answered the four open questions on 2026-10-15 (see **Decisions**). The plant list is
-settled (see **Plant list**). Ready to build.
+settled (see **Plant list**). `Lot 86 / base map` is built (`1543:617`, Base Map page) on 2026-10-16
+(see **Build notes**).
 **Scope:** personal project, so there's latitude to be opinionated.
 **Builds on:** `2026-10-15-map-sheet-design.md` (the sheet's `content` layer holds this component),
 `2026-10-15-property-map-set-audit.md` (finding 2: four plant inventories).
@@ -225,3 +226,24 @@ ID → species reference for every sheet with labels on. It slots into the set a
    real per-map difference is layer opacity (contours, plants, neighboring lots) and visibility
    (utilities, plants), which the component exposes as described in **Layers are the emphasis
    controls**.
+
+## Build notes (2026-10-16)
+
+`Lot 86 / base map` (`1543:617`) was built by script from the grayscale map (`168:3180`) and the CSV:
+
+- **Plants:** 75 `Vegetation` (Grayscale) instances named `plant P###`. P016 is left off (removed).
+  - The Zones drawing sits 2 px right of the base map drawing; buildings, pool, and driveway all
+    measure +2 px in x. Plant positions were shifted 2 px left to match.
+  - P072–P076 take their size and position from the old base map nodes.
+  - Grapes use the `Perennial` shape. `Vegetation` has no vine shape yet; the layer column still
+    says `vine`, which sets their draw order.
+- **Labels:** `Vegetation` labels are now 10 px in all ten variants. Each plant's `Show label` is
+  bound to `Map display` `plant-labels`, and its text is the plant ID. Every ID fits its symbol.
+- **Layers, bottom to top:** `Aerial_Photo` (hidden), `Contour lines` (10%), `neighboring lots`,
+  `Lot 86`, `Trees & Plants`, `Lot 86 boundary`, `Municipal Infrastructure`, `labels` (empty, for
+  street names and neighbor roles). Neighboring lots keep their own opacities (two at 25%).
+- **Toggles:** `Show plants` and `Show contours` (on), `Show utilities` (off; the `electrical` and
+  `water` frames in `Lot 86` and `Municipal Infrastructure`), `Show aerial` (off).
+- **Canvas fill** is copied from the old map as a raw color. It isn't bound to a variable yet.
+
+The old grayscale map stays until every sheet uses the component.
