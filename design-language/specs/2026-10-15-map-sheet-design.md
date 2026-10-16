@@ -368,6 +368,29 @@ gone from the Map Set page:
 - **Project-site markers** on 01 and 02 are placed by estimate from Portland's latitude and longitude.
   Andrew checks them.
 
+### Step 6: legend values pinned, Styles page (2026-10-16)
+
+**Lot 86's legend values are now explicit overrides**, so the library defaults can change without
+touching the set:
+
+- In `Lot 86 / site-legend` (`1517:9914`): the scale and north statement, location, elevation, area,
+  and author.
+- On all 24 Map Set legends: title, label body, author, and date.
+
+Nothing changed visually. **The library defaults are still Lot 86's.** Switching them to neutral
+placeholders waits on Andrew. Slides build maps from the published `map-legend`, so any slide legend
+that leans on a default would change when its file accepts the update.
+
+**The Styles page documents `Sheet` and `Map display`** in a new frame, `Sheet Documentation`
+(`1588:18372`, x = 11040; section `701:2` is now 12544 wide). It's cloned from Species Documentation:
+
+- **Sheet:** one row per variable with live Light and Dark swatches, each pinned to its mode. The
+  alias captions (`neutral/white / neutral/black`) are static, so update them after any change to the
+  collection.
+- **Map display:** two live plants in frames set to Labels on and Labels off. A plant's `Show label`
+  is bound to `plant-labels` on the instance, not in the Vegetation main, so these demo instances
+  carry the binding themselves.
+
 ## Decisions (2026-10-15)
 
 1. **Brainstorm maps are course-specific.** They stay in Course Specific sections, not the set.
