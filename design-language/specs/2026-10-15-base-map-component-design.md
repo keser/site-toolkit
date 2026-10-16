@@ -2,7 +2,7 @@
 
 **Date:** 2026-10-15
 **Status:** Andrew answered the four open questions on 2026-10-15 (see **Decisions**). The plant list is
-settled (see **Plant list**). Two perennials, P053 and P054, still need a species. Ready to build.
+settled (see **Plant list**). Ready to build.
 **Scope:** personal project, so there's latitude to be opinionated.
 **Builds on:** `2026-10-15-map-sheet-design.md` (the sheet's `content` layer holds this component),
 `2026-10-15-property-map-set-audit.md` (finding 2: four plant inventories).
@@ -65,19 +65,23 @@ chose the CSV plants instead, at their Zones drawing positions:
   trees:
   - The big walnut (`2701`) is dropped. P001, at 200 px, is the right size and position. It stands in
     the neighbor's yard.
-  - Four are real and join the CSV at their base map positions and sizes:
+  - The other five are real. They join the CSV at their base map positions and sizes:
     - P072, striped maple (`2704`), shading out the vegetable garden
     - P073 and P074, apple trees (`2691`, `2690`)
     - P075, peach tree (`2689`)
-  - `2681` (west edge, 120 px) is unconfirmed.
+    - P076, Japanese maple (`2681`), in the neighbor's front yard
 - **Shrubs:**
   - `2731` was a rough drawing of the blueberries, which are P010 and P014.
   - `2730` and `2732` were blackberries, and have been removed.
-- **Species named for the 15 blanks**, including three grapes (P058, P059, and the wild grape P067, under
-  the dawn redwood), which move to the vine layer. P055 and P056 stay "unknown flowering perennial."
-  P053 and P054 are still blank.
+- **Species named for the 15 blanks.** Three are grapes, and they move to the vine layer:
+  - P058 and P059, Catawba grapes (cultivated)
+  - P067, a river grape growing wild under the dawn redwood
 
-The marking sheet (`base-map-reconcile.csv`) is retired. The overlay frame (`1522:269`, Map Set page) stays until the last three plants are settled.
+  P055 and P056 stay "unknown flowering perennial."
+- **Removed plants stay in the CSV but off the map.** P016, the boxwood hedge, was removed in October
+  2026. The base map draws the site as it is now.
+
+The marking sheet (`base-map-reconcile.csv`) is retired. So is the overlay frame.
 
 ## Proposed component
 
@@ -194,10 +198,11 @@ ID → species reference for every sheet with labels on. It slots into the set a
 
 ## Build order
 
-1. Settle the plant list in `mapped-plants.csv` (done 2026-10-15, apart from P053, P054, and `2681`).
+1. Settle the plant list in `mapped-plants.csv` (done 2026-10-15: 76 rows).
 2. Build `Lot 86 / base map` from the grayscale map:
    - replace its plants with the CSV plants, as `Vegetation` instances at their Zones positions
-   - keep P072–P075 at their base map positions and sizes
+   - keep P072–P076 at their base map positions and sizes
+   - leave out plants whose notes say `REMOVED`
    - order the plants canopy first
    - add the boundary copy and the `labels` layer
    - add the toggles
@@ -209,7 +214,7 @@ ID → species reference for every sheet with labels on. It slots into the set a
 
 ## Decisions (2026-10-15)
 
-1. **The plant list and positions come from the CSV** (the Zones drawing), plus four base map trees.
+1. **The plant list and positions come from the CSV** (the Zones drawing), plus five base map trees.
    This reverses the first answer, positions from the base map, which needed a plant-by-plant
    reconciliation. See **Plant list**.
 2. **Plant ID is the primary map label** (`P012`), for inventory. Species and function codes stay
