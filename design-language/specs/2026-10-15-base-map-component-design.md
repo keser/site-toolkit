@@ -247,3 +247,32 @@ ID → species reference for every sheet with labels on. It slots into the set a
 - **Canvas fill** is copied from the old map as a raw color. It isn't bound to a variable yet.
 
 The old grayscale map stays until every sheet uses the component.
+
+### Species sheets (2026-10-16)
+
+Andrew kept the CSV sizes where they differ from the old base map (P002, P004, P006, P017, P022,
+P039, P040).
+
+The three species maps are now sheets on the Map Set page, built from `00 Sheet template`:
+
+| Sheet | Node | Key |
+|---|---|---|
+| `16a Species – status` | `1545:2035` | `map-key` Species – Status |
+| `17a Species – layer` | `1545:2857` | `map-key` Species – Layer |
+| `18a Species – function` | `1545:3506` | `map-key` Species – Function |
+
+`species_maps_apply.py` now targets these sheets:
+
+- It finds the plants inside the `Lot 86 / base map` instance in `content`.
+- It writes fills, strokes, and label colors as overrides on each plant's shape. Every run first resets
+  each plant to the `Vegetation` component's look.
+- Status and layer plants are drawn at full plant opacity, as on the old maps. Status fills stay at 50%.
+- It reports plants under 32 px instead of resizing them, and it reports IDs that are on the base map
+  but not in the CSV.
+- Badges go into `annotations`.
+
+First run: status 73 applied (P055 and P056 have no status), layer 75, function 41 (34 have no
+function codes). No problems, and no plant under 32 px.
+
+Still the same as on the old maps: the key covers the top-left corner, including part of P001 and
+P001's function badges. The old Species page frames stay until Andrew retires them.
