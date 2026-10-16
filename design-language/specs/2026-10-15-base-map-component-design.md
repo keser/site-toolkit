@@ -293,3 +293,49 @@ repo, which rebuilds the table in place from the CSV:
   hidden. The date is the month of the last rebuild.
 - **Fit:** the panel ends at y = 879, above the legend at 940. Three long species names wrap to two
   lines. Each group has room for about two more rows, so past about 80 plants the table needs a fourth group or a second sheet.
+
+### Lot sheets moved (2026-10-16)
+
+Every lot map in the set is now a sheet on the Map Set page, in set order:
+
+| Sheet | Node | From | Base map overrides |
+|---|---|---|---|
+| `07a Base map` | `1550:2359` | Base map (new) | labels on |
+| `08a Sector compass – base map` | `1553:5499` | `169:3793` | contours 30%, plants off |
+| `10a Site water flow` | `1553:3290` | `238:3573` | contours 50%, municipal `water` shown |
+| `11a Catchment area` | `1553:4394` | `238:4187` | contours 50% |
+| `12a Zones` | `1553:13812` | `189:2269` | contours 30% |
+| `13a Microclimates` | `1553:14519` | `1382:10661` | none |
+| `14a Zone circulation` | `1553:15189` | `1382:10660` | none |
+| `15a Soil sample locations` | `1553:6633` | `368:1605` | contours off |
+| `20a Succession` | `1553:15889` | `1416:5867` | contours off |
+| `21b Thematic design` | `1553:16543` | `1416:6474` | contours off |
+
+How each move was made:
+
+1. Each old map's emphasis was read from its `site-map` layers and set as overrides on the base map
+   instance. Contours at 30% fall outside the standard steps; they're kept as drawn.
+2. Overlays were copied into `annotations` at the same positions. Keys went into `key` where they
+   were. The legend took the old title and date. Sheets other than `07a` have labels off.
+
+Fixes and differences from the old maps:
+
+- **Water flow:** `Trees & Plants` sat inside `Lot 86`, and a second `Municipal Infrastructure` was
+  drawn above the overlay with its `water` line on. The sheet shows plants and turns on only the
+  municipal `water` frame (a direct visibility override, not `Show utilities`). Municipal now sits under
+  the overlay.
+- **Zones:** the legend title was "current Microclimate map", carried over from a copy. It now reads
+  "current zone map".
+- **Zone circulation:** the old frame was 1938 wide. Its drawing moved 18 px left. The circulation key
+  ran under the legend, so it moved up to end at y = 920. It sits in `annotations`, because `key`
+  holds the zones key.
+- **Microclimates and Zone circulation:** their keys are the hand-built frames named
+  "Sector Compass Key", now named `key`. They aren't `map-key` instances yet.
+- **Succession and Thematic design:** their keys are drawn inside the overlay, so the sheets have no
+  `key` layer. Their dates held a line-separator character (U+2028) where the space belongs, which
+  made the date wrap. It's now a plain space.
+- **Not moved:** the image version of the zone map (`189:2268`, aerial base) and the dark sector map
+  (`169:4139`). The set list has one light sheet for each.
+
+Overlays were drawn over the old plant positions, so annotations near plants that moved can sit a few
+pixels off. The old frames stay on their pages until Andrew retires them.
