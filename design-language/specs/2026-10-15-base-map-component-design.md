@@ -292,4 +292,4 @@ repo, which rebuilds the table in place from the CSV:
 - **Legend:** title "plant inventory", body "75 plants / not to scale". The scale bar and north arrow are
   hidden. The date is the month of the last rebuild.
 - **Fit:** the panel ends at y = 879, above the legend at 940. Three long species names wrap to two
-  lines. Past about 85 plants, the table needs a fourth group or a second sheet.
+  lines. Each group has room for about two more rows, so past about 80 plants the table needs a fourth group or a second sheet.
