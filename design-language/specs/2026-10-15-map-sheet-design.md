@@ -476,3 +476,22 @@ duplicates and the Resilience page's base map and `Sector Regions` overlay). Con
 the frames stay until Andrew retires them. Not marked, because no sheet replaces them: the full-color
 base map (`155:3976`), the aerial zone map (`189:2268`), the sun-path scene (`174:5469`), Course
 Specific brainstorms and practice maps, inspiration boards, and the Elevation page.
+
+### Course maps added to the Map Set (2026-10-18)
+
+**Decision change:** while the course runs, the Map Set holds the course maps too, so every map is
+in one place (reverses Decision 1 for now). They sit in their own section, **Course maps – remove
+after PDC** (`1613:11299`), below the second row, numbered `C01`–`C04` so the set numbering is
+untouched. Delete the section after the course. 23a Resilience brainstorm stays in the set.
+
+| # | Sheet | Built from | Notes |
+|---|---|---|---|
+| C01 | Zones brainstorm (`1613:11300`) | 12a Zones + the original's five note callouts | Key retitled "Zones Key". The key covers the original top-left notes, so Zone 3's note joins the bottom band and Zone 4's sits at the top of the Zone 04 region. |
+| C02 | Contour practice (`1613:14124`) | 07a + original overlays and `Contour Practice` key | The 18 flow and drainage arrows lived inside the old base-map frame; they're in a `flow arrows` frame in `annotations`. |
+| C03 | Water brainstorm (`1613:14247`) | 07a + original overlays and `Water Brainstorm` key | |
+| C04 | Soil brainstorm (`1613:14461`) | 07a + original overlays and `Soil Brainstorm` key | Sample 1's marker sits half under the key, as in the original. |
+
+All four use the `Lot 86 / base map` instance, the Lot 86 site legend (title and date from the
+original), and `Sheet=Light`, `Map display=Labels off` like 12a. Overlays keep their original
+positions, so they can sit a few pixels off plants that moved. The originals are marked
+`OLD – see Map Set C0N`.
