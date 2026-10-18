@@ -352,3 +352,10 @@ pixels off. The old frames stay on their pages until Andrew retires them.
 - **Tool sheds are visible** in both. The large tool shed, between apple P074 and peach P075, is
   8′ × 10′ (47 × 59 px at 5.85 px/ft), long side running north–south along the tree line. It had been
   drawn 40 × 41; it was resized about its center.
+- **The shed spot holds two structures over time.** The current shed is a temporary plastic and metal
+  kit that has already collapsed in storms. A sturdy replacement, engineered by Andrew's dad, is planned
+  for a spring build. It will store the lawn tractor, tools, and supplies. Its design isn't done.
+- **In `state=proposed`** the shed is `new tool shed (tentative)` (`1597:6927`): 10′ × 10′
+  (59 × 59 px), centered on the old shed's spot. Its roof panels are dashed [6, 4] to mark it
+  tentative, following the camper's dashed outline. Update its size and drop the dashes once the
+  design is final.
