@@ -339,3 +339,16 @@ Fixes and differences from the old maps:
 
 Overlays were drawn over the old plant positions, so annotations near plants that moved can sit a few
 pixels off. The old frames stay on their pages until Andrew retires them.
+
+## Current and proposed states (2026-10-18)
+
+`Lot 86 / base map` is now a component set (`1597:6795`) with one variant property, `state`.
+
+- **`state=current`** (`1543:617`) is the site as it stands. It's the original component, so its key
+  is unchanged and all 15 sheet instances still use it, with their Show toggles intact.
+- **`state=proposed`** (`1597:6796`) is the redesign: things moved to their new places, plus new
+  structures. It started as an exact copy of current. Edits to it don't touch existing sheets.
+- Both variants are stacked in the set, 80 px apart. The set description explains the two states.
+- **Tool sheds are visible** in both. The large tool shed, between apple P074 and peach P075, is
+  8′ × 10′ (47 × 59 px at 5.85 px/ft), long side running north–south along the tree line. It had been
+  drawn 40 × 41; it was resized about its center.
