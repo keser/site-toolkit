@@ -415,9 +415,11 @@ that leaned on the old defaults pick up placeholders when their file accepts the
   replaced once Andrew decides where the coop's water collection goes and how much sun the area gets
   after the striped maples are cut back. The rectangle inside the outline is the coop and run, which
   share one roof. The property's in-ground beds are already on the base map.
-- **The garden fence isn't visible on the base map.** Its only outline is the hidden `Vegetable Garden`
-  marker; the small and large tool sheds next to it are hidden too. The amber outline on this sheet
-  stands in for it until the fence is drawn.
+- **The garden fence is back on the base map** (2026-10-18). The `Vegetable Garden` instance
+  (`1543:747`) is the fence. It had been hidden when removing the fence was on the table, which is on
+  hold. It's visible again on every lot sheet with its "VG" label hidden and its fill cleared (the
+  tan fill came from the color base map). The amber stand-in outline on this sheet was removed; the
+  caption stays. The tool sheds next to it stay hidden.
 
 ## Decisions (2026-10-15)
 
