@@ -456,3 +456,14 @@ instances, each copying its key swatch's fill and border, so the map and key can
 - **Microclimates (`Microclimates`, 10):** fills at 50% from the key; borders are each type's 3 px
   Shade (cobalt, coral, gold, magenta) instead of the old 4 px `slate/800`.
 - Instances are named after their key row. Old frames were deleted after a screenshot check.
+
+### Regional sheets tidied (2026-10-18)
+
+- **Scale:** 01–04 legends read "north up / not to scale" instead of "scale to come". No regional
+  scale bar was verified against the image crops before turn-in.
+- **Source:** 03 and 04 credit "USGS Watershed Boundary Dataset; imagery Google Earth". 01 and 02
+  still read "Source credit".
+- **"Project Site" labels** on 01–04 are `caption` Black, not Shade.
+- **The watershed regions are part of the source image**, so they can't be swapped for
+  `map-region-sample` instances without tracing. The key swatches were sampled from the image. The
+  hidden `Macro Watershed Graphic` frames on 03 and 04 are an older diagram that isn't used.
