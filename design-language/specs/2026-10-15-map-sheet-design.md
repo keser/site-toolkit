@@ -409,9 +409,15 @@ that leaned on the old defaults pick up placeholders when their file accepts the
   792 × 944, centered in the 1920 × 940 map area. The striped maple P072 shading it is in frame.
 - **Annotations:** the Succession area outline and a Thematic caption, "veg garden & chicken run".
 - **Legend:** `map-scale` = `Garden detail`; area hidden (it's the lot's area).
-- **Rescale scales strokes too**, so the lot boundary and plant outlines are 4× heavier. The beds and
-  rows aren't drawn anywhere yet; the two rectangles inside are the chicken coop. Andrew draws the
-  beds, then decides whether this sheet needs a key and whether heavy strokes should be thinned.
+- **Rescale scales strokes too**, so the lot boundary and plant outlines are 4× heavier. Thinning
+  waits until the sheet has content.
+- **Parked (2026-10-18).** The garden's contents aren't course work. The current beds will be
+  replaced once Andrew decides where the coop's water collection goes and how much sun the area gets
+  after the striped maples are cut back. The rectangle inside the outline is the coop and run, which
+  share one roof. The property's in-ground beds are already on the base map.
+- **The garden fence isn't visible on the base map.** Its only outline is the hidden `Vegetable Garden`
+  marker; the small and large tool sheds next to it are hidden too. The amber outline on this sheet
+  stands in for it until the fence is drawn.
 
 ## Decisions (2026-10-15)
 
