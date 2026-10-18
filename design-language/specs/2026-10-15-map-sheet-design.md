@@ -467,3 +467,12 @@ instances, each copying its key swatch's fill and border, so the map and key can
 - **The watershed regions are part of the source image**, so they can't be swapped for
   `map-region-sample` instances without tracing. The key swatches were sampled from the image. The
   hidden `Macro Watershed Graphic` frames on 03 and 04 are an older diagram that isn't used.
+
+### Superseded originals marked (2026-10-18)
+
+Every original frame on a topic page that has a Map Set sheet is renamed
+`OLD – see Map Set NN – <original name>` (24 frames, including the three `[Dark]` sector
+duplicates and the Resilience page's base map and `Sector Regions` overlay). Content is unchanged;
+the frames stay until Andrew retires them. Not marked, because no sheet replaces them: the full-color
+base map (`155:3976`), the aerial zone map (`189:2268`), the sun-path scene (`174:5469`), Course
+Specific brainstorms and practice maps, inspiration boards, and the Elevation page.
