@@ -440,3 +440,19 @@ that leaned on the old defaults pick up placeholders when their file accepts the
    - GitHub blocks files over 100 MB and recommends keeping repos small.
    - Git LFS avoids the history growth, but it has a storage and bandwidth quota that's billed beyond
      the free tier.
+
+### Regions rebuilt from components (2026-10-18)
+
+The Resilience brainstorm (23a) and Microclimates (13a) maps had their keys migrated but still drew
+their regions as plain frames with raw hex fills. All 20 regions are now `map-region-sample`
+instances, each copying its key swatch's fill and border, so the map and key can't drift.
+
+- **`map-region-sample` stretches now.** Its `fill` and `border` layers were pinned top-left, so a
+  resized instance didn't scale. All five variants use Stretch constraints; key swatches (60 × 40)
+  are unchanged.
+- **Resilience (`Sector Regions`, 10):** key Tint fills, no border. Sage → Wildlife Corridor (seven
+  regions, including the top band), teal → Winter Sun Path, gold → Winter Wind, slate → Pollutants,
+  coral → Spring → Fall Wind. Fire is key-only; nothing on the map uses it.
+- **Microclimates (`Microclimates`, 10):** fills at 50% from the key; borders are each type's 3 px
+  Shade (cobalt, coral, gold, magenta) instead of the old 4 px `slate/800`.
+- Instances are named after their key row. Old frames were deleted after a screenshot check.
