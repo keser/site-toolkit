@@ -419,7 +419,12 @@ that leaned on the old defaults pick up placeholders when their file accepts the
   (`1543:747`) is the fence. It had been hidden when removing the fence was on the table, which is on
   hold. It's visible again on every lot sheet with its "VG" label hidden and its fill cleared (the
   tan fill came from the color base map). The amber stand-in outline on this sheet was removed; the
-  caption stays. The tool sheds next to it stay hidden.
+  caption stays.
+- **The tool sheds are on the base map too** (2026-10-18), so it records the current state.
+  `small tool shed` (`1543:749`) sits inside the fence on its west edge; `large tool shed`
+  (`1543:748`) sits just east of the fence. Both are `structure` instances restyled to match the
+  coop: roof panels gray (0.8) instead of the color map's brown, and the "TS" label hidden. A
+  proposed-state map will move things and add a tentative 10′ × 10′ shed (about 58 × 58 px).
 
 ## Decisions (2026-10-15)
 
