@@ -3,7 +3,7 @@
 
 Usage:
     python3 tools/fetch_ct_eco.py --lat 41.5728 --lon -72.6344 --out <dir>
-        [--radius-ft 300] [--year 2023]
+        [--radius-ft 300] [--year 2023] [--only surface-ft.tif ground-ft.tif]
 
 Every raster covers the same square box in CT State Plane feet (EPSG:6434), centered on the
 site, so the layers stack pixel for pixel. Writes manifest.json with each file's source,
@@ -115,6 +115,18 @@ def layers(year):
     ]
 
 
+def select_layers(year, only):
+    """The layers whose file names are in `only` (all layers when `only` is None)."""
+    every = layers(year)
+    if only is None:
+        return every
+    known = {layer["file"] for layer in every} | {"buildings.geojson"}
+    unknown = [name for name in only if name not in known]
+    if unknown:
+        raise ValueError(f"unknown layer file(s) {', '.join(unknown)}; choose from {', '.join(sorted(known))}")
+    return [layer for layer in every if layer["file"] in only]
+
+
 def _get(url):
     with urlopen(url, timeout=120) as r:
         data, ctype = r.read(), r.headers.get("Content-Type", "")
@@ -123,7 +135,7 @@ def _get(url):
     return data
 
 
-def fetch(lat, lon, out, radius_ft=300, year=2023):
+def fetch(lat, lon, out, radius_ft=300, year=2023, only=None):
     out = Path(out)
     out.mkdir(parents=True, exist_ok=True)
     x, y = latlon_to_ct_ft(lat, lon)
@@ -132,21 +144,22 @@ def fetch(lat, lon, out, radius_ft=300, year=2023):
     manifest = {"center": {"lat": lat, "lon": lon, "x_ft": round(x, 2), "y_ft": round(y, 2)},
                 "box_ft": [round(v, 2) for v in box], "sr": f"EPSG:{SR}", "year": year,
                 "fetched": date.today().isoformat(), "citation": citation, "files": []}
-    for layer in layers(year):
+    for layer in select_layers(year, only):
         url = export_url(layer["service"], box, layer["pixel_ft"], layer["fmt"],
                          layer.get("bands"), layer.get("pixel_type"))
         (out / layer["file"]).write_bytes(_get(url))
         manifest["files"].append({"file": layer["file"], "what": layer["what"],
                                   "pixel_ft": layer["pixel_ft"], "url": url})
         print(f"wrote {layer['file']}")
-    url = buildings_query_url(box)
-    with urlopen(url, timeout=120) as r:
-        geo = json.load(r)
-    (out / "buildings.geojson").write_text(json.dumps(geo))
-    manifest["files"].append({"file": "buildings.geojson", "url": url,
-                              "what": f"{len(geo.get('features', []))} building footprints from the 2023 "
-                                      "lidar, 2D only; take heights from surface-ft minus ground-ft"})
-    print(f"wrote buildings.geojson ({len(geo.get('features', []))} footprints)")
+    if only is None or "buildings.geojson" in only:
+        url = buildings_query_url(box)
+        with urlopen(url, timeout=120) as r:
+            geo = json.load(r)
+        (out / "buildings.geojson").write_text(json.dumps(geo))
+        manifest["files"].append({"file": "buildings.geojson", "url": url,
+                                  "what": f"{len(geo.get('features', []))} building footprints from the 2023 "
+                                          "lidar, 2D only; take heights from surface-ft minus ground-ft"})
+        print(f"wrote buildings.geojson ({len(geo.get('features', []))} footprints)")
     (out / "manifest.json").write_text(json.dumps(manifest, indent=2) + "\n")
     print("wrote manifest.json")
     return manifest
@@ -159,8 +172,10 @@ def main():
     p.add_argument("--out", required=True)
     p.add_argument("--radius-ft", type=float, default=300)
     p.add_argument("--year", type=int, default=2023)
+    p.add_argument("--only", nargs="+", metavar="FILE",
+                   help="fetch only these files, e.g. surface-ft.tif ground-ft.tif (for a wide shade box)")
     a = p.parse_args()
-    fetch(a.lat, a.lon, a.out, a.radius_ft, a.year)
+    fetch(a.lat, a.lon, a.out, a.radius_ft, a.year, a.only)
 
 
 if __name__ == "__main__":

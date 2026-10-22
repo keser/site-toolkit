@@ -610,3 +610,28 @@ as `C05 Sun paths (course)`.
 **Open:** the lidar puts the lot's low corner at the back-east (about 104 ft), with the ground falling
 east about 4%. The flow schematic and runoff narrative on `water.html` (and sheets 10a/11a) say water
 exits at the street-side SE corner (about 102 ft) to the storm drains. That analysis needs review.
+
+### Shadow study and sun hours (2026-10-22, roadmap step 3)
+
+Three Property – current sheets, built from the CT 2023 lidar with `tools/shade.py`:
+
+| # | Sheet | Shows |
+|---|---|---|
+| 24a | Shadow study (`1868:12910`) | 3 × 3 panels: Dec 21, Mar 20, Jun 21 at 9 AM, noon, 3 PM clock time |
+| 25a | Sun hours – growing season (`1868:12634`) | Average daily hours of direct sun, the 21st of each month April to October |
+| 25.1a | Sun hours – by season (`1868:13130`) | Dec 21, Mar 20, Jun 21, with class areas inside the lot |
+
+- **Method.** A cell is in shadow when any lidar surface along the ray toward the sun rises above the
+  line of sight. The receptor is bare earth plus 1 ft. The surface comes from a 1,200 ft box
+  (`fetch_ct_eco.py --radius-ft 600 --only surface-ft.tif ground-ft.tif`), so trees up to 600 ft
+  away cast shade. Steps are 10 minutes for the three days and 20 for the growing-season months.
+- **Classes** follow the planting convention: full sun 6+ hours (`gold/100`), part sun 4–6
+  (`gold/300`), part shade 2–4 (`slate/400`), shade under 2 (`slate/700`); buildings `neutral/White`.
+  Lightness falls with sun, and the hue turns from gold to slate at the sun/shade line.
+- **Keys:** new `map-key` variants `Sun Hours` and `Shadow Study` (cloned from Hardiness Zone,
+  one column), each ending with the shared lot boundary row. On 25a and 25.1a the key is scaled 0.75,
+  matching sheet 09. The 3 × 3 sheet uses an inline key row, since a scaled key would be unreadable.
+- **Caveat on every sheet:** the flight is leaf-off, but max-surface returns still trace branches,
+  so deciduous canopy shades as if in leaf. Winter sun under deciduous trees is understated.
+- **Result:** the lot is heavily shaded. Over the growing season about 690 ft² of open ground gets
+  6+ hours and about 11,580 ft² gets under 2, mostly under canopy.

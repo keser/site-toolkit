@@ -57,3 +57,17 @@ def test_buildings_query_url_uses_box_in_state_plane():
 def test_surface_layer_says_zero_is_no_data():
     surface = next(layer for layer in f.layers(2023) if layer["file"] == "surface-ft.tif")
     assert "0 = no lidar return" in surface["what"]
+
+
+def test_select_layers_keeps_only_the_named_files():
+    picked = f.select_layers(2023, ["surface-ft.tif", "ground-ft.tif"])
+    assert [layer["file"] for layer in picked] == ["surface-ft.tif", "ground-ft.tif"]
+
+
+def test_select_layers_with_no_filter_returns_every_layer():
+    assert f.select_layers(2023, None) == f.layers(2023)
+
+
+def test_select_layers_rejects_an_unknown_file():
+    with pytest.raises(ValueError, match="ortho.jpg"):
+        f.select_layers(2023, ["ortho.jpg"])
