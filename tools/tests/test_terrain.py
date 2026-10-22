@@ -48,3 +48,15 @@ def test_stitch_joins_segments_that_share_endpoints_into_one_line():
 def test_simplify_drops_points_within_tolerance_of_the_line():
     line = [(0, 0), (1, 0.05), (2, 0), (3, 2)]
     assert terrain.simplify(line, 0.1) == [(0, 0), (2, 0), (3, 2)]
+
+
+def test_slope_aspect_of_an_east_rising_plane_faces_west_at_45_degrees():
+    z = np.tile(np.arange(10.0), (10, 1))   # rises 1 ft per ft to the east
+    slope, aspect = terrain.slope_aspect(z, 1.0)
+    assert np.isclose(slope[5, 5], 45.0) and np.isclose(aspect[5, 5], 270.0)
+
+
+def test_slope_aspect_of_a_north_rising_plane_faces_south():
+    z = np.tile(np.arange(10.0)[::-1, None], (1, 10))   # row 0 (north) highest
+    slope, aspect = terrain.slope_aspect(z, 1.0)
+    assert np.isclose(aspect[5, 5], 180.0)

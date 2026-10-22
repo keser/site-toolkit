@@ -61,3 +61,57 @@ def sun_hours(surface, receptor, cell_ft, positions, step_minutes, max_dist_ft=N
             continue
         hours += ~shadow_mask(surface, receptor, cell_ft, az, alt, max_dist_ft)
     return hours * step_minutes / 60
+
+
+def horizon_profile(surface, cell_ft, row, col, z0, azimuths, max_dist_ft=600, min_dist_ft=0):
+    """Skyline seen from grid cell (row, col) at height z0: the highest elevation angle (degrees,
+    floored at 0) of the surface along each azimuth. min_dist_ft skips the near field, such as a
+    garden's own fence, which lidar records as solid."""
+    surface = np.asarray(surface, float)
+    h, w = surface.shape
+    out = []
+    for az in azimuths:
+        east, north = math.sin(math.radians(az)), math.cos(math.radians(az))
+        best = 0.0
+        for k in range(1, int(max_dist_ft / cell_ft) + 1):
+            r, c = round(row - k * north), round(col + k * east)
+            if not (0 <= r < h and 0 <= c < w):
+                break
+            dist = math.hypot(r - row, c - col) * cell_ft
+            if dist and dist >= min_dist_ft:
+                best = max(best, math.degrees(math.atan2(surface[r, c] - z0, dist)))
+        out.append(best)
+    return out
+
+
+def plane_factor(az, alt, slope=0.0, aspect=180.0):
+    """Cosine of the sun's angle of incidence on a plane (slope degrees from horizontal, aspect the
+    direction it faces, clockwise from north), floored at 0. Works on arrays of slope/aspect."""
+    a, h = math.radians(az), math.radians(alt)
+    s, asp = np.radians(slope), np.radians(aspect)
+    return np.maximum(math.sin(h) * np.cos(s) + math.cos(h) * np.sin(s) * np.cos(a - asp), 0.0)
+
+
+def clear_sky_dni(alt):
+    """Direct normal irradiance on a clear day, W/m², Meinel's air-mass model. A weighting, not a
+    forecast: real yield also depends on clouds, which this ignores."""
+    if alt <= 0:
+        return 0.0
+    air_mass = 1 / math.sin(math.radians(alt))
+    return 1353 * 0.7 ** (air_mass ** 0.678)
+
+
+def solar_access(surface, receptor, cell_ft, positions, slope=0.0, aspect=180.0, max_dist_ft=None):
+    """Share of the direct sun a surface would get unshaded (0..1), each sun position weighted by
+    clear-sky DNI times its incidence on the surface (flat by default; pass slope/aspect arrays for
+    roofs)."""
+    got = np.zeros(np.shape(surface))
+    total = np.zeros(np.shape(surface))
+    for az, alt in positions:
+        if alt <= 0:
+            continue
+        wgt = clear_sky_dni(alt) * plane_factor(az, alt, slope, aspect)
+        total = total + wgt
+        got = got + wgt * ~shadow_mask(surface, receptor, cell_ft, az, alt, max_dist_ft)
+    with np.errstate(invalid="ignore", divide="ignore"):
+        return np.where(total > 0, got / total, 0.0)

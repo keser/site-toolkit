@@ -671,3 +671,28 @@ Three Property – current sheets, built from the CT 2023 lidar with `tools/shad
   layers need the 2023 point cloud (LAZ); not fetched yet.
 - **Finding:** a linear berm or ridge runs along the north lot line, hidden under canopy in the photos.
 - New `map-key` variants `Terrain` and `Canopy Height`.
+
+### Garden solar analysis and roof solar access (2026-10-22, roadmap step 6)
+
+- **Data Visualizations › Sun › Garden solar analysis** (`1879:72`), three charts at the vegetable
+  garden (centre of the base map's garden symbol, 3 ft up):
+  - *Garden horizon:* the lidar skyline (`land/ground`) with the three sun paths; filled hour dots
+    have direct sun, hollow ones are blocked. The first 12 ft are skipped, since lidar records the
+    garden's own fence as solid.
+  - *Solar section:* bare earth and lidar surface (`layer/sub-canopy`) on a 400 ft south–north line,
+    with noon rays at the same vertical exaggeration.
+  - *Day length and direct sun:* daylight through 2026 against direct sun reaching the garden
+    (`emphasis`, `emphasis/fill`).
+- **Map Set 30a Roof solar access** (`1882:13850`, 1″ = 5′): TSRF on the house roof, classed like sun
+  hours (`gold/100`, `gold/300`, `slate/400`, `slate/700`), outer 2 ft not analysed (`charcoal/100`).
+  New `map-key` variant `Roof Solar`. TSRF = unshaded, orientation-weighted clear-sky direct sun
+  on the roof plane ÷ that of an unshaded panel at 35°, facing south. A relative measure for siting;
+  yield in kWh needs a weather-based model such as PVWatts.
+- **Tools:** `shade.horizon_profile` (with `min_dist_ft`), `plane_factor`, `clear_sky_dni` (Meinel),
+  `solar_access`; `terrain.slope_aspect`.
+- **Findings:**
+  - The garden gets about 386 of 4,451 daylight hours of direct sun a year, all between April and
+    September. Noon sun in winter and at the equinoxes is blocked 14–16 ft south by a 17–28 ft crown.
+    That tree is the main factor. The lidar is leaf-off, so if it is deciduous, spring and fall sun
+    is better than shown.
+  - House roof: median TSRF 58%; about 200 ft² at 75% and up, on the south-facing plane.

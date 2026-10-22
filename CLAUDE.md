@@ -27,8 +27,8 @@ settled.
   generator, no build step at serve time. Must remain `docs/` (Pages only serves root or `/docs`).
 - `tools/` — `build_nav.py [site_dir]`, `port_report.py`, `fetch_ct_eco.py` (a Connecticut site's
   CT ECO imagery, lidar, and building layers into the site repo), `sun_arcs.py` (sun positions, a
-  top-down sun-path projection, and a Google Earth camera model), `shade.py` (shadow masks and hours
-  of direct sun from a lidar surface), `imagery.py` (NDVI and color-infrared from 4-band imagery), `terrain.py` (hillshade, contours,
+  top-down sun-path projection, and a Google Earth camera model), `shade.py` (shadow masks, hours
+  of direct sun, skyline profiles and roof solar access from a lidar surface), `imagery.py` (NDVI and color-infrared from 4-band imagery), `terrain.py` (hillshade, contours,
   canopy height), and `tests/` (run `python3 -m pytest tools`).
 - `design-language/` — docs and history for the shared visual system. Figma is the source of truth.
   **Design-system specs and plans for the permaculture files are authored here** (decided 2026-10-13),

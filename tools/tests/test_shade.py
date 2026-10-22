@@ -68,3 +68,31 @@ def test_sun_hours_drop_behind_a_wall():
     hours = shade.sun_hours(surface, np.zeros_like(surface), 1.0, positions, step_minutes=30)
     assert hours[15, 25] == 0.0
     assert hours[30, 25] == 2.0
+
+
+def test_horizon_profile_sees_a_wall_at_its_angular_height():
+    surface = wall_ew()                       # 10 ft wall at row 20
+    angles = shade.horizon_profile(surface, 1.0, 30, 25, 0.0, [180, 0], max_dist_ft=60)
+    assert np.isclose(angles[0], 0.0)         # looking south: open
+    assert np.isclose(angles[1], np.degrees(np.arctan(10 / 10)))   # wall 10 ft north, 10 ft tall
+
+
+def test_plane_factor_is_one_facing_the_sun_and_zero_edge_on():
+    assert np.isclose(shade.plane_factor(180, 45, slope=45, aspect=180), 1.0)
+    assert np.isclose(shade.plane_factor(180, 45, slope=45, aspect=0), 0.0, atol=1e-9)
+    assert np.isclose(shade.plane_factor(90, 90, slope=0, aspect=0), 1.0)
+
+
+def test_solar_access_of_open_ground_is_one_and_falls_behind_a_wall():
+    surface = wall_ew()
+    positions = [(180, 30), (180, 60)]
+    acc = shade.solar_access(surface, np.zeros_like(surface), 1.0, positions)
+    assert np.isclose(acc[40, 25], 1.0)
+    assert np.isclose(acc[2, 25], 1.0)        # 18 ft north: beyond both shadows (17.3 and 5.8 ft)
+    assert 0 < acc[13, 25] < 1                # 7 ft north: shaded at 30 deg, sunny at 60
+
+
+def test_horizon_profile_can_skip_obstacles_closer_than_a_minimum_distance():
+    surface = wall_ew()                       # wall 10 ft north of row 30
+    angles = shade.horizon_profile(surface, 1.0, 30, 25, 0.0, [0], max_dist_ft=60, min_dist_ft=12)
+    assert np.isclose(angles[0], 0.0)

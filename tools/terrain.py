@@ -14,6 +14,15 @@ import math
 import numpy as np
 
 
+def slope_aspect(dem, cell):
+    """Slope in degrees and aspect (the direction the slope faces, degrees clockwise from north)."""
+    d_row, d_col = np.gradient(np.asarray(dem, float), cell)
+    dz_east, dz_north = d_col, -d_row
+    slope = np.degrees(np.arctan(np.hypot(dz_east, dz_north)))
+    aspect = np.degrees(np.arctan2(-dz_east, -dz_north)) % 360
+    return slope, aspect
+
+
 def hillshade(dem, cell, az=315, alt=45):
     """0..1 shading for a sun at azimuth az (clockwise from north) and altitude alt."""
     dem = np.asarray(dem, float)
