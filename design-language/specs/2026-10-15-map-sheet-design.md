@@ -495,3 +495,27 @@ All four use the `Lot 86 / base map` instance, the Lot 86 site legend (title and
 original), and `Sheet=Light`, `Map display=Labels off` like 12a. Overlays keep their original
 positions, so they can sit a few pixels off plants that moved. The originals are marked
 `OLD – see Map Set C0N`.
+
+### File reorganized (2026-10-20)
+
+With every map on the Map Set, the per-topic pages no longer held anything unique. The file now
+has eight pages; `design-language/README.md` lists them.
+
+1. **Snapshot first.** Andrew saved the Figma version "Before reorganization: style inventory and
+   per-map pages". It keeps the Keys page's Inventory section (the style inventory that led to
+   the Styles page) and the OLD frames for case-study screenshots.
+2. **Documentation components** on Components > Documentation: `doc-header` (`1736:41`, Label and
+   Date), `doc-title` (`1736:282`, Title, Body, Show body), `doc-section-label` (`1736:1524`, same
+   properties, 320 wide). Sizes and colors copy the Styles docs' raw Inter 13/18/36; the file's
+   text styles are slide-sized, so none fit.
+3. **Styles:** the `_Status`/`Divider`/`Content` frames and 41 `Description` labels are now
+   instances. The single `Styles` section split into one section per doc.
+4. **Components** gathers every main component from Keys and Base Map. The Base Map `Legend` frame
+   is renamed `base-map-symbols`.
+5. **Data Visualizations** keeps one copy of each chart. Dropped as duplicates: the Water page's
+   chart frame, Solar Paths' larger sun charts, Sector Analysis' loose 3D scene.
+6. **Map Set** sheets are grouped into sections by kind; sheet names and numbers are unchanged.
+7. **Deleted pages:** Keys, Base Map, Solar Paths, Elevation, Sector Analysis, Water & Watershed,
+   Soil, Species, Site Data Visualizations. None held a main component when deleted.
+8. **Section fills are white** (`neutral/White`) on every page, 2026-10-21. Some were #454545 and a
+   few nested chart sections were #FCFCFA.
