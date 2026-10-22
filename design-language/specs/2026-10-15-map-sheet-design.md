@@ -652,3 +652,22 @@ Three Property – current sheets, built from the CT 2023 lidar with `tools/shad
   (dense). New `map-key` variant `Vegetation Index`.
 - **Registration:** NAIP's ground matches the 3-inch ortho within about 1 ft (phase correlation);
   its roofs lean a few feet, as NAIP is not a true ortho.
+
+### Terrain under canopy and canopy height (2026-10-22, roadmap step 5)
+
+| # | Sheet | Shows |
+|---|---|---|
+| 28a | Terrain under canopy (`1873:13946`) | Bare-earth hillshade (3× exaggeration, lit from the NW) with 1 ft contours, 5 ft index lines labeled |
+| 29a | Canopy height (`1873:14163`) | Lidar surface minus bare earth, classed by the Species `layer/*` tokens |
+
+- **Tool:** `tools/terrain.py` (`hillshade`, `contour_segments` by marching squares, `stitch`,
+  `simplify` by Douglas–Peucker, `canopy_height`). Contours are drawn as Figma vectors, one per level,
+  `slate/400` at `weight/sm` and index lines `slate/600` at `weight/md`, from bare earth smoothed
+  twice with a 3 × 3 mean.
+- **Canopy classes:** canopy 40+ ft, sub-canopy 15–40, shrub 3–15 (`layer/canopy`, `layer/sub-canopy`,
+  `layer/shrub`). Classed on the native 2 ft grid; shrub-height cells within 4 ft of a taller crown
+  take that crown's class, since they are its sloping edge. Under 3 ft shows the photo.
+- **Limit:** the rasters record the top surface only, so a shrub under a tree is invisible. Stacked
+  layers need the 2023 point cloud (LAZ); not fetched yet.
+- **Finding:** a linear berm or ridge runs along the north lot line, hidden under canopy in the photos.
+- New `map-key` variants `Terrain` and `Canopy Height`.
