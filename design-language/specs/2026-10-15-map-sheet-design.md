@@ -519,3 +519,9 @@ has eight pages; `design-language/README.md` lists them.
    Soil, Species, Site Data Visualizations. None held a main component when deleted.
 8. **Section fills are white** (`neutral/White`) on every page, 2026-10-21. Some were #454545 and a
    few nested chart sections were #FCFCFA.
+9. **Text checked against the white sections** (2026-10-21):
+   - Permaculture Resources' two text blocks were white on white. They're now `neutral/Black` and
+     auto-height.
+   - The 72 tick labels on the sun path charts and wind roses were raw #898781 (3.59:1 on white).
+     They're bound to Chart Neutral `label/muted` (Light: `charcoal/600`, about 6.4:1), per the
+     chart-tokens spec.
