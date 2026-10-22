@@ -590,3 +590,23 @@ as `C05 Sun paths (course)`.
 5. **Sheet 09.1 uses the updated 3D scene.** It held its own copy of the old scene. The copy is
    replaced, scaled to 1200 wide on the right, with the shared `Sun Paths` key bottom-left (its lot
    boundary row hidden, since the 3D scene draws no lot).
+
+### Legend audit (2026-10-22)
+
+1. **Site legend figures follow the plan outline and the 2023 lidar.** In the `Lot 86 / site-legend`
+   main component, area is now 18,705 ft² (the plan outline; 18,730 was 0.43 × 43,560) and elevation
+   is 103 to 110 ft (CT 2023 lidar bare earth inside the outline; it was 103 to 107). No sheet
+   overrode either value.
+2. **Placeholders filled where the source is known:** 02 (USDA Plant Hardiness Zone Map, 2023), 09.1
+   (massing from the base map, sun from NOAA equations; date October 2026), C05 (Google Earth). 14a's
+   title was 12a's; it is now "zone circulation map".
+3. **Still placeholder, source unknown:** "Source credit" on 01 Bioregion, 05 and 06 Sector compass;
+   "scale to come" on 05, 06 and C05.
+4. **Microsite:** the home page area reads 18,705 ft². `water.html` Section A is re-sampled from the
+   2023 lidar along the plan outline's centerline (262 ft, 107.5 ft at the street falling to 103.6 ft).
+   The old profile ran 546 ft and rose away from the street. The water budget keeps the course
+   analysis's 18,730 ft², and the flow schematic is unchanged; see the open item below.
+
+**Open:** the lidar puts the lot's low corner at the back-east (about 104 ft), with the ground falling
+east about 4%. The flow schematic and runoff narrative on `water.html` (and sheets 10a/11a) say water
+exits at the street-side SE corner (about 102 ft) to the storm drains. That analysis needs review.

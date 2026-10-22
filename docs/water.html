@@ -312,14 +312,14 @@
 
   <section class="page-section" id="elevation">
     <h2 class="section-title">Elevation Cross-Sections</h2>
-    <p class="subhead">Ground profiles through the lot, from the USGS 3DEP 1-meter DEM (NAVD88 feet).
+    <p class="subhead">Ground profiles through the lot, in NAVD88 feet: Section A from the CT 2023 lidar, Section B from the USGS 3DEP 1-meter DEM.
       Vertical scale is exaggerated to make the slope readable. Two cuts: <b>along</b> the lot
       (street&nbsp;→&nbsp;back) and <b>across</b> it (west ridge&nbsp;→&nbsp;east low).</p>
 
     <div class="panel">
-      <div class="panel-title">Section A — along the lot, Freestone&nbsp;Ave (S) → back (N)</div>
-      <div class="panel-sub">~9× vertical exaggeration · the lot rises ~6&nbsp;ft over ~550&nbsp;ft ≈ 1% — imperceptible on the ground; the street end is the low end</div>
-      <svg class="chart" id="elev-secA" viewBox="0 0 820 210" role="img" aria-label="Elevation profile along the lot centerline: 102 feet at the street rising gently to about 108 feet at the back."></svg>
+      <div class="panel-title">Section A — along the lot, Freestone&nbsp;Ave (SSW) → back (NNE)</div>
+      <div class="panel-sub">~6× vertical exaggeration · the lot falls ~4&nbsp;ft over its 262&nbsp;ft ≈ 1.5% toward the back; the street end is the high end. Most of the fall runs across the lot: the ground drops east about 4&nbsp;ft per 100&nbsp;ft</div>
+      <svg class="chart" id="elev-secA" viewBox="0 0 820 210" role="img" aria-label="Elevation profile along the lot centerline: about 107.5 feet at the street falling gently to about 103.6 feet toward the back."></svg>
     </div>
 
     <div class="panel">
@@ -328,8 +328,9 @@
       <svg class="chart" id="elev-secB" viewBox="0 0 820 250" role="img" aria-label="Elevation profile across the lot: ridge crest 119 feet to the west, gentle fall to the lot at 105 to 108 feet, then a steep drop east to about 91 feet."></svg>
     </div>
 
-    <p class="elev-src"><b>Source:</b> USGS 3DEP 1-m DEM sampled Aug&nbsp;2026 (National Map ImageServer);
-      cross-checked against USGS EPQS. Full transects: <code>lesson-05-water/work/watersheds-water-flow.md</code>.</p>
+    <p class="elev-src"><b>Source:</b> Section A: CT State GIS Office 2023 lidar bare earth (2&nbsp;ft grid), sampled Oct&nbsp;2026
+      along the centerline of the 1993 plan outline (<code>tools/fetch_ct_eco.py</code>). Section B: USGS 3DEP 1-m DEM
+      sampled Aug&nbsp;2026 (National Map ImageServer); cross-checked against USGS EPQS. Full transects: <code>lesson-05-water/work/watersheds-water-flow.md</code>.</p>
   </section>
 
   <section class="page-section" id="flow-schematic">
@@ -676,17 +677,16 @@
   }
 
   // ---- Section A ----
-  const A=[[0,102.4],[36,102.4],[73,103.1],[109,104.1],[146,103.4],[182,104.3],[219,105.1],
-           [255,105.6],[291,107.1],[328,107.7],[364,107.1],[401,106.6],[437,105.6],[474,107.4],
-           [510,107.8],[546,107.8]];
+  const A=[[0,107.5],[17,107.6],[35,106.6],[52,106.5],[70,106.8],[87,105.9],[105,105.8],[122,105.3],
+           [140,105.1],[157,104.6],[175,104.4],[192,103.6],[210,103.6],[227,103.6],[245,103.6],[262,104.2]];
   profile(document.getElementById("elev-secA"),{
-    pts:A, x0:58,x1:790, y0:150,y1:22, xmin:0,xmax:546, ymin:100,ymax:110,
-    yticks:[100,102,104,106,108,110],
-    xticks:[{v:0,l:"Freestone Ave"},{v:150,l:"150 ft"},{v:300,l:"300 ft"},{v:450,l:"450 ft"},{v:546,l:"back"}],
-    bands:[{a:0,b:546,label:"the lot (sampled centerline)"}],
+    pts:A, x0:58,x1:790, y0:150,y1:22, xmin:0,xmax:262, ymin:102,ymax:110,
+    yticks:[102,104,106,108,110],
+    xticks:[{v:0,l:"Freestone Ave"},{v:100,l:"100 ft"},{v:200,l:"200 ft"},{v:262,l:"back"}],
+    bands:[{a:0,b:262,label:"the lot (sampled centerline)"}],
     marks:[
-      {x:0,y:102.4,dy:40,t:"street end ≈102 ft",t2:"low end — outfall to storm drains",anchor:"start"},
-      {x:510,y:107.8,dy:22,t:"back ≈108 ft",anchor:"end"}
+      {x:0,y:107.5,dy:22,t:"street end ≈107.5 ft",t2:"high end",anchor:"start"},
+      {x:230,y:103.6,dy:30,t:"back ≈103.6 ft",t2:"low end",anchor:"end"}
     ]
   });
 
