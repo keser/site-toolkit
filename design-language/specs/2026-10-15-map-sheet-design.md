@@ -635,3 +635,20 @@ Three Property – current sheets, built from the CT 2023 lidar with `tools/shad
   so deciduous canopy shades as if in leaf. Winter sun under deciduous trees is understated.
 - **Result:** the lot is heavily shaded. Over the growing season about 690 ft² of open ground gets
   6+ hours and about 11,580 ft² gets under 2, mostly under canopy.
+
+### Color infrared and vegetation index (2026-10-22, roadmap step 4)
+
+| # | Sheet | Shows |
+|---|---|---|
+| 26a | Color infrared (`1871:13709`) | Spring (2023 ortho, 3 in, leaf-off) and summer (NAIP 2023, 1 ft, leaf-on) side by side, with a how-to-read note |
+| 27a | Vegetation index (`1871:13897`) | NDVI for the same two flights in four classes, with areas inside the lot |
+
+- **Tool:** `tools/imagery.py` (`ndvi`, `cir`, `stretch`, `classify`). CT ECO 4-band TIFFs open as RGBA;
+  the alpha channel is near-infrared.
+- **NDVI is relative, per flight.** The bands are 8-bit and uncalibrated, and the cameras scale
+  near-infrared differently (lot median 0.30 in spring, 0.16 in summer), so each flight has its own
+  breaks (spring 0.15/0.30/0.45, summer 0.05/0.15/0.25) and the classes read as relative vigor.
+- **Classes** run `charcoal/100` (bare, roof, paving, water), `sage/100`, `sage/300`, `sage/600`
+  (dense). New `map-key` variant `Vegetation Index`.
+- **Registration:** NAIP's ground matches the 3-inch ortho within about 1 ft (phase correlation);
+  its roofs lean a few feet, as NAIP is not a true ortho.
