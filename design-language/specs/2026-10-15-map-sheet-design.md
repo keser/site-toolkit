@@ -525,3 +525,40 @@ has eight pages; `design-language/README.md` lists them.
    - The 72 tick labels on the sun path charts and wind roses were raw #898781 (3.59:1 on white).
      They're bound to Chart Neutral `label/muted` (Light: `charcoal/600`, about 6.4:1), per the
      chart-tokens spec.
+
+### Sun path sheets rebuilt (2026-10-22)
+
+Two new Regional & overlay sheets replace the course sun path map, which moves to the course section
+as `C05 Sun paths (course)`.
+
+| # | Sheet | Background | Overlay |
+|---|---|---|---|
+| 09 | Sun paths – top-down (`1831:13120`) | CT State GIS Office 2023 ortho, 3 in, leaf-off, warped into the base map's frame | Polar sun-path diagram centered on the lot |
+| 09.2 | Sun paths – tilted (`1831:13289`) | Google Earth Pro capture, leaf-on, looking south at 50° tilt | The same diagram laid on the lidar ground and projected through the capture's camera |
+
+- **One geometry, two views.** Arc distance from the lot follows sun altitude: r = 80 ft × (90 − alt) / 90.
+  Direction is true azimuth. A sky dome was tried for the tilted view and dropped: at a 50° tilt, sun
+  heights from about 25° to 75° land at nearly the same screen height, so the arcs stack.
+- **Three arcs:** winter solstice (`season/winter`), the equinoxes merged (gold `season/fall` under a
+  dashed sage `season/spring`), summer solstice (`season/summer`). Hour dots on every clock hour;
+  March and September dots are drawn separately because their clocks differ by 15 minutes. Captions
+  at 9 AM, noon, and 3 PM. Arcs are `weight/xl` over a white `weight/2xl` casing.
+- **Registration.** The base map frame is fitted to its `Lot 86 boundary` vector: 5.79 px/ft, north at
+  −65.46° (the north indicator says −65.43°), every corner within 5 px. The Google Earth camera is the
+  saved KML LookAt with a 61° field of view and a 2 ft / 8 ft target shift, fitted by aligning all 27 CT
+  building outlines at lidar roof height to the capture's edges.
+- **Key:** the `Sun Paths` map-key variant now has four rows (three arcs and the lot boundary) with
+  `map-line-sample` Bold, no cap, no casing swatches bound to the season tokens. C05 shares the variant,
+  so its key changed too. Both sheets' key instances are 640 wide.
+- **Legends:** top-down uses `Lot 86 / site-legend` with elevation hidden and source shown; tilted uses
+  the plain legend with the north arrow hidden ("looking south, not to scale").
+- **Tools:** `site-toolkit/tools/sun_arcs.py` (sun positions, projections, camera); the Lot 86 build is
+  `site-plan/data/sun_paths_build.py` in the site repo.
+
+**Open:**
+- The base map's `Lot 86 boundary` vector is the deep 0.571 ac outline (its long sides are 322 and
+  151 ft), although its site legend says 0.43 ac. The 1993 permit plan gives 262 and 101 ft. The sun
+  sheets draw the plan-based outline. Correct the base map after the surveyor's pins are measured.
+- The microsite overlay (`sun-solar.html`, `spo`) still uses schematic radii and four arcs; the Data
+  Visualizations sun charts still say "Spring Equinox" and "Fall Equinox". Sync both to this convention.
+
