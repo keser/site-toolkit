@@ -555,10 +555,38 @@ as `C05 Sun paths (course)`.
 - **Tools:** `site-toolkit/tools/sun_arcs.py` (sun positions, projections, camera); the Lot 86 build is
   `site-plan/data/sun_paths_build.py` in the site repo.
 
-**Open:**
-- The base map's `Lot 86 boundary` vector is the deep 0.571 ac outline (its long sides are 322 and
-  151 ft), although its site legend says 0.43 ac. The 1993 permit plan gives 262 and 101 ft. The sun
-  sheets draw the plan-based outline. Correct the base map after the surveyor's pins are measured.
-- The microsite overlay (`sun-solar.html`, `spo`) still uses schematic radii and four arcs; the Data
-  Visualizations sun charts still say "Spring Equinox" and "Fall Equinox". Sync both to this convention.
+**Open (both resolved 2026-10-22, below):**
+- ~~The base map's `Lot 86 boundary` vector is the deep 0.571 ac outline.~~
+- ~~The microsite overlay and the Data Visualizations sun charts still use four arcs.~~
 
+### Base map corrected; sun views synced (2026-10-22)
+
+1. **Base map boundary is the 1993 plan outline (0.43 ac).** Both `Lot 86 / base map` variants carried
+   the deep outline twice: the `Lot 86 boundary` vector and a `Lot 86` vector inside the `Lot 86` frame.
+   Both now draw the plan outline (sides 46, 262, 112, 101, 65.7, 165.15 ft). The traced outline stays
+   in each variant as a hidden layer, `Lot 86 boundary – traced 0.571 ac (reference)`, until the
+   surveyor's pins are measured. The sun sheets' frame fit still uses the traced corners, which is
+   unchanged geometry.
+2. **Design overlays now overrun the lot.** Zone 5 on 12a, 14a and C01, succession states 4–5 on 20a,
+   Theme 5 on 21b, the goal zones on C04, and flow arrows on 10a/11a reach past the new rear line (the
+   two large rear trees, P042 and P043, sit on or past it). Left as drawn: redrawing them is a design
+   decision, not a correction.
+3. **Microsite `sun-solar.html` follows the three-arc convention.**
+   - Sun data for all three views is regenerated from `tools/sun_arcs.py`. The old series was about a
+     day off at the equinoxes (noon 47.98° and 49.05°; both are 48.5°) and its sunrise and sunset left
+     out refraction (winter 7:20/4:15, almanac 7:14/4:23).
+   - Charts: three panels; the equinox panel draws September solid under March dashed.
+   - Overlay: the polar sun-path diagram (r = R × (90 − alt) / 90) with a horizon ring, hour dots, and
+     captions at 9 AM, noon, and 3 PM, replacing the schematic radii.
+   - 3D: solid arcs, hour dots on every clock hour, the same captions; March labels on the inside of
+     its arc to clear the winter labels.
+   - The equinox swatch (`.swatch-equinox`) alternates sage and gold.
+4. **Data Visualizations › Sun matches.**
+   - Sun path charts: three panels rebuilt from the same series, bound to the season tokens and
+     `Chart Neutral/surface`; the fourth cell holds a note on the merged equinox and the data source.
+   - Sun path overlay: north-up crop of the CT 2023 ortho centered on the lot (700 × 660), with the
+     sheet 09 diagram and tokens (white casing, `neutral/Black` lot line); legend and copy rewritten.
+   - Sun path 3D diagram: arcs, dots and captions replaced, bound to the season tokens.
+5. **Sheet 09.1 uses the updated 3D scene.** It held its own copy of the old scene. The copy is
+   replaced, scaled to 1200 wide on the right, with the shared `Sun Paths` key bottom-left (its lot
+   boundary row hidden, since the 3D scene draws no lot).
