@@ -25,7 +25,8 @@ settled.
 ## Layout
 - `docs/` — demo microsite, GitHub Pages source (`main` / `/docs`). Plain static HTML, no
   generator, no build step at serve time. Must remain `docs/` (Pages only serves root or `/docs`).
-- `tools/` — `build_nav.py [site_dir]`, `port_report.py`, and `tests/` (run `python3 -m pytest tools`).
+- `tools/` — `build_nav.py [site_dir]`, `port_report.py`, `fetch_ct_eco.py` (a Connecticut site's
+  CT ECO imagery, lidar, and building layers into the site repo), and `tests/` (run `python3 -m pytest tools`).
 - `design-language/` — docs and history for the shared visual system. Figma is the source of truth.
   **Design-system specs and plans for the permaculture files are authored here** (decided 2026-10-13),
   not in any site repo.
