@@ -611,6 +611,21 @@ as `C05 Sun paths (course)`.
 east about 4%. The flow schematic and runoff narrative on `water.html` (and sheets 10a/11a) say water
 exits at the street-side SE corner (about 102 ft) to the storm drains. That analysis needs review.
 
+**Resolved (2026-10-22):** the owner's on-site account, checked against the lidar:
+1. The front yard drains to the street.
+2. The house splits the flow.
+3. The existing swale along the house's west drip line (the Lot 85 side) carries water back to the pool, where it
+   spreads and soaks in.
+4. The backyard drains toward the back-east low (about 103 ft).
+
+The lidar agrees on the backyard and the low point. It shows the 18 ft front strip falling east rather
+than to the curb, but a short pitch to the curb is below its 2 ft resolution, so the schematic follows
+the owner. `water.html` now says only the front yard reaches the storm drains, and the proposed swale
+⑥ catches front-yard runoff only. Whether ⑥ stays at the front is a design call for the owner.
+Sheets 10a and 11a: flow arrows redrawn to the back-east low (new `lowpoint-back-east` marker on
+10a), front-yard arrows to the street, key text to match. The `water.html` schematic still draws the
+driveway on the west side; on the base map it is on the east. The schematic is not to scale.
+
 ### Shadow study and sun hours (2026-10-22, roadmap step 3)
 
 Three Property – current sheets, built from the CT 2023 lidar with `tools/shade.py`:

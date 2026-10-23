@@ -212,7 +212,8 @@
       year — there is no dry season (Köppen&nbsp;"f") — so the rainwater-harvesting case
       is not drought relief. It is (1)&nbsp;the mid-summer stretch when garden
       evapotranspiration outpaces rainfall, and (2)&nbsp;capturing the roughly 25&nbsp;% of
-      rainfall that currently runs off the lot to the Freestone&nbsp;Avenue storm drains.
+      rainfall that runs off roofs, pavement, and lawn. Today the front yard's share reaches the
+      Freestone&nbsp;Avenue storm drains; the rest runs to the backyard and soaks in.
     </p>
 
     <div class="badge-row">
@@ -237,7 +238,7 @@
       average rain, and that is when the Zone&nbsp;3 vegetable garden runs short. A single
       average month (~3.6&nbsp;in) sheds roughly <b>9,000&nbsp;gal</b> off the site's
       ~2,475&nbsp;ft² of roof + pavement; the design aims to slow, spread, and sink that
-      rather than lose it to the street.
+      rather than let it run off.
     </p>
 
     <p class="precip-src">
@@ -335,21 +336,22 @@
 
   <section class="page-section" id="flow-schematic">
     <h2 class="section-title">Site Water-Flow Schematic</h2>
-    <p class="subhead">Plan view of how water moves across the lot — from the 3DEP 1-meter DEM and the
-      Lesson&nbsp;4 zone map. A drafting guide for the Figma <b>Site Water Flow Map</b> (template p.&nbsp;61)
+    <p class="subhead">Plan view of how water moves across the lot — from the 2023 CT&nbsp;ECO lidar,
+      the 3DEP 1-meter DEM, the owner's on-site observation, and the Lesson&nbsp;4 zone map. A drafting guide for the Figma <b>Site Water Flow Map</b> (template p.&nbsp;61)
       and <b>Catchment Area Map</b> (p.&nbsp;59); trace it over the real base map.</p>
 
     <div class="panel">
       <svg class="chart" id="flow-chart" viewBox="0 0 900 560" role="img"
-        aria-label="Plan schematic: a narrow lot fronting Freestone Avenue with a drainage divide to the west, contours falling east, sheet flow entering from the west, crossing to the south-east, and exiting at the south-east corner to the street storm drains.">
+        aria-label="Plan schematic: a narrow lot fronting Freestone Avenue with a drainage divide to the west and contours falling east. The front yard drains to the street storm drains; the house splits the flow; a swale on the west side carries water back to the pool, and the backyard drains to a low point toward the back-east corner.">
       </svg>
     </div>
 
     <div class="flow-note">
-      <b>Read:</b> the ridge ~240&nbsp;ft west is the divide — water arrives from the <b>west / upslope</b>
-      side, crosses <b>east-southeast + south</b>, and exits at the <b>SE corner + frontage</b> to the
-      Freestone&nbsp;Ave storm drains (≈100% today). The existing NW swale ⑤ holds roof water back toward the
-      pool; a new SE-corner swale / rain garden ⑥ would sit in the outlet and catch the lot's whole throughput.
+      <b>Read:</b> the ridge ~240&nbsp;ft west is the divide, so water arrives from the <b>west / upslope</b>
+      yards. The <b>front yard</b> drains to the Freestone&nbsp;Ave storm drains. The <b>house splits the flow</b>:
+      the existing swale ⑤ on the Lot&nbsp;85 side carries water back to the pool, where it spreads and soaks
+      into the yard, and the <b>backyard</b> drains toward a low point (≈103&nbsp;ft) near the back-east corner.
+      A swale / rain garden ⑥ at the front would catch only the front yard's runoff before it reaches the street.
     </div>
 
     <p class="flow-src"><b>Source:</b> <code>lesson-05-water/work/watersheds-water-flow.md</code> +
@@ -738,8 +740,8 @@
   // ---- the lot ----
   const LX=214,LR=384,LT=52,LB=494;
   add(el("rect",{x:LX,y:LT,width:LR-LX,height:LB-LT,fill:"var(--flow-lot)",stroke:"var(--flow-lot-line)","stroke-width":1.8}));
-  txt("58 Freestone Ave — 0.43 ac  ·  back ≈108 ft",{x:LX,y:LT-8,class:"flow-lbl-m"});
-  txt("SE corner — low point ≈102 ft",{x:LR+10,y:LB-46,class:"flow-lbl-b",style:"fill:var(--flow-exit)"});
+  txt("58 Freestone Ave — 0.43 ac  ·  street ≈107 ft",{x:LX,y:LT-8,class:"flow-lbl-m"});
+  txt("back-east low ≈103 ft",{x:LR+10,y:168,class:"flow-lbl-b",style:"fill:var(--flow-flow)"});
 
   // ---- structures + numbered markers ----
   add(el("rect",{x:236,y:372,width:118,height:96,fill:"var(--flow-struct)",stroke:"var(--flow-struct-line)","stroke-width":1.2}));   // house
@@ -765,12 +767,18 @@
   // ---- flow ----
   [130,235,340,440].forEach(y=>arrow(96,y,210,y+16,"var(--flow-flow)","fl",1.7));
   txt("sheet flow from upslope (west) yards",{x:96,y:112,class:"flow-lbl-b",style:"fill:var(--flow-flow)"});
-  curve("M 232 130 C 280 240, 330 350, 366 460","var(--flow-flow)","fl",2.3);
-  curve("M 240 300 C 300 380, 340 440, 368 464","var(--flow-flow)","fl",2.3);
-  curve("M 246 460 C 300 484, 340 484, 366 470","var(--flow-flow)","fl",2.3);
-  txt("across the lot: E-SE + S",{x:392,y:340,class:"flow-lbl",style:"fill:var(--flow-flow)"});
+  // front yard -> street
+  [262,330].forEach(x=>arrow(x,472,x+6,490,"var(--flow-exit)","ex",2.2));
   curve("M 386 486 C 396 496, 400 500, 404 500","var(--flow-exit)","ex",2.6);
-  txt("→ Freestone Ave storm drains (≈100% today)",{x:414,y:504,class:"flow-lbl-b",style:"fill:var(--flow-exit)"});
+  txt("front yard → Freestone Ave storm drains",{x:414,y:504,class:"flow-lbl-b",style:"fill:var(--flow-exit)"});
+  // house splits the flow; east side and backyard run to the back-east low
+  curve("M 366 440 C 372 400, 372 360, 362 320","var(--flow-flow)","fl",2.3);
+  curve("M 330 300 C 345 250, 360 210, 370 180","var(--flow-flow)","fl",2.3);
+  curve("M 250 190 C 300 182, 340 176, 366 174","var(--flow-flow)","fl",2.3);
+  curve("M 300 70 C 330 110, 355 140, 370 164","var(--flow-flow)","fl",2.3);
+  add(el("ellipse",{cx:300,cy:290,rx:40,ry:34,fill:"none",stroke:"var(--flow-flow)","stroke-width":1,"stroke-dasharray":"3 3"}));
+  txt("soaks in",{x:300,y:340,"text-anchor":"middle",class:"flow-lbl",style:"fill:var(--flow-flow)"});
+  txt("house splits the flow",{x:392,y:390,class:"flow-lbl",style:"fill:var(--flow-flow)"});
 
   // ---- legend ----
   const legX=612, legY=64;
@@ -781,8 +789,8 @@
     "Driveway (asphalt)",
     "Above-ground pool",
     "Coop + shed → gutters + barrels",
-    "Existing NW swale → pool / lawn",
-    "PROPOSED swale / rain garden (outlet)",
+    "Existing swale (Lot 85 side) → pool",
+    "PROPOSED swale / rain garden (front yard)",
     "Spigot (addition / house seam)",
     "Meter — basement, by the panel"
   ];
