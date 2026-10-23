@@ -723,3 +723,21 @@ Three Property – current sheets, built from the CT 2023 lidar with `tools/shad
 4. **Microsite:** `sun-solar.html` gains a Garden Solar Analysis section (horizon, solar section, day
    length, roof TSRF summary), drawn from `solar.json`. The aerial-based views (24a–30a) stay in Figma:
    the public repo carries no real site imagery.
+
+### Owner decisions (2026-10-23)
+
+1. **Overlays clipped to the lot line.** Shapes are intersected with the plan outline (12a and 14a
+   zones, 13a's top-right Type 01 area, 20a states 4 and 5); originals stay hidden beside them as
+   "… (before lot clip)". Zone 05 pills turn vertical inside the remaining strip. 15a's soil overlay frame
+   is empty, so nothing changed there. On 18a, plants outside the line keep their symbols but get no
+   function badges (`species_maps_apply.py` now checks; 17 plants).
+2. **Swale ⑥ stays at the front** and catches front-yard runoff only.
+3. **Native status is three-way:** 34 native, 38 introduced, 2 not rated (the Allegheny blackberry section and
+   the ornamental allium subgenus, identified above species level). Figma Data Viz and
+   `species-inventory.html` match; the microsite catalog is regenerated from current iNaturalist data
+   (taxa above genus, such as "Dicots", are left out).
+4. **Garden pruning modeled** (`site-plan/data/garden_pruning_build.py` in the Lot 86 repo). The garden
+   sits behind a continuous canopy, not one tree. Clearing on-lot canopy in the sun's sector
+   (azimuth 100–260°) raises April 15 – October 15 direct sun from 2.1 h a day to 3.2 h (within 30 ft,
+   about 800 ft²), 4.2 h (40 ft, about 1,300 ft²) or 5.3 h (60 ft, about 2,400 ft²). Six hours a day
+   needs neighbors' trees cut too. A crown reduction to 15 ft matches removal out to 30 ft.

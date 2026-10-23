@@ -59,3 +59,17 @@ details to this repo. Never name neighbors or other private third parties.
 
 Early. Tools and docs were extracted from the demo site's own repo. The analyses in the demo
 are written for one property and have not yet been parameterized for other addresses.
+
+### Later: kickoff research lookups
+
+To design when the deep-research phase of starting a new site gets focus. That phase needs a
+set of location-based lookups to run for every new site. The first one found so far:
+
+- **Native plant nurseries near the site.** It came up while sourcing plants for the demo
+  site's Lesson 8 plant system design. A state extension list is a good starting source. In
+  Connecticut it's UConn's
+  [native plant availability and nursery list](https://ipm.cahnr.uconn.edu/native-plant-availability-nurseries/),
+  which gives each nursery's town and marks retail or wholesale. Filter it by distance from the
+  site, then check each nursery's season and hours.
+
+Add more lookups here as other lessons turn them up.
