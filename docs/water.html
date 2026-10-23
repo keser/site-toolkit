@@ -746,29 +746,29 @@
   // ---- structures + numbered markers ----
   add(el("rect",{x:236,y:372,width:118,height:96,fill:"var(--flow-struct)",stroke:"var(--flow-struct-line)","stroke-width":1.2}));   // house
   add(el("rect",{x:236,y:352,width:52,height:20,fill:"var(--flow-struct)",stroke:"var(--flow-struct-line)","stroke-width":1}));      // addition
-  add(el("path",{d:"M 214 494 L 236 494 L 236 320 L 214 300 Z",fill:"var(--flow-struct)",opacity:.85,stroke:"var(--flow-struct-line)","stroke-width":1})); // driveway
+  add(el("path",{d:"M 384 494 L 362 494 L 362 320 L 384 300 Z",fill:"var(--flow-struct)",opacity:.85,stroke:"var(--flow-struct-line)","stroke-width":1})); // driveway
   add(el("circle",{cx:300,cy:290,r:22,fill:"var(--flow-pool)",opacity:.8,stroke:"var(--flow-struct-line)","stroke-width":1}));       // pool
   add(el("rect",{x:250,y:224,width:24,height:22,fill:"var(--flow-struct)",stroke:"var(--flow-struct-line)","stroke-width":1}));      // coop
   add(el("rect",{x:284,y:224,width:28,height:22,fill:"var(--flow-struct)",stroke:"var(--flow-struct-line)","stroke-width":1}));      // shed
   curve("M 236 470 C 226 400, 226 340, 244 300","var(--flow-swale-old)","sw",2);                                               // existing swale
-  add(el("ellipse",{cx:372,cy:476,rx:24,ry:11,fill:"none",stroke:"var(--flow-swale-new)","stroke-width":2}));                   // proposed SE feature
+  add(el("ellipse",{cx:300,cy:481,rx:38,ry:8,fill:"none",stroke:"var(--flow-swale-new)","stroke-width":2}));                   // proposed front-yard feature
   add(el("circle",{cx:354,cy:392,r:3,fill:"var(--flow-flow)"}));                                                                // spigot
-  add(el("rect",{x:300,y:462,width:7,height:7,fill:"none",stroke:"var(--chart-neutral-reference)","stroke-width":1}));              // meter
+  add(el("rect",{x:300,y:440,width:7,height:7,fill:"none",stroke:"var(--chart-neutral-reference)","stroke-width":1}));              // meter
 
   marker(295,420,1);  // house
-  marker(224,360,2);  // driveway
+  marker(373,350,2);  // driveway
   marker(300,290,3);  // pool
   marker(298,235,4);  // coop+shed
   marker(228,340,5);  // existing swale
-  marker(372,476,6);  // proposed SE feature
+  marker(300,481,6);  // proposed front-yard feature
   marker(354,392,7);  // spigot
-  marker(303,466,8);  // meter
+  marker(303,444,8);  // meter
 
   // ---- flow ----
   [130,235,340,440].forEach(y=>arrow(96,y,210,y+16,"var(--flow-flow)","fl",1.7));
   txt("sheet flow from upslope (west) yards",{x:96,y:112,class:"flow-lbl-b",style:"fill:var(--flow-flow)"});
   // front yard -> street
-  [262,330].forEach(x=>arrow(x,472,x+6,490,"var(--flow-exit)","ex",2.2));
+  [246,350].forEach(x=>arrow(x,472,x+4,490,"var(--flow-exit)","ex",2.2));
   curve("M 386 486 C 396 496, 400 500, 404 500","var(--flow-exit)","ex",2.6);
   txt("front yard → Freestone Ave storm drains",{x:414,y:504,class:"flow-lbl-b",style:"fill:var(--flow-exit)"});
   // house splits the flow; east side and backyard run to the back-east low

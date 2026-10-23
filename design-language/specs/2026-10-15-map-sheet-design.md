@@ -623,8 +623,8 @@ than to the curb, but a short pitch to the curb is below its 2 ft resolution, so
 the owner. `water.html` now says only the front yard reaches the storm drains, and the proposed swale
 ⑥ catches front-yard runoff only. Whether ⑥ stays at the front is a design call for the owner.
 Sheets 10a and 11a: flow arrows redrawn to the back-east low (new `lowpoint-back-east` marker on
-10a), front-yard arrows to the street, key text to match. The `water.html` schematic still draws the
-driveway on the west side; on the base map it is on the east. The schematic is not to scale.
+10a), front-yard arrows to the street, key text to match. The `water.html` schematic now draws the
+driveway on the east side, as the base map does, with swale ⑥ across the front yard.
 
 ### Shadow study and sun hours (2026-10-22, roadmap step 3)
 
@@ -711,3 +711,15 @@ Three Property – current sheets, built from the CT 2023 lidar with `tools/shad
     That tree is the main factor. The lidar is leaf-off, so if it is deciduous, spring and fall sun
     is better than shown.
   - House roof: median TSRF 58%; about 200 ft² at 75% and up, on the south-facing plane.
+
+### Cleanup pass (2026-10-23)
+
+1. **Sun Paths key:** its `key-grid` is now a vertical stack, so a hidden row (09.1 hides
+   "Lot boundary") no longer leaves an empty track.
+2. **`water.html` schematic:** driveway on the east side, matching the base map; swale ⑥ across the
+   front yard; meter marker inside the house.
+3. **Overlays past the plan lot line:** listed for the owner, not changed. Zones and paths are design
+   calls. Catchment, sector and wind arrows on 11a and 23a reach past the line by design.
+4. **Microsite:** `sun-solar.html` gains a Garden Solar Analysis section (horizon, solar section, day
+   length, roof TSRF summary), drawn from `solar.json`. The aerial-based views (24a–30a) stay in Figma:
+   the public repo carries no real site imagery.
