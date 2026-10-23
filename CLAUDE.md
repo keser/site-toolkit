@@ -15,12 +15,14 @@ settled.
   purpose; if that section is re-ported from its source, strip the number again and don't quote it.
 - Anything committed to a public repo is permanently public. Every file in `docs/assets/` is a
   deliberate decision to publish it.
-- **Demo images are checkerboard placeholders** (SVG, gray and white tiles) labeled with the subject
-  ("Bioregion map of your project site here"). Real site imagery does not go in this repo. If a
-  future demo shows real imagery, use high-resolution source images, added deliberately, never
-  screenshots of slides.
-- The species page uses one shared placeholder (`docs/assets/species-placeholder.svg`) and no
-  remote photo URLs.
+- **The demo shows real Lot 86 imagery** (owner's decision, 2026-10-23), and only Lot 86. Images
+  come from high-resolution sources, added deliberately: Figma map sheets exported at full size,
+  CT ECO orthoimagery, the owner's own iNaturalist photos. Never screenshots of slides. Each image
+  gets a source credit on its page. Images still missing stay checkerboard placeholders (SVG, gray
+  and white tiles) labeled with the subject.
+- Lot 86 images are built by `site-plan/data/microsite_assets_build.py` in the Lot 86 repo
+  (parcel aerial, species photos) or exported from the Figma map sheets. Species photos live in
+  `docs/assets/species/`, resized to 600 px; no remote photo URLs.
 
 ## Layout
 - `docs/` — demo microsite, GitHub Pages source (`main` / `/docs`). Plain static HTML, no

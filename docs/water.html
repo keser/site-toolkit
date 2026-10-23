@@ -288,8 +288,8 @@
   <section class="page-section" id="water-balance">
     <h2 class="section-title">Site Water Balance</h2>
     <p class="subhead">Where an average year's rain goes on the 0.43-acre lot. About three-quarters
-      soaks in or evaporates; the other quarter — ≈129,000&nbsp;gal — runs off, and today
-      essentially all of it leaves to the Freestone&nbsp;Avenue storm drains.</p>
+      soaks in or evaporates; the other quarter — ≈129,000&nbsp;gal — runs off. The front yard's share reaches the
+      Freestone&nbsp;Avenue storm drains; the rest runs to the backyard and soaks in.</p>
 
     <div class="panel">
       <svg class="chart" id="wbal-chart" viewBox="0 0 970 360" role="img"
@@ -298,10 +298,11 @@
     </div>
 
     <div class="wbal-foot">
-      <b>Today:</b> ~100% of that 129,000&nbsp;gal/yr of runoff exits to the Freestone&nbsp;Avenue
-      storm drains — the site keeps almost none of it.<br>
-      <b>Design goal:</b> redirect the runoff into on-site infiltration (extend the NW drip-line
-      swale, add an SE-corner swale / rain garden, a driveway-edge strip) and build soil sponge
+      <b>Today:</b> runoff from the front yard exits to the Freestone&nbsp;Avenue storm drains; behind the
+      house it follows the swale to the pool or drains to the back-east low and soaks in. The split
+      between the two has not been measured.<br>
+      <b>Design goal:</b> redirect the runoff into on-site infiltration (extend the drip-line
+      swale on the Lot&nbsp;85 side, add a front-yard swale / rain garden, a driveway-edge strip) and build soil sponge
       across the lawn, plus ≈4,400&nbsp;gal/yr of active harvest from the coop + shed roofs into
       Zone-3 barrels. No large cistern is warranted.
     </div>
@@ -633,8 +634,8 @@
   const brace=el("path",{d:`M ${xC+NW+150} ${cHardY} L ${xC+NW+164} ${cHardY} L ${xC+NW+164} ${cPermY+permV*s} L ${xC+NW+150} ${cPermY+permV*s}`,
     fill:"none",stroke:"var(--wbal-runoff)","stroke-width":1.5});
   svg.appendChild(brace);
-  txt(svg,"→ storm drains",{x:xC+NW+170,y:(cHardY+cPermY+permV*s)/2-4});
-  txt(svg,"(≈100% today)",{x:xC+NW+170,y:(cHardY+cPermY+permV*s)/2+11},"wbal-nsub");
+  txt(svg,"→ front yard: storm drains",{x:xC+NW+170,y:(cHardY+cPermY+permV*s)/2-4});
+  txt(svg,"backyard: soaks in · split not measured",{x:xC+NW+170,y:(cHardY+cPermY+permV*s)/2+11},"wbal-nsub");
 })();
 (function(){
   const NS="http://www.w3.org/2000/svg";
