@@ -95,3 +95,10 @@ def test_naip_rgb_layer_is_true_color_png_for_wide_views():
     naip = next(layer for layer in f.layers(2023) if layer["file"] == "naip-rgb.png")
     assert naip["service"].endswith("/images/NAIP_2023/ImageServer")
     assert naip["fmt"] == "png" and naip["bands"] == [0, 1, 2]
+
+
+def test_mosaic_1934_layer_is_magics_statewide_fairchild_mosaic():
+    m = next(layer for layer in f.layers(2023) if layer["file"] == "mosaic-1934.png")
+    assert m["service"].endswith("/images/Mosaic_1934_MAGIC/ImageServer")
+    assert m["fmt"] == "png" and m.get("bands") is None  # one gray band
+    assert "1934" in m["what"]

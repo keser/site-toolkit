@@ -128,6 +128,9 @@ def layers(year):
          "what": f"NAIP {year}, bands R, G, B, near-infrared"},
         {"file": "naip-rgb.png", "service": naip, "pixel_ft": 1, "fmt": "png", "bands": [0, 1, 2],
          "what": f"NAIP {year}, true color, leaf-on summer flight"},
+        {"file": "mosaic-1934.png", "service": f"{CT_ECO}/images/Mosaic_1934_MAGIC/ImageServer", "pixel_ft": 2,
+         "fmt": "png", "what": "1934 Fairchild aerial survey, grayscale; scanned, georeferenced and mosaicked "
+                                "by UConn MAGIC, originals at the CT State Library (any --year)"},
         {"file": "surface-ft.tif", "service": f"{CT_ECO}/elevation/MaxSurfaceHeight_{year}/ImageServer",
          "pixel_ft": 2, "fmt": "tiff", "pixel_type": "F32",
          "what": f"{year} lidar max surface elevation (treetops, roofs), feet; "

@@ -28,7 +28,7 @@ afterwards the owner swaps each slide screenshot for a crop of the same source i
 | R4 | County | Middlesex County, 82 × 46 mi frame | Sentinel-2 cloudless 2016 (EOX), lines from Census TIGERweb 2020 | CC BY 4.0; TIGER public domain | (new) |
 | R5 | State | Connecticut, 205 × 115 mi frame | Sentinel-2 cloudless 2016 (EOX), TIGERweb 2020 lines | CC BY 4.0; TIGER public domain | Slide 10 state view |
 | R6 | Region | Southern New England and Long Island Sound | Sentinel-2 Cloudless 2016 (EOX) | CC BY 4.0, credit "Sentinel-2 cloudless – https://s2maps.eu by EOX IT Services GmbH (Contains modified Copernicus Sentinel data 2016)". Later years are CC BY-NC-SA 4.0, so 2016 keeps the license simple | Slide 10 world/region view |
-| H1 | 1938 hurricane | Oblique photos of Portland, to find | CT State Library, 1938 Hurricane Aerial Photographs (Sept 23–24, 1938, 118th Photographic Section, US Army Air Corps, and CT National Guard 43rd Division), via the Connecticut Digital Archive | to confirm per item on the CDA record | Slide 13 |
+| H1 | 1934 aerial survey | R2's neighborhood frame | UConn MAGIC's 1934 mosaic (CT ECO `Mosaic_1934_MAGIC`): Fairchild Aerial Surveys, spring 1934, originals at the CT State Library | no terms stated; private until confirmed | Slide 13 (frame 09180, the same survey) |
 | H2 | 1990 color infrared | R2's neighborhood frame | CT DEP 1990 CIR, frame 0585, Keystone Aerial Surveys, Aug 1990, UConn Library MAGIC (scanned PDF) | state agency record served by MAGIC; credit as MAGIC asks (to confirm on their site) | Slide 14 and 159; microsite "Historic Images (1990)" |
 | S1 | Lidar terrain | 820 × 461 ft around the lot | CT 2023 lidar (already fetched) | public | Ties to 28a; microsite option |
 
@@ -115,3 +115,12 @@ the owner wants road distance.
   frame so the two compare directly; phase correlation against R2 puts it within about 5 ft near the
   lot. MAGIC states no reuse terms, so H2 stays out of the public microsite until they confirm.
 - **Left:** H1 (waits on a working 1938 source), the microsite step, and the owner's slide swaps.
+- **H1 reset to the 1934 survey (owner, 2026-10-24).** No overhead grid survey of the 1938 hurricane
+  was found, only low oblique shots of buildings and waterways, so the hurricane map is dropped. H1
+  is now the oldest overhead view of the site: MAGIC's 1934 mosaic in R2's frame, so 1934, 1990 (H2)
+  and 2023 (R2) line up. CT ECO's `Historic_1934` service has no frames over Portland. The mosaic
+  is built from separate tiles and sat about 75 ft off here: corrected by matching the quarry and
+  river shorelines, then the lot's street (`mosaic_1934_fit.json`). Flood history stays on the course
+  storm slides; the owner is tracing that photo's source.
+- **Publishing:** H1 and H2 have no stated reuse terms (MAGIC; CT State Library), so both stay out of
+  the microsite until confirmed. R1–R6 and S1 are clear to publish with their credits.
