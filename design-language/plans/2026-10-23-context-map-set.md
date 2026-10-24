@@ -124,3 +124,9 @@ the owner wants road distance.
   storm slides; the owner is tracing that photo's source.
 - **Publishing:** H1 and H2 have no stated reuse terms (MAGIC; CT State Library), so both stay out of
   the microsite until confirmed. R1–R6 and S1 are clear to publish with their credits.
+- **Published (2026-10-24).** Home: R3 and R2 in the history cards. Base map page: R1. Climate page:
+  R4–R6 as a regional series, and R7 in the bioregion panel. Water page: S1. H1 and H2 wait on reuse
+  terms.
+- **R7 Bioregion (owner chose option A, 2026-10-24).** One Earth's NA10 is RESOLVE Ecoregions 2017
+  #335, #338, #339 (CC BY 4.0), so R7 traces their union on Sentinel-2 cloudless 2016, 250 mi = 234 px.
+  One Earth gets credit for the grouping and name; its own map image (sheet 01) stays unpublished.
