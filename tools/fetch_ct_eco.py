@@ -4,6 +4,10 @@
 Usage:
     python3 tools/fetch_ct_eco.py --lat 41.5728 --lon -72.6344 --out <dir>
         [--radius-ft 300] [--year 2023] [--only surface-ft.tif ground-ft.tif]
+        [--width-ft 2640 --height-ft 1485] [--pixel-ft 0.6875]
+
+--width-ft/--height-ft fetch a rectangle instead of the square, and --pixel-ft coarsens every
+layer, for wide context views (a neighborhood) that would exceed the server's 4100 px limit.
 
 Every raster covers the same square box in CT State Plane feet (EPSG:6434), centered on the
 site, so the layers stack pixel for pixel. Writes manifest.json with each file's source,
@@ -62,6 +66,10 @@ def site_box(x, y, radius_ft):
     return (x - radius_ft, y - radius_ft, x + radius_ft, y + radius_ft)
 
 
+def rect_box(x, y, width_ft, height_ft):
+    return (x - width_ft / 2, y - height_ft / 2, x + width_ft / 2, y + height_ft / 2)
+
+
 def export_url(service, box, pixel_ft, fmt, bands=None, pixel_type=None):
     w = round((box[2] - box[0]) / pixel_ft)
     h = round((box[3] - box[1]) / pixel_ft)
@@ -115,9 +123,12 @@ def layers(year):
     ]
 
 
-def select_layers(year, only):
-    """The layers whose file names are in `only` (all layers when `only` is None)."""
+def select_layers(year, only, pixel_ft=None):
+    """The layers whose file names are in `only` (all layers when `only` is None), at `pixel_ft`
+    instead of each layer's own pixel size when given."""
     every = layers(year)
+    if pixel_ft is not None:
+        every = [{**layer, "pixel_ft": pixel_ft} for layer in every]
     if only is None:
         return every
     known = {layer["file"] for layer in every} | {"buildings.geojson"}
@@ -135,16 +146,16 @@ def _get(url):
     return data
 
 
-def fetch(lat, lon, out, radius_ft=300, year=2023, only=None):
+def fetch(lat, lon, out, radius_ft=300, year=2023, only=None, width_ft=None, height_ft=None, pixel_ft=None):
     out = Path(out)
     out.mkdir(parents=True, exist_ok=True)
     x, y = latlon_to_ct_ft(lat, lon)
-    box = site_box(x, y, radius_ft)
+    box = rect_box(x, y, width_ft, height_ft) if width_ft else site_box(x, y, radius_ft)
     citation = f"CT State GIS Office. ({year}). {year} Aerial imagery and elevation. CT ECO, UConn."
     manifest = {"center": {"lat": lat, "lon": lon, "x_ft": round(x, 2), "y_ft": round(y, 2)},
                 "box_ft": [round(v, 2) for v in box], "sr": f"EPSG:{SR}", "year": year,
                 "fetched": date.today().isoformat(), "citation": citation, "files": []}
-    for layer in select_layers(year, only):
+    for layer in select_layers(year, only, pixel_ft):
         url = export_url(layer["service"], box, layer["pixel_ft"], layer["fmt"],
                          layer.get("bands"), layer.get("pixel_type"))
         (out / layer["file"]).write_bytes(_get(url))
@@ -172,10 +183,15 @@ def main():
     p.add_argument("--out", required=True)
     p.add_argument("--radius-ft", type=float, default=300)
     p.add_argument("--year", type=int, default=2023)
+    p.add_argument("--width-ft", type=float, help="rectangle width (with --height-ft) instead of the square")
+    p.add_argument("--height-ft", type=float)
+    p.add_argument("--pixel-ft", type=float, help="pixel size for every layer, for wide views")
     p.add_argument("--only", nargs="+", metavar="FILE",
                    help="fetch only these files, e.g. surface-ft.tif ground-ft.tif (for a wide shade box)")
     a = p.parse_args()
-    fetch(a.lat, a.lon, a.out, a.radius_ft, a.year, a.only)
+    if (a.width_ft is None) != (a.height_ft is None):
+        p.error("--width-ft and --height-ft go together")
+    fetch(a.lat, a.lon, a.out, a.radius_ft, a.year, a.only, a.width_ft, a.height_ft, a.pixel_ft)
 
 
 if __name__ == "__main__":

@@ -71,3 +71,13 @@ def test_select_layers_with_no_filter_returns_every_layer():
 def test_select_layers_rejects_an_unknown_file():
     with pytest.raises(ValueError, match="ortho.jpg"):
         f.select_layers(2023, ["ortho.jpg"])
+
+
+def test_rect_box_is_centered_with_given_width_and_height():
+    assert f.rect_box(1000.0, 2000.0, 2640, 1485) == (-320.0, 1257.5, 2320.0, 2742.5)
+
+
+def test_select_layers_overrides_pixel_size_for_wide_views():
+    picked = f.select_layers(2023, ["ortho-rgb.png"], pixel_ft=0.6875)
+    assert [layer["pixel_ft"] for layer in picked] == [0.6875]
+    assert f.select_layers(2023, ["ortho-rgb.png"])[0]["pixel_ft"] == 0.25  # default untouched

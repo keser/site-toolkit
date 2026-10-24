@@ -84,6 +84,9 @@ the owner wants road distance.
   `context/r1-site.jpg` and `context.json` (5.79 px/ft, north −65.46°, 40 ft bar = 231.7 px). The
   sheet sits in `Regional & overlay`. The base map's aerial layer now holds the same image, and the
   unsourced 2026-07-03 screen capture is hidden in both variants.
-- **Scale bar drift.** The `map-scale` Lot variant draws 40 ft at 234 px, about 1% long for the base
-  map frame. An instance can't be resized, so R1 and the other base-map sheets carry the 1% until the
-  component gets a variant sized to the computed length.
+- **Scale bar fixed (2026-10-24).** New `map-scale` variant `Scale=Base map` draws 40 ft at the
+  computed 231.7 px. All 24 sheets that used `Scale=Lot` (every base-map-frame sheet, the template and
+  the course sheets) now use it. `Lot` is unused; `Garden detail` (22, 30a) is not yet checked.
+- **R2 Neighborhood – satellite (2026-10-24).** CT ECO 2023 ortho, north up, fetched with the new
+  `fetch_ct_eco.py --width-ft --height-ft --pixel-ft` options. Each regional sheet picks its extent so
+  a round distance spans the fixed 234 px bar (here 300 ft, 0.78 px/ft), instead of resizing the bar.
