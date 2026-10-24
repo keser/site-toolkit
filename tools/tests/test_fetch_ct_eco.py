@@ -81,3 +81,17 @@ def test_select_layers_overrides_pixel_size_for_wide_views():
     picked = f.select_layers(2023, ["ortho-rgb.png"], pixel_ft=0.6875)
     assert [layer["pixel_ft"] for layer in picked] == [0.6875]
     assert f.select_layers(2023, ["ortho-rgb.png"])[0]["pixel_ft"] == 0.25  # default untouched
+
+
+def test_ct_ft_to_latlon_inverts_the_projection():
+    lat, lon = f.ct_ft_to_latlon(1031631.09, 769456.67)
+    assert lat == pytest.approx(41.5728, abs=1e-6)
+    assert lon == pytest.approx(-72.6344, abs=1e-6)
+    x, y = f.latlon_to_ct_ft(*f.ct_ft_to_latlon(1020000.0, 760000.0))
+    assert (x, y) == (pytest.approx(1020000.0, abs=0.01), pytest.approx(760000.0, abs=0.01))
+
+
+def test_naip_rgb_layer_is_true_color_png_for_wide_views():
+    naip = next(layer for layer in f.layers(2023) if layer["file"] == "naip-rgb.png")
+    assert naip["service"].endswith("/images/NAIP_2023/ImageServer")
+    assert naip["fmt"] == "png" and naip["bands"] == [0, 1, 2]

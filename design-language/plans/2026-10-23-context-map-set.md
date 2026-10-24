@@ -90,3 +90,10 @@ the owner wants road distance.
 - **R2 Neighborhood – satellite (2026-10-24).** CT ECO 2023 ortho, north up, fetched with the new
   `fetch_ct_eco.py --width-ft --height-ft --pixel-ft` options. Each regional sheet picks its extent so
   a round distance spans the fixed 234 px bar (here 300 ft, 0.78 px/ft), instead of resizing the bar.
+- **R3 Community resources (2026-10-24).** NAIP 2023 true color, 1 mi = 234 px, framed so the points
+  sit left of a new `map-key` variant (Default / Community Resources). Places come from slide 58: the
+  slide map was fitted to NAIP by matching water (93% overlap) and each marker matched to
+  OpenStreetMap; the owner confirmed them and named marker 8 as Tractor Supply. Road distances are
+  re-routed from the lot with OSRM; changed from the slide: hospital 2.5 → 2.4 mi, gas 0.4 → 0.3, population
+  center 1.6 → 1.7, public space 1.1 → 0.8 (to the park entrance), farm supply 4.1 → 3.9, building supply
+  3.5 → 3.6. The two off-map resources are a note in the key, as the owner asked.

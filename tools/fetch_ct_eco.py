@@ -62,6 +62,19 @@ def latlon_to_ct_ft(lat, lon):
     return x, y
 
 
+def ct_ft_to_latlon(x, y):
+    """EPSG:6434 easting, northing in US survey feet to degrees (the inverse of latlon_to_ct_ft)."""
+    dx, dy = (x - _FE) * _FT, _R0 - (y - _FN) * _FT
+    r = math.copysign(math.hypot(dx, dy), _N)
+    t = (r / (_A * _BIGF)) ** (1 / _N)
+    lon = math.atan2(dx, dy) / _N + _LON0
+    phi = math.pi / 2 - 2 * math.atan(t)
+    for _ in range(10):
+        s = _E * math.sin(phi)
+        phi = math.pi / 2 - 2 * math.atan(t * ((1 - s) / (1 + s)) ** (_E / 2))
+    return math.degrees(phi), math.degrees(lon)
+
+
 def site_box(x, y, radius_ft):
     return (x - radius_ft, y - radius_ft, x + radius_ft, y + radius_ft)
 
@@ -113,6 +126,8 @@ def layers(year):
          "what": f"{year} orthoimagery, bands R, G, B, near-infrared"},
         {"file": "naip-4band.tif", "service": naip, "pixel_ft": 1, "fmt": "tiff", "bands": [0, 1, 2, 3],
          "what": f"NAIP {year}, bands R, G, B, near-infrared"},
+        {"file": "naip-rgb.png", "service": naip, "pixel_ft": 1, "fmt": "png", "bands": [0, 1, 2],
+         "what": f"NAIP {year}, true color, leaf-on summer flight"},
         {"file": "surface-ft.tif", "service": f"{CT_ECO}/elevation/MaxSurfaceHeight_{year}/ImageServer",
          "pixel_ft": 2, "fmt": "tiff", "pixel_type": "F32",
          "what": f"{year} lidar max surface elevation (treetops, roofs), feet; "
