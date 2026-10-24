@@ -1,6 +1,6 @@
 # Context map set: documented satellite, community and historic views
 
-Status: draft for the owner's approval (2026-10-23). Nothing is built yet.
+Status: approved 2026-10-24; R1 built. Southern New England (R6) is the top of the series; no world view.
 
 ## Goal
 
@@ -77,5 +77,13 @@ the owner wants road distance.
    major Connecticut events were the March 1936 flood and the September 1938 hurricane. Worth
    checking before the history text is reused.
 3. **Flood photo.** The source of the slide 55 photo, if it can be traced.
-4. **Region and state.** Is a world or continent view wanted, or is southern New England the top
-   of the series?
+
+## Progress
+
+- **R1 Site – satellite (2026-10-24).** `context_maps_build.py` in the Lot 86 repo writes
+  `context/r1-site.jpg` and `context.json` (5.79 px/ft, north −65.46°, 40 ft bar = 231.7 px). The
+  sheet sits in `Regional & overlay`. The base map's aerial layer now holds the same image, and the
+  unsourced 2026-07-03 screen capture is hidden in both variants.
+- **Scale bar drift.** The `map-scale` Lot variant draws 40 ft at 234 px, about 1% long for the base
+  map frame. An instance can't be resized, so R1 and the other base-map sheets carry the 1% until the
+  component gets a variant sized to the computed length.
