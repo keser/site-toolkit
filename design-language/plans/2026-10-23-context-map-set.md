@@ -28,7 +28,7 @@ afterwards the owner swaps each slide screenshot for a crop of the same source i
 | R4 | County | Middlesex County, 82 × 46 mi frame | Sentinel-2 cloudless 2016 (EOX), lines from Census TIGERweb 2020 | CC BY 4.0; TIGER public domain | (new) |
 | R5 | State | Connecticut, 205 × 115 mi frame | Sentinel-2 cloudless 2016 (EOX), TIGERweb 2020 lines | CC BY 4.0; TIGER public domain | Slide 10 state view |
 | R6 | Region | Southern New England and Long Island Sound | Sentinel-2 Cloudless 2016 (EOX) | CC BY 4.0, credit "Sentinel-2 cloudless – https://s2maps.eu by EOX IT Services GmbH (Contains modified Copernicus Sentinel data 2016)". Later years are CC BY-NC-SA 4.0, so 2016 keeps the license simple | Slide 10 world/region view |
-| H1 | 1938 hurricane | The owner's oblique photos | CT State Library, 1938 Hurricane Aerial Photographs (Sept 23–24, 1938, 118th Photographic Section, US Army Air Corps, and CT National Guard 43rd Division), via the Connecticut Digital Archive | to confirm per item on the CDA record | Slide 13 |
+| H1 | 1938 hurricane | Oblique photos of Portland, to find | CT State Library, 1938 Hurricane Aerial Photographs (Sept 23–24, 1938, 118th Photographic Section, US Army Air Corps, and CT National Guard 43rd Division), via the Connecticut Digital Archive | to confirm per item on the CDA record | Slide 13 |
 | H2 | 1990 color infrared | Area and lot crops | CT DEP 1990 CIR, frame 0585, Keystone Aerial Surveys, Aug 1990, UConn Library MAGIC (scanned PDF) | state agency record served by MAGIC; credit as MAGIC asks (to confirm on their site) | Slide 14 and 159; microsite "Historic Images (1990)" |
 | S1 | Lidar terrain | Lot plus 300 ft | CT 2023 lidar (already fetched) | public | Ties to 28a; microsite option |
 
@@ -72,12 +72,15 @@ the owner wants road distance.
 ## Open questions for the owner
 
 1. **Resource names.** The nine places behind slide 58's markers (name or address for each).
-2. **Hurricane date (answered 2026-10-24).** The 1938 New England Hurricane. The owner's photos are
-   from the CT State Library's 1938 hurricane aerials
-   (https://libguides.ctstatelibrary.org/hg/aerialphotos/1938), not the 1934 Fairchild survey.
-   Those are 132 **oblique** views, so H1 is a photo sheet with a locator and view direction, not a
-   scaled map. Open: which CDA items the owner used, and each item's rights statement. The 1934
-   Fairchild mosaic (CT ECO `Historic_1934`) could still pair with it as a georeferenced "before".
+2. **Hurricane date (answered 2026-10-24).** The 1938 New England Hurricane. The slide 13 photo is
+   not from it: its caption reads "Aerial survey of Connecticut 1934 photograph 09180, Fairchild
+   Aerial Survey Co Apr 1934", a 1934 statewide grid frame, and it already shows the quarries
+   flooded. The owner used it by mistake (confirmed 2026-10-24). The course needs real 1938 damage
+   photos: the CT State Library's 1938 Hurricane Aerial Photographs
+   (https://libguides.ctstatelibrary.org/hg/aerialphotos/1938), 132 oblique views flown Sept 23–24,
+   1938, including the Connecticut River to Cromwell. Open: which items show Portland, and each
+   item's rights statement. The library's catalog sites (CT Digital Archive, CONTENTdm) refused
+   connections on 2026-10-24, so the search waits. Frame 09180 can still serve as a 1934 "before".
 3. **Flood photo.** The source of the slide 55 photo, if it can be traced.
 
 ## Progress
