@@ -29,8 +29,8 @@ afterwards the owner swaps each slide screenshot for a crop of the same source i
 | R5 | State | Connecticut, 205 × 115 mi frame | Sentinel-2 cloudless 2016 (EOX), TIGERweb 2020 lines | CC BY 4.0; TIGER public domain | Slide 10 state view |
 | R6 | Region | Southern New England and Long Island Sound | Sentinel-2 Cloudless 2016 (EOX) | CC BY 4.0, credit "Sentinel-2 cloudless – https://s2maps.eu by EOX IT Services GmbH (Contains modified Copernicus Sentinel data 2016)". Later years are CC BY-NC-SA 4.0, so 2016 keeps the license simple | Slide 10 world/region view |
 | H1 | 1938 hurricane | Oblique photos of Portland, to find | CT State Library, 1938 Hurricane Aerial Photographs (Sept 23–24, 1938, 118th Photographic Section, US Army Air Corps, and CT National Guard 43rd Division), via the Connecticut Digital Archive | to confirm per item on the CDA record | Slide 13 |
-| H2 | 1990 color infrared | Area and lot crops | CT DEP 1990 CIR, frame 0585, Keystone Aerial Surveys, Aug 1990, UConn Library MAGIC (scanned PDF) | state agency record served by MAGIC; credit as MAGIC asks (to confirm on their site) | Slide 14 and 159; microsite "Historic Images (1990)" |
-| S1 | Lidar terrain | Lot plus 300 ft | CT 2023 lidar (already fetched) | public | Ties to 28a; microsite option |
+| H2 | 1990 color infrared | R2's neighborhood frame | CT DEP 1990 CIR, frame 0585, Keystone Aerial Surveys, Aug 1990, UConn Library MAGIC (scanned PDF) | state agency record served by MAGIC; credit as MAGIC asks (to confirm on their site) | Slide 14 and 159; microsite "Historic Images (1990)" |
+| S1 | Lidar terrain | 820 × 461 ft around the lot | CT 2023 lidar (already fetched) | public | Ties to 28a; microsite option |
 
 Each sheet gets an inset locator (small outline of the next view up) so the series reads as a zoom
 from region to lot.
@@ -108,3 +108,10 @@ the owner wants road distance.
   TIGERweb 2020 lines. Scales: 10 mi and 25 mi on the 234 px bar. R4 outlines R3's frame; R5 outlines
   Middlesex County. New `map-key` variants County and State carry the full CC BY credit. The TIGER
   lines are legal boundaries, so they run into the Sound.
+- **R6, S1, H2 (2026-10-24).** R6 Southern New England: Sentinel-2 cloudless 2016, 50 mi = 234 px,
+  CT/RI/MA lines strong and neighbors faint. S1 Lidar terrain: bare earth tinted 88–122 ft under a 3×
+  hillshade, 1 ft contours with 5 ft index labels, 100 ft = 234 px. H2: the MAGIC 1990 frame 0585,
+  registered to NAIP by matching water (`cir_1990_fit.py` in the Lot 86 repo) and resampled into R2's
+  frame so the two compare directly; phase correlation against R2 puts it within about 5 ft near the
+  lot. MAGIC states no reuse terms, so H2 stays out of the public microsite until they confirm.
+- **Left:** H1 (waits on a working 1938 source), the microsite step, and the owner's slide swaps.
