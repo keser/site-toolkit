@@ -1,0 +1,17 @@
+{
+  "tokens": {
+    "sun/full-sun": "gold/100",
+    "sun/part-sun": "gold/300",
+    "sun/part-shade": "slate/400",
+    "sun/shade": "slate/700",
+    "vigor/bare": "charcoal/100",
+    "vigor/sparse": "sage/100",
+    "vigor/moderate": "sage/300",
+    "vigor/dense": "sage/600",
+    "terrain/low": "sage/100",
+    "terrain/mid": "gold/50",
+    "terrain/high": "gold/200",
+    "terrain/contour": "slate/400",
+    "terrain/contour-index": "slate/600"
+  }
+}

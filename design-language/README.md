@@ -42,6 +42,10 @@ plans refer to those pages by name.
 - **Charts:** "Chart Semantic" and "Chart Neutral" collections, mirrored for the microsite in
   `docs/assets/chart-tokens.css` and checked by `tools/check_chart_tokens.py`. History:
   `specs/2026-10-14-chart-tokens-design.md` and its plan.
+- **Map Semantic:** single-mode aliases to the Ramps for the map color scales that rasters and keys
+  share: `sun/*` (sun hours, roof solar), `vigor/*` (vegetation index), `terrain/*` (elevation tint,
+  contours). Mirrored in `tokens/map.json`; Python renders read it through `tools/tokens.py`, so a
+  raster and its key can't drift. History: `plans/2026-10-24-map-semantic-tokens.md`.
 - **Microsite:** the `.viz-root` pattern (light/dark aware, inline SVG, self-contained pages).
   See `microsite-patterns.md`.
 

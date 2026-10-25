@@ -31,7 +31,7 @@ settled.
   CT ECO imagery, lidar, and building layers into the site repo), `sun_arcs.py` (sun positions, a
   top-down sun-path projection, and a Google Earth camera model), `shade.py` (shadow masks, hours
   of direct sun, skyline profiles and roof solar access from a lidar surface), `imagery.py` (NDVI and color-infrared from 4-band imagery), `terrain.py` (hillshade, contours,
-  canopy height), and `tests/` (run `python3 -m pytest tools`).
+  canopy height), `tokens.py` (token colors for raster renders, resolved through the Ramps), and `tests/` (run `python3 -m pytest tools`).
 - `design-language/` — docs and history for the shared visual system. Figma is the source of truth.
   **Design-system specs and plans for the permaculture files are authored here** (decided 2026-10-13),
   not in any site repo.
@@ -61,6 +61,10 @@ settled.
 - **Species colors come from the `--species-*` tokens** in the same file. Their values live in
   `design-language/tokens/species.json` (Ramps steps per mode); `check_chart_tokens.py tokens`
   fails if the CSS drifts from it, and `tools/palette_check.py` validates the palette itself.
+- **Raster renders take colors from tokens, not hex.** A build script that colors a map raster calls
+  `tokens.rgb("map" | "species", name)`; the values live in `design-language/tokens/map.json` and
+  `species.json`, mirroring Figma's Map Semantic and Species collections. External palettes (USDA
+  zones, colors sampled from a photo) stay raw, with their source noted.
 - Anchor contracts: `sectors.html` links to `sun-solar.html#sun-path-charts` and `climate.html#wind`.
 - Demo tasks page (`project-plan.html`) is a hand-ported snapshot of the demo site's task data.
 

@@ -130,3 +130,6 @@ the owner wants road distance.
 - **R7 Bioregion (owner chose option A, 2026-10-24).** One Earth's NA10 is RESOLVE Ecoregions 2017
   #335, #338, #339 (CC BY 4.0), so R7 traces their union on Sentinel-2 cloudless 2016, 250 mi = 234 px.
   One Earth gets credit for the grouping and name; its own map image (sheet 01) stays unpublished.
+- **S1 on the Ramps (owner, 2026-10-24).** The elevation tint is now Map Semantic `terrain/low`, `mid`,
+  `high` (sage/100 → gold/50 → gold/200), and the contours are slate like 28a's. See
+  `2026-10-24-map-semantic-tokens.md`.
