@@ -34,11 +34,10 @@ between "what is" and "what could be."
    centerline profile alone runs 103.6–107.5 ft).
 
 ## Known gaps
-- The zone, microclimate, and brainstorm map images still print "Min 106 / Max 114 ft" in their
-  footers; captions note it until the images are re-exported from the corrected Figma sheets.
-- The zone brainstorm calls the southeast side yard the lowest point; the lidar puts the low
-  point near the back-east corner. Listed as an open question in the synthesis, pending the
-  owner's call.
+- Resolved 2026-10-25: the zone, microclimate, and brainstorm images were re-exported from the
+  corrected Figma sheets (12a, 13a, C01). The low point question was settled by the owner: the
+  back-east corner is the lowest ground but absorbs most runoff (turf, mature trees, a
+  needle-mulched spruce grove); the street-side corner is the practical low point for runoff.
 - Data the intended audience is likely to want (zoning and setbacks, easements, wetlands,
   utilities, soils, a tree inventory with trunk diameters) is deferred until audience
   conversations after the course (`~/Code/keser/ROADMAP.md`).
