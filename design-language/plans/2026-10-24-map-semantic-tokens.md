@@ -67,3 +67,15 @@ drifted: the map lines were `#5b4a32` and the key swatch `#5c4a33`. Neither colo
   - 03/04's key swatches are sampled from the reference watershed map.
   - The CIR 1990 key swatches are sampled from the photo.
   - 09.1’s three brown faces (the small tan box) are 16–20 ΔE from any step, with no brown ramp to bind to.
+
+## Styles page docs (2026-10-24)
+
+- **New section "Map semantic"**, in the Species doc layout: 13 rows (token, Ramps step, CSS name,
+  one swatch bound to the variable), grouped Sun exposure, Vegetation vigor, Terrain.
+- **CSS names on every color token's label**, read from each variable's code syntax: Chart, Species,
+  Sheet, Color Roles and Chart Categorical rows. The Ramps sections give the pattern
+  (`var(--ramp-<hue>-<step>)`) in each hue's note. Label columns are one width per doc, so swatches
+  stay aligned.
+- **New text style `Mono/16/Regular`** for the CSS lines: Mono Caps would print CSS names in capitals.
+- **Ramps notes corrected.** Each hue's note said "Color Roles: Tint = 500, Shade = 700", from before
+  the three-role system. They now list the live Tint, Base and Shade steps.

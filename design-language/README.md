@@ -22,7 +22,8 @@ Pages, in order. Every page's content sits in labeled sections that use the `doc
 
 1. **Cover:** title, Andrew Keser, andrewkeser.com, Highlands Land Systems Design.
 2. **Styles:** one section per doc: color ramps, color roles, fill styles, stroke, typography,
-   charts, species, sheet & map display.
+   charts, species, sheet & map display, map semantic. Every color token's label shows its CSS name
+   (its Figma code syntax).
 3. **Components:** Documentation, Map keys & legends, Map samples, Base map symbols, Lot 86.
 4. **Map Set – Lot 86:** Template, Regional & overlay, Property – current, Property – proposed,
    Course maps – remove after PDC.
