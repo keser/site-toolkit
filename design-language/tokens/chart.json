@@ -1,0 +1,105 @@
+{
+  "about": "Figma Chart Semantic (season, water, land, emphasis, alert), Chart Neutral (neutral/*) and Chart Categorical (categorical/N = slot-N-<hue>), as Ramps steps per mode. CSS name: --chart-<name with / as ->.",
+  "tokens": {
+    "season/winter": {
+      "light": "cobalt/500",
+      "dark": "cobalt/400"
+    },
+    "season/spring": {
+      "light": "sage/500",
+      "dark": "sage/400"
+    },
+    "season/summer": {
+      "light": "magenta/400",
+      "dark": "magenta/400"
+    },
+    "season/fall": {
+      "light": "gold/400",
+      "dark": "gold/300"
+    },
+    "water/rain": {
+      "light": "cobalt/400",
+      "dark": "cobalt/300"
+    },
+    "water/flow": {
+      "light": "cobalt/600",
+      "dark": "cobalt/400"
+    },
+    "water/body": {
+      "light": "cobalt/200",
+      "dark": "cobalt/700"
+    },
+    "land/permeable": {
+      "light": "sage/500",
+      "dark": "sage/400"
+    },
+    "land/ground": {
+      "light": "charcoal/500",
+      "dark": "charcoal/400"
+    },
+    "emphasis": {
+      "light": "amber/500",
+      "dark": "amber/400"
+    },
+    "emphasis/fill": {
+      "light": "amber/100",
+      "dark": "amber/800"
+    },
+    "alert": {
+      "light": "coral/600",
+      "dark": "coral/300"
+    },
+    "neutral/grid": {
+      "light": "charcoal/100",
+      "dark": "charcoal/700"
+    },
+    "neutral/axis": {
+      "light": "charcoal/300",
+      "dark": "charcoal/600"
+    },
+    "neutral/reference": {
+      "light": "charcoal/600",
+      "dark": "charcoal/300"
+    },
+    "neutral/label": {
+      "light": "charcoal/800",
+      "dark": "charcoal/100"
+    },
+    "neutral/label/muted": {
+      "light": "charcoal/600",
+      "dark": "charcoal/400"
+    },
+    "neutral/surface": {
+      "light": "charcoal/50",
+      "dark": "charcoal/800"
+    },
+    "categorical/1": {
+      "light": "cobalt/500",
+      "dark": "cobalt/400"
+    },
+    "categorical/2": {
+      "light": "sage/600",
+      "dark": "sage/400"
+    },
+    "categorical/3": {
+      "light": "magenta/400",
+      "dark": "magenta/500"
+    },
+    "categorical/4": {
+      "light": "gold/500",
+      "dark": "gold/400"
+    },
+    "categorical/5": {
+      "light": "teal/500",
+      "dark": "teal/400"
+    },
+    "categorical/6": {
+      "light": "violet/400",
+      "dark": "violet/500"
+    },
+    "categorical/7": {
+      "light": "coral/400",
+      "dark": "coral/500"
+    }
+  }
+}

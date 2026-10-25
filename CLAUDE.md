@@ -52,7 +52,8 @@ settled.
   `.chart-title .chart-label .chart-value .chart-note` classes.
 - **Chart colors and chart text come from `docs/assets/chart-tokens.css`.** It mirrors the chart
   collections in the Site Toolkit Design Language Figma library (formerly PDC Pro Vision); the spec
-  is `design-language/specs/2026-10-14-chart-tokens-design.md`.
+  is `design-language/specs/2026-10-14-chart-tokens-design.md`. Its `--chart-*` values live in
+  `design-language/tokens/chart.json` (Ramps steps per mode), which the check resolves.
   A new chart's prefixed variables reference `--chart-*` tokens, not raw hex, and its SVG text uses
   `font: var(--chart-font-<role>)`. Chart fills and strokes never use the page variables
   (`--grid`, `--baseline`, `--accent`, `--text-*`); the check flags them. Run

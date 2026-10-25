@@ -62,3 +62,11 @@ def test_check_naming_an_unknown_token_is_reported():
 def test_token_without_a_mode_is_reported():
     p = palette({"x": {"light": "a/500"}})
     assert any("x" in f and "dark" in f for f in check(RAMPS, p))
+
+
+def test_no_arguments_prints_usage_instead_of_crashing():
+    import subprocess
+    script = Path(__file__).resolve().parent.parent / "palette_check.py"
+    r = subprocess.run([sys.executable, str(script)], capture_output=True, text=True)
+    assert r.returncode == 2
+    assert "Usage" in r.stderr and "Traceback" not in r.stderr

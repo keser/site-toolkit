@@ -11,24 +11,9 @@ from pathlib import Path
 ROOT = Path(__file__).resolve().parent.parent
 CSS = ROOT / "docs/assets/chart-tokens.css"
 SPECIES = ROOT / "design-language/tokens/species.json"
+CHART = ROOT / "design-language/tokens/chart.json"
 RAMPS_JSON = ROOT / "design-language/tokens/ramps.json"
 
-# (light, dark), copied from design-language/specs/2026-10-14-chart-tokens-design.md via the Ramps table
-TOKENS = {
-    "season-winter": ("#476de7", "#638bff"), "season-spring": ("#698436", "#849f55"),
-    "season-summer": ("#e748c1", "#e748c1"), "season-fall": ("#b09100", "#cbad42"),
-    "water-rain": ("#638bff", "#8cacff"), "water-flow": ("#3353c1", "#638bff"),
-    "water-body": ("#b4caff", "#233c94"), "land-permeable": ("#698436", "#849f55"),
-    "land-ground": ("#7a7975", "#959490"), "emphasis": ("#d75509", "#f66d1e"),
-    "emphasis-fill": ("#fdd9c4", "#4e1f03"), "alert": ("#ad1e26", "#ff8780"),
-    "neutral-grid": ("#e0dfdd", "#474644"), "neutral-axis": ("#b1afac", "#605f5b"),
-    "neutral-reference": ("#605f5b", "#b1afac"), "neutral-label": ("#2e2e2c", "#e0dfdd"),
-    "neutral-label-muted": ("#605f5b", "#959490"), "neutral-surface": ("#f0f0ee", "#2e2e2c"),
-    "categorical-1": ("#476de7", "#638bff"), "categorical-2": ("#516920", "#849f55"),
-    "categorical-3": ("#e748c1", "#ca18a6"), "categorical-4": ("#907600", "#b09100"),
-    "categorical-5": ("#008c81", "#2ea89c"), "categorical-6": ("#a877e5", "#8e5aca"),
-    "categorical-7": ("#ef5c58", "#d2383b"),
-}
 # Chart-specific values allowed to stay raw (plan ruling R4)
 ALLOW_RAW = {
     "--spo-hour-grid",
@@ -68,25 +53,20 @@ def check_tokens():
     light, media, forced = (decls(b) for b in blocks(css))
     if media != forced:
         fails.append("the two dark blocks differ")
-    for name, (l, d) in TOKENS.items():
-        prop = f"--chart-{name}"
-        if light.get(prop, "").lower() != l: fails.append(f"{prop} light {light.get(prop)} ≠ {l}")
-        if media.get(prop, "").lower() != d: fails.append(f"{prop} dark {media.get(prop)} ≠ {d}")
+    fails += check_collection_tokens(css, CHART, "--chart-")
     for cls in ("chart-title", "chart-label", "chart-value", "chart-note"):
         if f".{cls}" not in css: fails.append(f"class .{cls} missing")
     fails += check_species_tokens(css)
     return fails
 
-def species_css_name(token):
-    return "--species-" + token.replace("/", "-")
-
-def check_species_tokens(css):
-    """--species-* values in all three blocks must equal species.json resolved through ramps.json."""
-    ramps, tokens = json.loads(RAMPS_JSON.read_text()), json.loads(SPECIES.read_text())["tokens"]
+def check_collection_tokens(css, path, prefix):
+    """Each token in a collection file (Ramps steps per mode) must equal its CSS variable,
+    <prefix><name with / as ->, in the light block and both dark blocks."""
+    ramps, tokens = json.loads(RAMPS_JSON.read_text()), json.loads(Path(path).read_text())["tokens"]
     light, media, forced = (decls(b) for b in blocks(css))
     fails = []
     for token, steps in tokens.items():
-        prop = species_css_name(token)
+        prop = prefix + token.replace("/", "-")
         unknown = [steps.get(m) for m in ("light", "dark") if steps.get(m) not in ramps]
         if unknown: fails.append(f"{prop}: unknown Ramps step {', '.join(map(str, unknown))}"); continue
         want_l, want_d = ramps[steps["light"]], ramps[steps["dark"]]
@@ -94,6 +74,10 @@ def check_species_tokens(css):
         if media.get(prop, "").lower() != want_d: fails.append(f"{prop} dark {media.get(prop)} ≠ {want_d}")
         if forced.get(prop, "").lower() != want_d: fails.append(f"{prop} forced dark {forced.get(prop)} ≠ {want_d}")
     return fails
+
+def check_species_tokens(css):
+    """--species-* values in all three blocks must equal species.json resolved through ramps.json."""
+    return check_collection_tokens(css, SPECIES, "--species-")
 
 def check_page(path, prefixes):
     return check_html((ROOT / path).read_text(), prefixes)

@@ -88,3 +88,18 @@ def test_species_unknown_ramp_step_is_reported_not_raised(monkeypatch, tmp_path)
     monkeypatch.setattr(cct, "SPECIES", bad)
     fails = check_species_tokens("")
     assert any("sage/750" in f for f in fails)
+
+
+def test_chart_token_drift_is_reported():
+    from check_chart_tokens import check_collection_tokens, CHART
+    css = (".viz-root { --chart-season-winter: #000000; }\n"
+           "@media (prefers-color-scheme: dark) {\n"
+           "  :root:where(:not([data-theme=\"light\"])) .viz-root { --chart-season-winter: #000000; }\n}\n"
+           ":root[data-theme=\"dark\"] .viz-root { --chart-season-winter: #000000; }")
+    fails = check_collection_tokens(css, CHART, "--chart-")
+    assert any("--chart-season-winter light" in f for f in fails)
+
+
+def test_chart_json_matches_the_published_css():
+    from check_chart_tokens import check_collection_tokens, CHART, CSS
+    assert check_collection_tokens(CSS.read_text(), CHART, "--chart-") == []

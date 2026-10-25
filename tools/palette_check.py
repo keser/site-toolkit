@@ -73,6 +73,9 @@ def check(ramps, palette):
     return fails
 
 if __name__ == "__main__":
+    if len(sys.argv) != 3:
+        print(__doc__.strip(), file=sys.stderr)
+        sys.exit(2)
     ramps, palette = (json.load(open(p)) for p in sys.argv[1:3])
     fails = check(ramps, palette)
     for f in fails: print("FAIL", f)

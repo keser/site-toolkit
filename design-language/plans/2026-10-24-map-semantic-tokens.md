@@ -42,16 +42,28 @@ drifted: the map lines were `#5b4a32` and the key swatch `#5c4a33`. Neither colo
     (still 85%).
 - **S1 re-rendered** in Figma and on the microsite (`docs/assets/context-terrain.jpg`).
 
-## Left open (from the QA)
+## QA leftovers, fixed (2026-10-24)
 
-- No variable outside Map Semantic has code syntax (170 of 183).
-- `neutral/White` and `neutral/Black` are scoped to every property; narrowing to fills and strokes
-  is safe once checked against effect bindings.
-- `check_chart_tokens.py` hard-codes chart hex pairs; `species.json` resolves through the Ramps,
-  which is the better pattern.
-- `palette_check.py` crashes without arguments instead of printing usage.
-- Older sheets still carry raw paints: 03/04 Watershed (45 each), 09.1 Sun path 3D scene (171),
-  02 Hardiness zone (USDA colors; stay raw by the rule above).
-- The CIR 1990 key swatches stay raw: they are sampled from the photo.
-- The sun-path preview image in the Lot 86 repo (`preview-*.jpg`, local check only) uses its own
-  season colors, not `Chart Semantic` `season/*`.
+- **Code syntax on every variable (194).** Where CSS exists, the name matches it: `--chart-*`
+  (Chart Categorical `slot-N-<hue>` is `--chart-categorical-N`), `--species-*`, `--map-*`. The rest
+  reserve names by one convention, `--<prefix>-<name with / as ->` in lowercase: `--ramp-*`,
+  `--role-*`, `--stroke-*`, `--sheet-*`, `--map-display-*`. A script cross-checked the chart and
+  species names against `chart-tokens.css` in both directions: no gaps.
+- **`neutral/White` and `neutral/Black`** are scoped to fills, strokes and effect colors, no longer
+  every property. Existing bindings are unaffected; scopes only filter the pickers.
+- **Chart check resolves through the Ramps.** The 23 hard-coded hex pairs in
+  `check_chart_tokens.py` became `tokens/chart.json` (Ramps steps per mode, like `species.json`);
+  one function checks both collections. `tokens.py` can read chart colors too.
+- **`palette_check.py` without arguments** prints its usage and exits 2.
+- **Sun-path previews** (Lot 86, local only) use Chart Semantic `season/*`.
+- **Older sheets bound to the Ramps** by the v3 migration rule (nearest step in the same hue; near-black
+  to `neutral/Black`; opacity kept): 03 and 04 Watershed 42 paints each, 09.1 Sun path 3D scene 168,
+  and the captions on 02. ΔE from the old colors is 4–13, except the Connecticut River line
+  (`#2973bf` → cobalt/500, the Base role for lines, about 25).
+  - **Visible change:** 09.1's house walls went from warm beige to neutral grey (charcoal/100,
+    /300, /400); the Ramps have no warm neutral.
+- **Raw by rule, with reasons:**
+  - 02's USDA zone swatches are an external standard.
+  - 03/04's key swatches are sampled from the reference watershed map.
+  - The CIR 1990 key swatches are sampled from the photo.
+  - 09.1’s three brown faces (the small tan box) are 16–20 ΔE from any step, with no brown ramp to bind to.
