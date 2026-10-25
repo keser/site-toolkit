@@ -42,6 +42,18 @@ AI to support this kind of workflow, and how that work draws on design-systems p
 | `design-language/` | How maps, diagrams, and report pages share one visual system. Figma is the source of truth; this folder documents it and keeps the history. |
 | `template/` | Starting point for a new site workspace. Copy it into a new **private** repo per site. |
 
+## Installing the tools
+
+The tools are plain Python modules packaged with `pyproject.toml`. Install them editable into a
+virtual environment, since `tokens.py` reads the token files from this repo:
+
+```
+python3 -m venv .venv
+.venv/bin/pip install -e "path/to/site-toolkit[test]"
+```
+
+Then a site repo's scripts can `import sun_arcs`, `import shade`, and so on.
+
 ## Starting a new site
 
 1. Create a new private repo at `~/Code/keser/site-plans/<site-name>/` and copy `template/` into it.

@@ -1,0 +1,27 @@
+[build-system]
+requires = ["setuptools>=68"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "site-toolkit"
+version = "0.1.0"
+description = "Tools for permaculture site analysis and design: site data, sun and shade, imagery, terrain, design tokens."
+readme = "README.md"
+requires-python = ">=3.12"
+dependencies = ["numpy", "pillow"]
+
+[project.optional-dependencies]
+test = ["pytest"]
+
+# The tools are plain top-level modules (import sun_arcs, import shade, ...).
+# Install editable (pip install -e): tokens.py reads design-language/tokens/ relative to
+# the repo, so a copied, non-editable install can't find its token files.
+[tool.setuptools]
+package-dir = { "" = "tools" }
+py-modules = [
+  "build_nav", "check_chart_tokens", "fetch_ct_eco", "fetch_s2cloudless", "imagery",
+  "palette_check", "port_report", "shade", "sun_arcs", "terrain", "tokens",
+]
+
+[tool.pytest.ini_options]
+testpaths = ["tools/tests"]

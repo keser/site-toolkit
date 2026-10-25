@@ -31,7 +31,11 @@ settled.
   CT ECO imagery, lidar, and building layers into the site repo), `sun_arcs.py` (sun positions, a
   top-down sun-path projection, and a Google Earth camera model), `shade.py` (shadow masks, hours
   of direct sun, skyline profiles and roof solar access from a lidar surface), `imagery.py` (NDVI and color-infrared from 4-band imagery), `terrain.py` (hillshade, contours,
-  canopy height), `tokens.py` (token colors for raster renders, resolved through the Ramps), and `tests/` (run `python3 -m pytest tools`).
+  canopy height), `tokens.py` (token colors for raster renders, resolved through the Ramps), and `tests/`.
+  The tools are an installable package (`pyproject.toml`, top-level modules). Locally they live in
+  the shared environment `~/Code/keser/.venv`, installed editable, so site repos import them
+  without path hacks. Run tests with `~/Code/keser/.venv/bin/python -m pytest`. New dependencies go in
+  `pyproject.toml`.
 - `design-language/` — docs and history for the shared visual system. Figma is the source of truth.
   **Design-system specs and plans for the permaculture files are authored here** (decided 2026-10-13),
   not in any site repo.

@@ -8,3 +8,7 @@ __pycache__/
 
 # docs/assets/ is tracked on purpose: the demo microsite needs its images.
 # Every image added there is a deliberate decision to publish it.
+
+# Python packaging (editable install)
+*.egg-info/
+.venv/
