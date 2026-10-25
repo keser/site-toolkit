@@ -91,6 +91,9 @@
     :root:where(:not([data-theme="light"])) .viz-root { --spo-hour-grid: rgba(255,255,255,0.3); }
   }
   :root[data-theme="dark"] .viz-root { --spo-hour-grid: rgba(255,255,255,0.3); }
+  /* Annual chart months: the four season tokens, with the months between blended in OKLab, a third
+     of the way at a time. Derived, so both modes follow the season tokens. */
+  .viz-root { --spo-month-jan: color-mix(in oklab, var(--spo-series-winter) 67%, var(--spo-series-spring)); --spo-month-feb: color-mix(in oklab, var(--spo-series-winter) 33%, var(--spo-series-spring)); --spo-month-mar: var(--spo-series-spring); --spo-month-apr: color-mix(in oklab, var(--spo-series-spring) 67%, var(--spo-series-summer)); --spo-month-may: color-mix(in oklab, var(--spo-series-spring) 33%, var(--spo-series-summer)); --spo-month-jun: var(--spo-series-summer); --spo-month-jul: color-mix(in oklab, var(--spo-series-summer) 67%, var(--spo-series-fall)); --spo-month-aug: color-mix(in oklab, var(--spo-series-summer) 33%, var(--spo-series-fall)); --spo-month-sep: var(--spo-series-fall); --spo-month-oct: color-mix(in oklab, var(--spo-series-fall) 67%, var(--spo-series-winter)); --spo-month-nov: color-mix(in oklab, var(--spo-series-fall) 33%, var(--spo-series-winter)); --spo-month-dec: var(--spo-series-winter); }
   header.spo-page-head { margin-bottom: 24px; }
   #sun-path-overlay section { margin-bottom: 28px; }
   .spo-aerial-frame { position: relative; border-radius: 8px; overflow: hidden; border: 1px solid var(--border); background: #000; }
@@ -999,15 +1002,15 @@ function fmtTime(t) {
 
   // month curves
   const monthColors = {
-    Jan: "#8d93a9", Feb: "#72788e", Mar: "var(--spo-series-spring)", Apr: "#4a9e4a",
-    May: "#e8c400", Jun: "var(--spo-series-summer)", Jul: "#e0517a", Aug: "#c98500",
-    Sep: "var(--spo-series-fall)", Oct: "#b06a2e", Nov: "#595e72", Dec: "var(--spo-series-winter)",
+    Jan: "var(--spo-month-jan)", Feb: "var(--spo-month-feb)", Mar: "var(--spo-month-mar)", Apr: "var(--spo-month-apr)",
+    May: "var(--spo-month-may)", Jun: "var(--spo-month-jun)", Jul: "var(--spo-month-jul)", Aug: "var(--spo-month-aug)",
+    Sep: "var(--spo-month-sep)", Oct: "var(--spo-month-oct)", Nov: "var(--spo-month-nov)", Dec: "var(--spo-month-dec)",
   };
   const hitPoints = [];
   Object.entries(ANNUAL_DATA).forEach(([date, d]) => {
     const pts = d.pts.filter(([, , el]) => el >= 0);
     if (!pts.length) return;
-    const color = monthColors[d.month] || "#999";
+    const color = monthColors[d.month];
     const pathD = pts.map(([, az, el], i) => {
       const xy = polarXY(az, el);
       return `${i === 0 ? "M" : "L"} ${xy.x.toFixed(1)} ${xy.y.toFixed(1)}`;

@@ -145,9 +145,14 @@ three tans and blues were variety, not meaning. The pool is `water/body`, trees
 `var()` can't give it. Each face now draws the token color plus a white or black overlay at the
 old strength, so the scene follows a theme toggle with no script read.
 
+Month colors on the annual sun-path chart now derive from the four season tokens. March, June,
+September, and December are the tokens. The months between blend their neighbors with
+`color-mix(in oklab, …)`, a third of the way at a time, so no new tokens were needed. OKLCH blends
+were brighter but landed August on amber and May near coral, colliding with emphasis and alert.
+Every month clears 3:1 against the panel in both modes (lowest: September, the fall token, 3.0:1).
+
 ## Deferred
 
-- The sun-solar month colors (`monthColors`, annual sun-path chart): 8 of 12 months are raw hex.
 - `--gsa-roof-1..4` on sun-solar equal Map Semantic `sun/*` exactly but are copied as hex. Map
   tokens have no CSS mirror yet.
 - Labels over the aerial photo on sun-solar stay fixed dark-on-white-halo in both modes; they
