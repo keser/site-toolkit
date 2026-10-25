@@ -105,7 +105,10 @@ settled.
   After a Ramps, Color Roles, Species, or text-style change, re-sync it from the plans
   (`plans/2026-10-10-map-tokens-v2.md` Task 3, `plans/2026-10-11-map-tokens-v3.md` Task 5,
   `plans/2026-10-14-species-palette.md` Task 4). Edit frames in place rather than rebuilding them,
-  so the owner's manual tweaks survive. Hue order in docs: magenta, coral, amber, gold, sage, teal,
+  so the owner's manual tweaks survive. The page is now one section per collection (Color ramps, Color roles,
+  Fill styles, Stroke, Typography, Charts, Species, Sheet & map display, Map semantic). To add a
+  token, clone a sibling row or swatch, rebind its fills, and resize the section to fit. Give a
+  translucent (alpha) swatch an explicit backing: white for Light, charcoal/900 for Dark. Hue order in docs: magenta, coral, amber, gold, sage, teal,
   cobalt, violet, slate, charcoal, neutral.
 - **Plugin API gotchas.**
   - Binding a paint to a variable resets its opacity to 1; restore it afterward.
