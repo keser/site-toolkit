@@ -114,7 +114,8 @@ settled.
   cobalt, violet, slate, charcoal, neutral.
 - **Plugin API gotchas.**
   - Binding a paint to a variable writes the variable's alpha into the paint's opacity, so an opaque
-    variable resets it to 1. Bind a translucent style to an `alpha/*` Ramps copy instead.
+    variable resets it to 1. A translucent style binds a Color Roles variable (`<hue>/Tint/50`)
+    that aliases an `alpha/*` Ramps copy.
   - JetBrains Mono has no SemiBold; use Bold.
   - Scripts see fonts installed only on the owner's machine as missing. Swap them with
     `setRangeFontName`, then bind, and skip `hasMissingFont` nodes.

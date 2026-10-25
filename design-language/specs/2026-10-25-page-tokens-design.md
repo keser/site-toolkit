@@ -154,7 +154,8 @@ Every month clears 3:1 against the panel in both modes (lowest: September, the f
 `--gsa-roof-1..4` now reference Map Semantic `sun/*`. Map Semantic gained a CSS mirror: `--map-*`
 in `chart-tokens.css`, light block only (one mode; dark inherits), checked against `map.json`.
 
-The 20 Tint/25 and /50 paint styles now bind `alpha/<hue>-<tint step>-<25|50>` Ramps copies
+The 20 Tint/25 and /50 paint styles now bind Color Roles `<hue>/Tint/<25|50>`, which alias
+`alpha/<hue>-<tint step>-<25|50>` Ramps copies
 (decided 2026-10-25, reversing map-tokens v2 Ruling 14; logged in that spec). The check verifies
 every `alpha/*` entry against its base step and percentage.
 
