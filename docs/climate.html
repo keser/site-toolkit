@@ -229,7 +229,7 @@
   <div class="wrap">
     <header class="page-head">
       <h1>Climate Survey</h1>
-      <p class="subhead">41°34'22.04"N 72°38'03.90"W · 106–114 ft elevation · Connecticut River Valley, Middlesex County · digitized from the Lesson 1 Climate Survey slides (Figma, June 2026)</p>
+      <p class="subhead">41°34'22.04"N 72°38'03.90"W · 103–107 ft elevation (2023 lidar) · Connecticut River Valley, Middlesex County</p>
       <div class="badge-row" id="badge-row"></div>
     </header>
 
@@ -262,8 +262,6 @@
     <div class="grid" id="chart-grid-1"></div>
 
     <section id="wind">
-      <div id="wind-annual-wrap"></div>
-
       <div style="margin: 4px 0 12px;">
         <div class="panel-title">Seasonal Wind Roses</div>
         <div class="panel-sub">10-year hourly METAR observations, Hartford-Brainard Airport (KHFD, ~16&nbsp;km from site), 2016–2025. Winter prevails from the N; spring, summer, and fall all trend S (summer most strongly, at 23.7%).</div>
@@ -278,9 +276,8 @@
     </details>
 
     <footer class="notes">
-      Monthly temperature and precipitation normals, USDA hardiness zone, and wind summary digitized from the site's Lesson 1 Climate Survey (Figma Slides, June 2026), sourced there via WeatherSpark and NASA POWER. Record high/low and elevation via NOAA (Hartford-Brainard Airport / Hartford, ~18&nbsp;mi from site) and the USGS National Elevation Dataset. The hardiness zone and bioregion maps carry their own sources under each.
-      The annual wind rose's percentages are approximate — reconstructed from the source Figma chart's wedge geometry, not re-queried from underlying station data — and kept here for fidelity to the original Lesson 1 assignment.
-      The four seasonal wind roses below it are the actual data: 10 years of hourly METAR observations from Hartford-Brainard Airport (KHFD, ~16&nbsp;km from the site), reused directly from the Lesson 3 Sector Analysis report. They resolve what the annual chart averages away — winter prevails from the N, while spring, summer, and fall all trend S (summer most strongly, at 23.7%).
+      Monthly temperature and precipitation normals and the USDA hardiness zone via WeatherSpark and NASA POWER (June 2026). Record high/low via NOAA (Hartford-Brainard Airport / Hartford, ~18&nbsp;mi from site). Site elevation from the 2023 CT ECO lidar bare-earth surface. The hardiness zone and bioregion maps carry their own sources under each.
+      The wind roses are 10 years of hourly METAR observations from Hartford-Brainard Airport (KHFD, ~16&nbsp;km from the site), split by season because an annual average hides the real pattern: winter prevails from the N, while spring, summer, and fall all trend S (summer most strongly, at 23.7%).
       Wind data: Iowa Environmental Mesonet ASOS archive for station HFD (Hartford-Brainard Airport), via mesonet.agron.iastate.edu — real hourly wind observations, not a forecast model. Seasons are meteorological (Winter = Dec/Jan/Feb, etc). Direction bins are 16-point compass (22.5° sectors).
     </footer>
   </div>
@@ -300,14 +297,7 @@ const TEMP = {
 };
 const PRECIP = [3.04,2.81,3.49,3.76,3.49,3.80,4.25,3.66,3.99,4.14,3.34,3.76];
 
-const WIND = {
-  avgSpeedMph: 8.3,
-  predominant: "W / SW",
-  sectors: ["N","NNE","NE","ENE","E","ESE","SE","SSE","S","SSW","SW","WSW","W","WNW","NW","NNW"],
-  pct:     [10.0,3.9,2.4,1.6,2.1,2.8,5.1,5.0,8.1,8.9,8.9,5.2,6.1,9.9,10.0,10.0],
-};
-
-// Seasonal detail reused from the Lesson 3 Sector Analysis report's wind-roses.html —
+// Seasonal wind detail —
 // 10 years of hourly KHFD (Hartford-Brainard Airport) METAR observations, 2016-2025.
 const SECTORS_16 = ["N","NNE","NE","ENE","E","ESE","SE","SSE","S","SSW","SW","WSW","W","WNW","NW","NNW"];
 const SEASONS = [
@@ -617,22 +607,7 @@ function buildWindRosePanel({ container, title, sub, stats, sectors, pct, predom
   return panel;
 }
 
-// ---------- Annual wind rose (Lesson 1 Figma slide, approximate) ----------
-(function buildAnnualWindPanel(){
-  buildWindRosePanel({
-    container: document.getElementById("wind-annual-wrap"),
-    title: "Annual Wind Rose",
-    sub: "% of observations by direction · approximate, digitized from the Lesson 1 climate-survey slide",
-    stats: `<span>Predominant <b>${WIND.predominant}</b></span><span>Avg annual speed <b>${WIND.avgSpeedMph} mph</b></span>`,
-    sectors: WIND.sectors,
-    pct: WIND.pct,
-    predominantSectors: ["W","SW"],
-    yMax: 12,
-    rings: [2,4,6,8,10,12],
-  });
-})();
-
-// ---------- Seasonal wind roses (KHFD station data, via Lesson 3 report) ----------
+// ---------- Seasonal wind roses (KHFD station data) ----------
 (function buildSeasonalWindPanels(){
   const container = document.getElementById("chart-grid-seasons");
   const Y_MAX = 25;
@@ -746,15 +721,6 @@ function buildWindRosePanel({ container, title, sub, stats, sectors, pct, predom
     <tbody>${MONTHS.map((m,i)=>`<tr><td>${m}</td><td>${PRECIP[i].toFixed(2)}</td></tr>`).join("")}</tbody>
   `;
   tableGrid.appendChild(t2);
-
-  const t3 = document.createElement("table");
-  t3.className = "data-table";
-  t3.innerHTML = `
-    <caption>Annual wind direction frequency (approx.)</caption>
-    <thead><tr><th>Dir.</th><th>%</th></tr></thead>
-    <tbody>${WIND.sectors.map((s,i)=>`<tr><td>${s}</td><td>${WIND.pct[i].toFixed(1)}</td></tr>`).join("")}</tbody>
-  `;
-  tableGrid.appendChild(t3);
 
   const t4 = document.createElement("table");
   t4.className = "data-table";

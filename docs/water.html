@@ -242,9 +242,8 @@
     </p>
 
     <p class="precip-src">
-      <b>Source:</b> monthly normals digitized from the Lesson&nbsp;1 Climate Survey
-      (PDC&nbsp;Pro Figma Slides, June&nbsp;2026; sourced there via WeatherSpark / NASA&nbsp;POWER),
-      same series used in <code>lesson-01-climate/assets/climate-survey-charts.html</code>.
+      <b>Source:</b> monthly normals via WeatherSpark / NASA&nbsp;POWER (June&nbsp;2026), the same
+      series as the <a href="climate.html">Climate</a> page.
       Design-storm depth (100-yr 24-hr) from NOAA&nbsp;Atlas&nbsp;14 Vol.&nbsp;10, point
       41.573,&nbsp;−72.634.
     </p>
@@ -279,10 +278,9 @@
       </div>
     </div>
 
-    <p class="runoff-src"><b>Source:</b> areas from the 1996 site plan, the 2016 3DEP/aerial, and the Lesson&nbsp;4 zone map;
-      rainfall from the Lesson&nbsp;1 Climate Survey; runoff coefficients per the Rational Method table
-      (ASCE Manual&nbsp;37 / WPCF Manual&nbsp;9) and the Texas Manual on Rainwater Harvesting. Full calc:
-      <code>lesson-05-water/work/rainwater-harvesting-analysis.md</code>.</p>
+    <p class="runoff-src"><b>Source:</b> areas from the 1996 site plan, the 2016 3DEP/aerial, and the current zone map;
+      rainfall from the <a href="climate.html">Climate</a> normals; runoff coefficients per the Rational Method table
+      (ASCE Manual&nbsp;37 / WPCF Manual&nbsp;9) and the Texas Manual on Rainwater Harvesting.</p>
   </section>
 
   <section class="page-section" id="water-balance">
@@ -307,8 +305,7 @@
       Zone-3 barrels. No large cistern is warranted.
     </div>
 
-    <p class="wbal-src"><b>Source:</b> <code>lesson-05-water/work/rainwater-harvesting-analysis.md</code> —
-      gross rain = 18,730&nbsp;ft² × 3.625&nbsp;ft × 7.48; runoff by surface from the Rational Method
+    <p class="wbal-src"><b>Source:</b> gross rain = 18,730&nbsp;ft² × 3.625&nbsp;ft × 7.48; runoff by surface from the Rational Method
       coefficient table; infiltration + ET taken as the balance.</p>
   </section>
 
@@ -339,14 +336,14 @@
 
     <p class="elev-src"><b>Source:</b> Section A: CT State GIS Office 2023 lidar bare earth (2&nbsp;ft grid), sampled Oct&nbsp;2026
       along the centerline of the 1993 plan outline (<code>tools/fetch_ct_eco.py</code>). Section B: USGS 3DEP 1-m DEM
-      sampled Aug&nbsp;2026 (National Map ImageServer); cross-checked against USGS EPQS. Full transects: <code>lesson-05-water/work/watersheds-water-flow.md</code>.</p>
+      sampled Aug&nbsp;2026 (National Map ImageServer); cross-checked against USGS EPQS.</p>
   </section>
 
   <section class="page-section" id="flow-schematic">
     <h2 class="section-title">Site Water-Flow Schematic</h2>
     <p class="subhead">Plan view of how water moves across the lot — from the 2023 CT&nbsp;ECO lidar,
-      the 3DEP 1-meter DEM, the owner's on-site observation, and the Lesson&nbsp;4 zone map. A drafting guide for the Figma <b>Site Water Flow Map</b> (template p.&nbsp;61)
-      and <b>Catchment Area Map</b> (p.&nbsp;59); trace it over the real base map.</p>
+      the 3DEP 1-meter DEM, the owner's on-site observation, and the current zone map. The measured
+      versions are map sheets 10 (site water flow) and 11 (catchment area).</p>
 
     <div class="panel">
       <svg class="chart" id="flow-chart" viewBox="0 0 900 560" role="img"
@@ -362,8 +359,7 @@
       A swale / rain garden ⑥ at the front would catch only the front yard's runoff before it reaches the street.
     </div>
 
-    <p class="flow-src"><b>Source:</b> <code>lesson-05-water/work/watersheds-water-flow.md</code> +
-      <code>rainwater-harvesting-analysis.md</code>. Lot width exaggerated ~4× for legibility; contour
+    <p class="flow-src"><b>Source:</b> the lidar and DEM sections above and the runoff analysis. Lot width exaggerated ~4× for legibility; contour
       positions approximate (2-ft interval, NAVD88).</p>
   </section>
 
@@ -424,7 +420,7 @@
     </div>
 
     <p class="shed-src"><b>Source:</b> USGS WBD point query at 41.573,&nbsp;−72.634; extent via Connecticut River
-      Conservancy / American Rivers. Detail: <code>lesson-05-water/work/watersheds-water-flow.md</code>.</p>
+      Conservancy / American Rivers.</p>
   </section>
 
   <section class="page-section" id="water-use">
@@ -467,7 +463,7 @@
     <p class="wuse-src"><b>Source:</b> Town of Portland Water &amp; Sewer Departments,
       bills dated 01/15/2025, 07/17/2025, 10/17/2025, 07/17/2026 (service periods 09/24/2024–06/16/2026).
       Meter readings in cubic feet &times; 7.48 = gallons. Two periods span an un-imaged bill but the
-      prior/current meter reads chain continuously. Scans in <code>lesson-05-water/assets/</code>.</p>
+      prior/current meter reads chain continuously. Bill scans are kept private.</p>
   </section>
 </div></div>
 

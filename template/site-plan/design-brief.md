@@ -85,4 +85,4 @@ covered now.
 - Which habitat features help wildlife: water, cover, nesting, corridors?
 
 ### Structures and energy
-To be added after the course lessons on structures and energy have been worked on a real site.
+To be added once structures and energy have been worked through on a real site.
