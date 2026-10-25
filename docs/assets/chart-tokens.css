@@ -7,7 +7,7 @@
 .viz-root {
   --chart-season-winter: #476de7; --chart-season-spring: #698436; --chart-season-summer: #e748c1; --chart-season-fall: #b09100;
   --chart-water-rain: #638bff; --chart-water-flow: #3353c1; --chart-water-body: #b4caff;
-  --chart-land-permeable: #698436; --chart-land-ground: #7a7975;
+  --chart-land-permeable: #698436; --chart-land-ground: #7a7975; --chart-land-structure: #cbcac7;
   --chart-emphasis: #d75509; --chart-emphasis-fill: #d7550933; --chart-focus: #476de7; --chart-focus-fill: #476de733; --chart-flood-depth-1: #d2e0ff; --chart-flood-depth-2: #638bff; --chart-flood-depth-3: #233c94; --chart-alert: #ad1e26;
   --chart-neutral-grid: #e0dfdd; --chart-neutral-axis: #b1afac; --chart-neutral-reference: #605f5b; --chart-neutral-label: #2e2e2c; --chart-neutral-label-muted: #605f5b; --chart-neutral-surface: #f0f0ee;
   --chart-categorical-1: #476de7; --chart-categorical-2: #516920; --chart-categorical-3: #e748c1; --chart-categorical-4: #907600; --chart-categorical-5: #008c81; --chart-categorical-6: #a877e5; --chart-categorical-7: #ef5c58;
@@ -22,7 +22,7 @@
   :root:where(:not([data-theme="light"])) .viz-root {
   --chart-season-winter: #638bff; --chart-season-spring: #849f55; --chart-season-summer: #e748c1; --chart-season-fall: #cbad42;
   --chart-water-rain: #8cacff; --chart-water-flow: #638bff; --chart-water-body: #233c94;
-  --chart-land-permeable: #849f55; --chart-land-ground: #959490;
+  --chart-land-permeable: #849f55; --chart-land-ground: #959490; --chart-land-structure: #605f5b;
   --chart-emphasis: #f66d1e; --chart-emphasis-fill: #f66d1e4d; --chart-focus: #638bff; --chart-focus-fill: #638bff4d; --chart-flood-depth-1: #b4caff; --chart-flood-depth-2: #638bff; --chart-flood-depth-3: #233c94; --chart-alert: #ff8780;
   --chart-neutral-grid: #474644; --chart-neutral-axis: #605f5b; --chart-neutral-reference: #b1afac; --chart-neutral-label: #e0dfdd; --chart-neutral-label-muted: #959490; --chart-neutral-surface: #2e2e2c;
   --chart-categorical-1: #638bff; --chart-categorical-2: #849f55; --chart-categorical-3: #ca18a6; --chart-categorical-4: #b09100; --chart-categorical-5: #2ea89c; --chart-categorical-6: #8e5aca; --chart-categorical-7: #d2383b;
@@ -32,7 +32,7 @@
 :root[data-theme="dark"] .viz-root {
   --chart-season-winter: #638bff; --chart-season-spring: #849f55; --chart-season-summer: #e748c1; --chart-season-fall: #cbad42;
   --chart-water-rain: #8cacff; --chart-water-flow: #638bff; --chart-water-body: #233c94;
-  --chart-land-permeable: #849f55; --chart-land-ground: #959490;
+  --chart-land-permeable: #849f55; --chart-land-ground: #959490; --chart-land-structure: #605f5b;
   --chart-emphasis: #f66d1e; --chart-emphasis-fill: #f66d1e4d; --chart-focus: #638bff; --chart-focus-fill: #638bff4d; --chart-flood-depth-1: #b4caff; --chart-flood-depth-2: #638bff; --chart-flood-depth-3: #233c94; --chart-alert: #ff8780;
   --chart-neutral-grid: #474644; --chart-neutral-axis: #605f5b; --chart-neutral-reference: #b1afac; --chart-neutral-label: #e0dfdd; --chart-neutral-label-muted: #959490; --chart-neutral-surface: #2e2e2c;
   --chart-categorical-1: #638bff; --chart-categorical-2: #849f55; --chart-categorical-3: #ca18a6; --chart-categorical-4: #b09100; --chart-categorical-5: #2ea89c; --chart-categorical-6: #8e5aca; --chart-categorical-7: #d2383b;

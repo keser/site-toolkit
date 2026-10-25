@@ -75,7 +75,7 @@
   footer.spc-notes { margin-top: 22px; font-size: 12px; color: var(--text-muted); line-height: 1.6; }
 
   /* ---- sun-path-3d.html (sp3d-) ---- */
-  .viz-root { --sp3d-series-winter: var(--chart-season-winter); --sp3d-series-spring: var(--chart-season-spring); --sp3d-series-summer: var(--chart-season-summer); --sp3d-series-fall: var(--chart-season-fall); --sp3d-ground: var(--chart-neutral-surface); --sp3d-ground-ring: var(--chart-neutral-axis); }
+  .viz-root { --sp3d-series-winter: var(--chart-season-winter); --sp3d-series-spring: var(--chart-season-spring); --sp3d-series-summer: var(--chart-season-summer); --sp3d-series-fall: var(--chart-season-fall); --sp3d-ground: var(--chart-neutral-surface); --sp3d-ground-ring: var(--chart-neutral-axis); --sp3d-structure: var(--chart-land-structure); --sp3d-water: var(--chart-water-body); --sp3d-canopy: var(--species-layer-canopy); --sp3d-hedge: var(--species-layer-shrub); }
   header.sp3d-page-head { margin-bottom: 20px; }
   .sp3d-legend-row { display: flex; flex-wrap: wrap; gap: 16px; margin-top: 12px; color: var(--text-secondary); font: var(--chart-font-label); text-transform: uppercase; }
   .sp3d-hour-label { fill: var(--chart-neutral-label); paint-order: stroke; stroke: var(--chart-neutral-surface);
@@ -581,11 +581,11 @@ const SEASON_DATA = {"2026-12-21":{"label":"Winter Solstice","points":[{"time":"
 ;
 
 const MASSING = {
-  house:  { x: -15.7, y: -43.7, w: 53.9, d: 28.7, h: 22, color: "#c9c2b0" },
-  camper: { x: 37.0,  y: 114.5, w: 30.9, d: 11.6, h: 9,  color: "#b7c4d1" },
-  coop:   { x: 62.4,  y: 62.5,  w: 10.2, d: 12.1, h: 6,  color: "#a98f6e" },
+  house:  { x: -15.7, y: -43.7, w: 53.9, d: 28.7, h: 22, color: "var(--sp3d-structure)" },
+  camper: { x: 37.0,  y: 114.5, w: 30.9, d: 11.6, h: 9,  color: "var(--sp3d-structure)" },
+  coop:   { x: 62.4,  y: 62.5,  w: 10.2, d: 12.1, h: 6,  color: "var(--sp3d-structure)" },
 };
-const POOL = { x: 0, y: 0, w: 22.2, d: 22.2, color: "#2a78d6" };
+const POOL = { x: 0, y: 0, w: 22.2, d: 22.2, color: "var(--sp3d-water)" };
 const TREES = [
   { type: "hedgerow", x: 0.8, y: -57.0, diameter: 40, isHedge: true, len: 95.4 },
   { type: "hedgerow", x: -43.5, y: -39.4, diameter: 30, isHedge: true, len: 88.4 },
@@ -637,11 +637,14 @@ function poly(pts, fill, opacity = 1) {
   return svgEl("polygon", { points: d, fill, opacity, stroke: "rgba(0,0,0,0.15)", "stroke-width": 0.5 });
 }
 
-function shade(hex, factor) {
-  const c = hex.replace("#", "");
-  const r = parseInt(c.slice(0, 2), 16), g = parseInt(c.slice(2, 4), 16), b = parseInt(c.slice(4, 6), 16);
-  const f = (v) => Math.max(0, Math.min(255, Math.round(v * factor)));
-  return `rgb(${f(r)},${f(g)},${f(b)})`;
+// A lit face: the token color, then a white (factor > 1) or black (factor < 1) overlay. The overlay
+// is light and shadow, not a color of meaning, so the faces follow the theme with the token.
+function face(svg, pts, color, factor) {
+  svg.appendChild(poly(pts, color));
+  if (factor === 1) return;
+  const o = poly(pts, factor > 1 ? "white" : "black", Math.abs(1 - factor).toFixed(2));
+  o.setAttribute("stroke", "none");
+  svg.appendChild(o);
 }
 
 // draws a simple box: footprint centered at (cx,cy), width w (east-west), depth d (north-south), height h
@@ -654,11 +657,11 @@ function drawBox(svg, cx, cy, w, d, h, color) {
   const top = corners2D.map(([x, y]) => project(x, y, h));
 
   // top face
-  svg.appendChild(poly(top, shade(color, 1.12)));
+  face(svg, top, color, 1.12);
   // right face (corners 1,2 = +x side)
-  svg.appendChild(poly([bottom[1], bottom[2], top[2], top[1]], shade(color, 0.92)));
+  face(svg, [bottom[1], bottom[2], top[2], top[1]], color, 0.92);
   // front face (corners 2,3 = +y side)
-  svg.appendChild(poly([bottom[2], bottom[3], top[3], top[2]], shade(color, 0.78)));
+  face(svg, [bottom[2], bottom[3], top[3], top[2]], color, 0.78);
 }
 
 function drawTree(svg, x, y, diameter) {
@@ -672,14 +675,14 @@ function drawTree(svg, x, y, diameter) {
   const mid = project(x, y, trunkH + canopyH * 0.55);
   const rr = r * SCALE * 0.72;
   [{ pt: base, s: 0.55 }, { pt: mid, s: 1 }, { pt: apex, s: 0.5 }].forEach(({ pt, s }) => {
-    const c = svgEl("circle", { cx: pt.x, cy: pt.y, r: rr * s, fill: "#6f8f52", opacity: 0.88, stroke: "rgba(0,0,0,0.12)", "stroke-width": 0.5 });
+    const c = svgEl("circle", { cx: pt.x, cy: pt.y, r: rr * s, fill: "var(--sp3d-canopy)", opacity: 0.88, stroke: "rgba(0,0,0,0.12)", "stroke-width": 0.5 });
     svg.appendChild(c);
   });
 }
 
 function drawHedge(svg, x, y, len, h) {
   // simple elongated low box, oriented east-west
-  drawBox(svg, x, y, len, 6, h, "#5b7a45");
+  drawBox(svg, x, y, len, 6, h, "var(--sp3d-hedge)");
 }
 
 // ---- build scene ----

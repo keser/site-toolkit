@@ -136,10 +136,18 @@ listed here, not slipped in.
 - `tools/check_chart_tokens.py`: also checks `page.json` against `page-tokens.css` and fails on
   any raw hex in `docs/*.html` styles outside an allowlist.
 
+## Follow-up: sun-solar 3D scene (2026-10-25)
+
+The scene's raw colors now resolve to tokens. House, camper, and coop share a new Chart Semantic
+`land/structure` (charcoal/200 light, charcoal/600 dark): the legend keys only the sun arcs, so the
+three tans and blues were variety, not meaning. The pool is `water/body`, trees
+`species layer/canopy`, hedgerows `species layer/shrub`. The JS `shade()` parsed hex, which a
+`var()` can't give it. Each face now draws the token color plus a white or black overlay at the
+old strength, so the scene follows a theme toggle with no script read.
+
 ## Deferred
 
-- The sun-solar 3D scene colors (house, camper, coop, pool, tree). Its script shades hex values
-  in JavaScript, so tokens need a `getComputedStyle` read first.
+- The sun-solar month colors (`monthColors`, annual sun-path chart): 8 of 12 months are raw hex.
 - `--gsa-roof-1..4` on sun-solar equal Map Semantic `sun/*` exactly but are copied as hex. Map
   tokens have no CSS mirror yet.
 - Labels over the aerial photo on sun-solar stay fixed dark-on-white-halo in both modes; they

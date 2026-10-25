@@ -37,6 +37,10 @@
       "light": "charcoal/500",
       "dark": "charcoal/400"
     },
+    "land/structure": {
+      "light": "charcoal/200",
+      "dark": "charcoal/600"
+    },
     "emphasis": {
       "light": "amber/500",
       "dark": "amber/400"
