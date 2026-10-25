@@ -40,6 +40,7 @@ defines only three (1, 2, 3).
 | Theme mechanism | Component variants · variable modes | **Variants on `caption.Style`** | Matches the existing `Mode = Light \| Dark` variants on `Sector Compass Key` and `Sector Diagram`. Can be backed by modes later without breaking instances. |
 | Migration | Repoint `Tint` in place · rename `Tint` → `Base`, add new `Tint` | **Rename, then add** | No map changes color until Andrew chooses. Existing bindings keep their variable IDs. |
 | Translucent styles (revised 2026-10-11) | Variable-bound (renders opaque) · RGBA variables (static copies + re-sync) · raw-color /25 /50 styles | **Raw-color /25 and /50** | Bound styles render at 100% in Figma. RGBA variables can't alias the ramps, so they need the same re-sync with 60 extra variables. |
+| Translucent styles (revised 2026-10-25) | Keep raw /25 /50 · bind to Ramps alpha copies | **Bind to `alpha/<hue>-<step>-<25|50>`** | Reverses 2026-10-11. Only 20 styles remain (not 60), Ramps already holds alpha steps for the Page tokens, and `check_chart_tokens.py tokens` now flags alpha drift from the repo. The copies still need a manual re-sync after a ramp change. Rendering verified: Tint 50 samples at the expected 50% blend. |
 | Amber Tint | amber/200 · amber/300 | **amber/300** | amber/200 matches coral/200's contrast exactly (12.5:1), and coral and amber are already the closest hue pair (23.3°). amber/300 (9.3:1) separates them by lightness. |
 
 ## 1. Color tokens — `Map Overlay` collection

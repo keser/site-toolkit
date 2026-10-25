@@ -1087,7 +1087,8 @@ git commit -m "Map tokens v2 Task 9: follow-up checklists, mark spec built"
   change, so variable-bound /25 and /50 styles rendered at 100%. Andrew confirmed it in the UI, and
   confirmed that setting fill opacity by hand either fades the stroke (layer opacity) or detaches the
   style. Chosen: **/25 and /50 styles hold a raw copied color**; /100 stays variable-bound. Option (a),
-  60 RGBA variables, was rejected: those variables would be static copies too, so it needs the same
+  60 RGBA variables, was rejected (**reversed 2026-10-25**: the 20 remaining styles now bind
+  `alpha/<hue>-<step>-<25|50>` Ramps copies; see the v2 design spec): those variables would be static copies too, so it needs the same
   re-sync step plus 60 extra variables. Upkeep: the Task 3 re-sync rule and drift check. On 2026-10-11 the set was trimmed to 50 styles: only Tint is used translucent, so the 40 Shade/Base 25/50 styles were deleted (no layer used them).
 - **Paste-properties binding test (Task 7 Step 6): not yet run.** Steps are in Task 7 Step 6 above. Until it runs, the Styles page note stays "Not yet run".
 - **Captions on maps use a remote library caption set (`238:4172`)**, not the local `caption` (`640:4373`) updated in Task 5. Local caption changes reach no current instance until instances are swapped.

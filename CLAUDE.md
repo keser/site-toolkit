@@ -113,7 +113,8 @@ settled.
   translucent (alpha) swatch an explicit backing: white for Light, charcoal/900 for Dark. Hue order in docs: magenta, coral, amber, gold, sage, teal,
   cobalt, violet, slate, charcoal, neutral.
 - **Plugin API gotchas.**
-  - Binding a paint to a variable resets its opacity to 1; restore it afterward.
+  - Binding a paint to a variable writes the variable's alpha into the paint's opacity, so an opaque
+    variable resets it to 1. Bind a translucent style to an `alpha/*` Ramps copy instead.
   - JetBrains Mono has no SemiBold; use Bold.
   - Scripts see fonts installed only on the owner's machine as missing. Swap them with
     `setRangeFontName`, then bind, and skip `hasMissingFont` nodes.

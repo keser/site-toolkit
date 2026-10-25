@@ -61,6 +61,7 @@ def check_tokens():
         if f".{cls}" not in css: fails.append(f"class .{cls} missing")
     fails += check_species_tokens(css)
     fails += check_map_tokens(css)
+    fails += check_alpha_ramps()
     if not PAGE_CSS.exists():
         return fails + [f"missing {PAGE_CSS.relative_to(ROOT)}"]
     page_css = PAGE_CSS.read_text()
@@ -92,6 +93,21 @@ def check_collection_tokens(css, path, prefix, scope=r" \.viz-root"):
         if light.get(prop, "").lower() != want_l: fails.append(f"{prop} light {light.get(prop)} ≠ {want_l}")
         if media.get(prop, "").lower() != want_d: fails.append(f"{prop} dark {media.get(prop)} ≠ {want_d}")
         if forced.get(prop, "").lower() != want_d: fails.append(f"{prop} forced dark {forced.get(prop)} ≠ {want_d}")
+    return fails
+
+def check_alpha_ramps():
+    """Each alpha/<hue>-<step>-<percent> Ramps entry is a copy of <hue>/<step> at that opacity
+    (black and white mean neutral/Black and neutral/White). Figma can't alias a color and change
+    its alpha, so these copies must be re-synced by hand; this catches the drift."""
+    ramps, fails = json.loads(RAMPS_JSON.read_text()), []
+    for name, val in ramps.items():
+        if not name.startswith("alpha/"): continue
+        m = re.fullmatch(r"alpha/([a-z]+)(?:-(\d+))?-(\d+)", name)
+        if not m: fails.append(f"{name}: name doesn't parse as alpha/<hue>-<step>-<percent>"); continue
+        hue, step, pct = m.groups()
+        base = f"neutral/{hue.capitalize()}" if step is None else f"{hue}/{step}"
+        want = ramps.get(base, "?") + f"{int(int(pct) * 255 / 100 + 0.5):02x}"  # round half up: 30% -> 4d
+        if val.lower() != want: fails.append(f"{name} {val} ≠ {base} at {pct}% ({want})")
     return fails
 
 def check_map_tokens(css):
