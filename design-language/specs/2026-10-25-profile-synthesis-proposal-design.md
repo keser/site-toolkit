@@ -30,7 +30,8 @@ between "what is" and "what could be."
    - The annual wind rose digitized from a course slide is removed; the seasonal roses from 10
      years of KHFD station data stay.
 5. **Settled site facts applied everywhere.** The lot is 0.43 ac (1993 plan outline), and
-   elevation is 103–107 ft (2023 CT ECO lidar).
+   elevation is 103–110 ft (2023 CT ECO lidar inside the outline; the
+   centerline profile alone runs 103.6–107.5 ft).
 
 ## Known gaps
 - The zone, microclimate, and brainstorm map images still print "Min 106 / Max 114 ft" in their
