@@ -151,10 +151,11 @@ September, and December are the tokens. The months between blend their neighbors
 were brighter but landed August on amber and May near coral, colliding with emphasis and alert.
 Every month clears 3:1 against the panel in both modes (lowest: September, the fall token, 3.0:1).
 
+`--gsa-roof-1..4` now reference Map Semantic `sun/*`. Map Semantic gained a CSS mirror: `--map-*`
+in `chart-tokens.css`, light block only (one mode; dark inherits), checked against `map.json`.
+
 ## Deferred
 
-- `--gsa-roof-1..4` on sun-solar equal Map Semantic `sun/*` exactly but are copied as hex. Map
-  tokens have no CSS mirror yet.
 - Labels over the aerial photo on sun-solar stay fixed dark-on-white-halo in both modes; they
   sit on a photo, not the page.
 

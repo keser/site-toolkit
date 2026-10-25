@@ -14,6 +14,7 @@ PAGE_CSS = ROOT / "docs/assets/page-tokens.css"
 PAGE = ROOT / "design-language/tokens/page.json"
 SPECIES = ROOT / "design-language/tokens/species.json"
 CHART = ROOT / "design-language/tokens/chart.json"
+MAP = ROOT / "design-language/tokens/map.json"
 RAMPS_JSON = ROOT / "design-language/tokens/ramps.json"
 
 # Chart-specific values allowed to stay raw (plan ruling R4)
@@ -59,6 +60,7 @@ def check_tokens():
     for cls in ("chart-title", "chart-label", "chart-value", "chart-note"):
         if f".{cls}" not in css: fails.append(f"class .{cls} missing")
     fails += check_species_tokens(css)
+    fails += check_map_tokens(css)
     if not PAGE_CSS.exists():
         return fails + [f"missing {PAGE_CSS.relative_to(ROOT)}"]
     page_css = PAGE_CSS.read_text()
@@ -90,6 +92,18 @@ def check_collection_tokens(css, path, prefix, scope=r" \.viz-root"):
         if light.get(prop, "").lower() != want_l: fails.append(f"{prop} light {light.get(prop)} ≠ {want_l}")
         if media.get(prop, "").lower() != want_d: fails.append(f"{prop} dark {media.get(prop)} ≠ {want_d}")
         if forced.get(prop, "").lower() != want_d: fails.append(f"{prop} forced dark {forced.get(prop)} ≠ {want_d}")
+    return fails
+
+def check_map_tokens(css):
+    """Map Semantic has one mode: each --map-* value sits in the light block only, equal to its
+    Ramps step, and the dark blocks don't override it."""
+    ramps, tokens = json.loads(RAMPS_JSON.read_text()), json.loads(MAP.read_text())["tokens"]
+    light, media, forced = (decls(b) for b in blocks(css))
+    fails = []
+    for token, step in tokens.items():
+        prop = "--map-" + token.replace("/", "-")
+        if light.get(prop, "").lower() != ramps.get(step): fails.append(f"{prop} {light.get(prop)} ≠ {ramps.get(step)}")
+        if prop in media or prop in forced: fails.append(f"{prop} is overridden in a dark block")
     return fails
 
 def check_species_tokens(css):

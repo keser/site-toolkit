@@ -71,6 +71,8 @@ settled.
 - **Species colors come from the `--species-*` tokens** in the same file. Their values live in
   `design-language/tokens/species.json` (Ramps steps per mode); `check_chart_tokens.py tokens`
   fails if the CSS drifts from it, and `tools/palette_check.py` validates the palette itself.
+- **Map colors in the microsite come from the `--map-*` tokens** in `chart-tokens.css`, mirroring
+  Map Semantic (`design-language/tokens/map.json`). One mode, so they sit in the light block only.
 - **Raster renders take colors from tokens, not hex.** A build script that colors a map raster calls
   `tokens.rgb("map" | "species", name)`; the values live in `design-language/tokens/map.json` and
   `species.json`, mirroring Figma's Map Semantic and Species collections. External palettes (USDA
