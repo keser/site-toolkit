@@ -3,7 +3,7 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<title>Zones &amp; Design — Lot #86</title>
+<title>Zones &amp; Use — Lot #86</title>
 <style>
   .viz-root {
     color-scheme: light;
@@ -87,39 +87,53 @@
     background: #fcfcfb; border-bottom: 1px solid rgba(11,11,11,0.10);
   }
   .site-nav__brand { font-weight: 600; font-size: 14px; color: #0b0b0b; text-decoration: none; }
-  .site-nav__links { display: flex; gap: 18px; flex-wrap: wrap; }
+  .site-nav__links { display: flex; gap: 10px 32px; flex-wrap: wrap; }
   .site-nav__links a { font-size: 13px; color: #52514e; text-decoration: none; }
   .site-nav__links a:hover { color: #0b0b0b; }
+  .site-nav__group { display: flex; flex-wrap: wrap; align-items: baseline; gap: 6px 14px; }
+  .site-nav__label { font-size: 11px; font-weight: 700; letter-spacing: 0.04em; text-transform: uppercase; color: #6b6a65; }
   @media (prefers-color-scheme: dark) {
     :root:not([data-theme="light"]) .site-nav { background: #1a1a19; border-bottom-color: rgba(255,255,255,0.10); }
     :root:not([data-theme="light"]) .site-nav__brand { color: #ffffff; }
     :root:not([data-theme="light"]) .site-nav__links a { color: #c3c2b7; }
     :root:not([data-theme="light"]) .site-nav__links a:hover { color: #ffffff; }
+    :root:not([data-theme="light"]) .site-nav__label { color: #a3a29a; }
   }
   :root[data-theme="dark"] .site-nav { background: #1a1a19; border-bottom-color: rgba(255,255,255,0.10); }
   :root[data-theme="dark"] .site-nav__brand { color: #ffffff; }
   :root[data-theme="dark"] .site-nav__links a { color: #c3c2b7; }
   :root[data-theme="dark"] .site-nav__links a:hover { color: #ffffff; }
+  :root[data-theme="dark"] .site-nav__label { color: #a3a29a; }
 </style>
 <nav class="site-nav">
   <a class="site-nav__brand" href="index.html">Lot #86 — Site Profile</a>
   <div class="site-nav__links">
-    <a href="base-map.html">Base Map</a>
-    <a href="sectors.html">Sectors</a>
-    <a href="zones-design.html">Zones &amp; Design</a>
-    <a href="climate.html">Climate</a>
-    <a href="water.html">Water</a>
-    <a href="sun-solar.html">Sun &amp; Solar</a>
-    <a href="flood-hazard.html">Flood &amp; Hazard</a>
-    <a href="species-inventory.html">Species Inventory</a>
-    <a href="project-plan.html">Project Plan</a>
+    <div class="site-nav__group">
+      <span class="site-nav__label">Current state</span>
+      <a href="base-map.html">Base Map</a>
+      <a href="climate.html">Climate</a>
+      <a href="sun-solar.html">Sun &amp; Solar</a>
+      <a href="sectors.html">Sectors</a>
+      <a href="water.html">Water</a>
+      <a href="flood-hazard.html">Flood &amp; Hazard</a>
+      <a href="species-inventory.html">Species Inventory</a>
+      <a href="zones-design.html">Zones &amp; Use</a>
+    </div>
+    <div class="site-nav__group">
+      <span class="site-nav__label">Synthesis</span>
+      <a href="synthesis.html">Findings</a>
+    </div>
+    <div class="site-nav__group">
+      <span class="site-nav__label">Proposal</span>
+      <a href="project-plan.html">Project Plan</a>
+    </div>
   </div>
 </nav>
 <!-- NAV:END -->
 <div class="viz-root">
   <div class="wrap">
     <header>
-      <h1 class="section-title" style="font-size:22px;">Zones &amp; Design</h1>
+      <h1 class="section-title" style="font-size:22px;">Zones &amp; Use</h1>
       <p class="subhead">How the property is used today, organized as permaculture zones of use (Zone 01, visited daily, near the house, through Zone 05, rarely visited), the microclimates within them, and early design ideas for each zone.</p>
       <div class="badge-row" id="section-nav">
         <a class="badge" href="#current-zones">Current Use</a>
@@ -179,7 +193,8 @@
         <p class="photo-credit">Photos by Andrew Keser, June &amp; August 2026.</p>
       </div>
 
-      <h3 class="section-head">SWOT Analysis</h3>
+      <h3 class="section-head" id="findings">Findings for design</h3>
+      <p class="subhead">Strengths, weaknesses, opportunities, and threats of the current layout. The top findings roll up into the <a href="synthesis.html">site-wide synthesis</a>.</p>
       <div class="two-col">
         <div>
           <p class="swot-label">Strengths</p>
@@ -350,7 +365,7 @@
 
       <h3 class="section-head">Questions</h3>
       <div class="qa-block">
-        <p class="q">Review your client must/nice/avoid list. How might you consider changing the zone layout to meet these needs?</p>
+        <p class="q">Given the owners' must-haves, nice-to-haves, and absolutely-nots, how should the zone layout change?</p>
         <p class="a">The overall layout can remain the same, but the ways we use them can be done more effectively so they align to current use patterns. For example, adding a seating area in the already shaded gardens of Zone 02 could offer another gathering space with good views similar to the front porch in Zone 01.</p>
       </div>
       <div class="qa-block">

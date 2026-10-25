@@ -4,8 +4,9 @@ What the site is today: its context, climate, energies, landform, water, soil, a
 systems. This is the as-is record. What the site should become goes in `design-brief.md`.
 
 Fill sections in any order, but observe before deciding: a season of watching beats a guess.
-Each finished section ends with **Design implications** that name the tasks they affect, by ID,
-so the analysis and the plan stay linked.
+Each finished section ends with **Findings for design**: its strengths, weaknesses,
+opportunities, and threats, naming any tasks they affect by ID. Leave a quadrant as "none
+identified yet" rather than padding it. The strongest findings roll up into `synthesis.md`.
 
 Each section lists:
 - **Answers:** the questions the section must settle.

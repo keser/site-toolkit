@@ -66,8 +66,21 @@ settled.
   `tokens.rgb("map" | "species", name)`; the values live in `design-language/tokens/map.json` and
   `species.json`, mirroring Figma's Map Semantic and Species collections. External palettes (USDA
   zones, colors sampled from a photo) stay raw, with their source noted.
-- Anchor contracts: `sectors.html` links to `sun-solar.html#sun-path-charts` and `climate.html#wind`.
+- **Three-part structure** (decided 2026-10-25; spec `design-language/specs/2026-10-25-profile-synthesis-proposal-design.md`).
+  The audience is designers and engineers proposing work for the owner, so write for them, not a
+  course rubric. Nav groups pages as Current state, Synthesis (`synthesis.html`), and Proposal
+  (`project-plan.html`).
+  Each current-state page ends with a `#findings` block ("Findings for design", `.fd-*` classes,
+  inside the page's `.wrap`) sorted as strengths, weaknesses, opportunities, threats. Only write
+  findings the page's own content supports; an empty quadrant reads "None identified yet."
+  `synthesis.html` rolls up the strongest findings and links each one back to its page.
+- Cite original data sources (NOAA, station IDs, lidar, USGS), never course lessons or private
+  repo paths.
+- Anchor contracts: `sectors.html` links to `sun-solar.html#sun-path-charts` and `climate.html#wind`;
+  `synthesis.html` links to each page's `#findings` and to `sectors.html#views`, `#social`,
+  `water.html#water-balance`, `#flow-schematic`, `sun-solar.html#sun-path-3d`, `zones-design.html#brainstorm`.
 - Demo tasks page (`project-plan.html`) is a hand-ported snapshot of the demo site's task data.
+  It is the Proposal part for this lot; on a client site it becomes a design brief with phases.
 
 ## Working rules
 - Sections first, tools later (see README, "How work flows"). Once a lesson has worked on a real

@@ -99,32 +99,46 @@
     background: #fcfcfb; border-bottom: 1px solid rgba(11,11,11,0.10);
   }
   .site-nav__brand { font-weight: 600; font-size: 14px; color: #0b0b0b; text-decoration: none; }
-  .site-nav__links { display: flex; gap: 18px; flex-wrap: wrap; }
+  .site-nav__links { display: flex; gap: 10px 32px; flex-wrap: wrap; }
   .site-nav__links a { font-size: 13px; color: #52514e; text-decoration: none; }
   .site-nav__links a:hover { color: #0b0b0b; }
+  .site-nav__group { display: flex; flex-wrap: wrap; align-items: baseline; gap: 6px 14px; }
+  .site-nav__label { font-size: 11px; font-weight: 700; letter-spacing: 0.04em; text-transform: uppercase; color: #6b6a65; }
   @media (prefers-color-scheme: dark) {
     :root:not([data-theme="light"]) .site-nav { background: #1a1a19; border-bottom-color: rgba(255,255,255,0.10); }
     :root:not([data-theme="light"]) .site-nav__brand { color: #ffffff; }
     :root:not([data-theme="light"]) .site-nav__links a { color: #c3c2b7; }
     :root:not([data-theme="light"]) .site-nav__links a:hover { color: #ffffff; }
+    :root:not([data-theme="light"]) .site-nav__label { color: #a3a29a; }
   }
   :root[data-theme="dark"] .site-nav { background: #1a1a19; border-bottom-color: rgba(255,255,255,0.10); }
   :root[data-theme="dark"] .site-nav__brand { color: #ffffff; }
   :root[data-theme="dark"] .site-nav__links a { color: #c3c2b7; }
   :root[data-theme="dark"] .site-nav__links a:hover { color: #ffffff; }
+  :root[data-theme="dark"] .site-nav__label { color: #a3a29a; }
 </style>
 <nav class="site-nav">
   <a class="site-nav__brand" href="index.html">Lot #86 — Site Profile</a>
   <div class="site-nav__links">
-    <a href="base-map.html">Base Map</a>
-    <a href="sectors.html">Sectors</a>
-    <a href="zones-design.html">Zones &amp; Design</a>
-    <a href="climate.html">Climate</a>
-    <a href="water.html">Water</a>
-    <a href="sun-solar.html">Sun &amp; Solar</a>
-    <a href="flood-hazard.html">Flood &amp; Hazard</a>
-    <a href="species-inventory.html">Species Inventory</a>
-    <a href="project-plan.html">Project Plan</a>
+    <div class="site-nav__group">
+      <span class="site-nav__label">Current state</span>
+      <a href="base-map.html">Base Map</a>
+      <a href="climate.html">Climate</a>
+      <a href="sun-solar.html">Sun &amp; Solar</a>
+      <a href="sectors.html">Sectors</a>
+      <a href="water.html">Water</a>
+      <a href="flood-hazard.html">Flood &amp; Hazard</a>
+      <a href="species-inventory.html">Species Inventory</a>
+      <a href="zones-design.html">Zones &amp; Use</a>
+    </div>
+    <div class="site-nav__group">
+      <span class="site-nav__label">Synthesis</span>
+      <a href="synthesis.html">Findings</a>
+    </div>
+    <div class="site-nav__group">
+      <span class="site-nav__label">Proposal</span>
+      <a href="project-plan.html">Project Plan</a>
+    </div>
   </div>
 </nav>
 <!-- NAV:END -->
@@ -132,7 +146,7 @@
   <div class="wrap">
     <header>
       <h1 class="section-title" style="font-size:22px;">Project Plan</h1>
-      <p class="subhead">Every task in the site's phased plan — Reset, Construction, Establish Systems, Diversity &amp; Habitat, and ongoing Design — with current status and dependencies. Ported from the project's task-tracking files, not auto-generated; the site's private progress log holds the narrative behind each change.</p>
+      <p class="subhead">The proposal for this lot: the owner's phased plan. Every task — Reset, Construction, Establish Systems, Diversity &amp; Habitat, and ongoing Design — with current status and dependencies. Ported from the project's task-tracking files, not auto-generated; the site's private progress log holds the narrative behind each change.</p>
       <p class="subhead-muted">Snapshot as of 2026-10-10.</p>
       <div class="badge-row" id="section-nav">
         <a class="badge" href="#recent-activity">Recent Activity</a>

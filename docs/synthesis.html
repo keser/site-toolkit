@@ -1,0 +1,217 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Synthesis — Lot #86</title>
+<style>
+  .viz-root {
+    color-scheme: light;
+    --surface-1:      #fcfcfb;
+    --page:           #f9f9f7;
+    --text-primary:   #0b0b0b;
+    --text-secondary: #52514e;
+    --text-muted:     #898781;
+    --grid:           #e1e0d9;
+    --baseline:       #c3c2b7;
+    --border:         rgba(11,11,11,0.10);
+    --scale-100: #cde2fb;
+    --scale-450: #2a78d6;
+    --scale-700: #0d366b;
+    --status-good:     #0ca30c;
+    --status-good-bg:  rgba(12,163,12,0.10);
+    --status-serious:     #ec835a;
+    --status-serious-bg:  rgba(236,131,90,0.14);
+  }
+  @media (prefers-color-scheme: dark) {
+    :root:where(:not([data-theme="light"])) .viz-root {
+      color-scheme: dark;
+      --surface-1:      #1a1a19;
+      --page:           #0d0d0d;
+      --text-primary:   #ffffff;
+      --text-secondary: #c3c2b7;
+      --text-muted:     #898781;
+      --grid:           #2c2c2a;
+      --baseline:       #383835;
+      --border:         rgba(255,255,255,0.10);
+      --scale-100: #9ec5f4;
+      --scale-450: #3987e5;
+      --scale-700: #104281;
+      --status-good:     #0ca30c;
+      --status-good-bg:  rgba(12,163,12,0.16);
+      --status-serious:     #ec835a;
+      --status-serious-bg:  rgba(236,131,90,0.18);
+    }
+  }
+  :root[data-theme="dark"] .viz-root {
+    color-scheme: dark;
+    --surface-1:      #1a1a19;
+    --page:           #0d0d0d;
+    --text-primary:   #ffffff;
+    --text-secondary: #c3c2b7;
+    --text-muted:     #898781;
+    --grid:           #2c2c2a;
+    --baseline:       #383835;
+    --border:         rgba(255,255,255,0.10);
+    --scale-100: #9ec5f4;
+    --scale-450: #3987e5;
+    --scale-700: #104281;
+    --status-good:     #0ca30c;
+    --status-good-bg:  rgba(12,163,12,0.16);
+    --status-serious:     #ec835a;
+    --status-serious-bg:  rgba(236,131,90,0.18);
+  }
+
+  * { box-sizing: border-box; }
+  body { margin: 0; }
+  .viz-root {
+    font-family: system-ui, -apple-system, "Segoe UI", sans-serif;
+    background: var(--page);
+    color: var(--text-primary);
+    min-height: 100vh;
+    padding: 32px 20px 60px;
+  }
+  .wrap { max-width: 1280px; margin: 0 auto; }
+  h1 { font-size: 22px; font-weight: 600; margin: 0 0 6px; }
+  .subhead { color: var(--text-secondary); font-size: 14px; line-height: 1.5; margin: 0 0 12px; max-width: 78ch; }
+  .subhead a { color: inherit; }
+  .sy-section { margin-top: 32px; }
+  .sy-section h2 { font-size: 21px; font-weight: 600; margin: 0 0 6px; }
+  .sy-steps { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 12px; margin: 20px 0 0; padding: 0; list-style: none; }
+  .sy-steps li { background: var(--surface-1); border: 1px solid var(--border); border-radius: 8px; padding: 14px 16px; font-size: 14px; line-height: 1.5; color: var(--text-secondary); }
+  .sy-steps b { display: block; color: var(--text-primary); font-size: 15px; margin-bottom: 4px; }
+  .sy-steps a { color: inherit; }
+  .sy-grid { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 12px; }
+  @media (max-width: 720px) { .sy-grid, .sy-steps { grid-template-columns: 1fr; } }
+  .sy-card { background: var(--surface-1); border: 1px solid var(--border); border-radius: 8px; padding: 14px 16px; }
+  .sy-label { font-size: 12px; font-weight: 700; text-transform: uppercase; letter-spacing: 0.04em; color: var(--text-secondary); margin: 0 0 8px; }
+  .sy-card ul, .sy-list { margin: 0; padding-left: 18px; font-size: 14px; line-height: 1.55; color: var(--text-primary); }
+  .sy-card li + li, .sy-list li + li { margin-top: 6px; }
+  .sy-list { max-width: 78ch; }
+  .sy-src { font-size: 12px; color: var(--text-secondary); white-space: nowrap; }
+</style>
+</head>
+<body>
+<!-- NAV:START -->
+<style>
+  .site-nav {
+    font-family: system-ui, -apple-system, "Segoe UI", sans-serif;
+    display: flex; flex-wrap: wrap; align-items: center; justify-content: space-between;
+    gap: 12px; padding: 14px 20px;
+    background: #fcfcfb; border-bottom: 1px solid rgba(11,11,11,0.10);
+  }
+  .site-nav__brand { font-weight: 600; font-size: 14px; color: #0b0b0b; text-decoration: none; }
+  .site-nav__links { display: flex; gap: 10px 32px; flex-wrap: wrap; }
+  .site-nav__links a { font-size: 13px; color: #52514e; text-decoration: none; }
+  .site-nav__links a:hover { color: #0b0b0b; }
+  .site-nav__group { display: flex; flex-wrap: wrap; align-items: baseline; gap: 6px 14px; }
+  .site-nav__label { font-size: 11px; font-weight: 700; letter-spacing: 0.04em; text-transform: uppercase; color: #6b6a65; }
+  @media (prefers-color-scheme: dark) {
+    :root:not([data-theme="light"]) .site-nav { background: #1a1a19; border-bottom-color: rgba(255,255,255,0.10); }
+    :root:not([data-theme="light"]) .site-nav__brand { color: #ffffff; }
+    :root:not([data-theme="light"]) .site-nav__links a { color: #c3c2b7; }
+    :root:not([data-theme="light"]) .site-nav__links a:hover { color: #ffffff; }
+    :root:not([data-theme="light"]) .site-nav__label { color: #a3a29a; }
+  }
+  :root[data-theme="dark"] .site-nav { background: #1a1a19; border-bottom-color: rgba(255,255,255,0.10); }
+  :root[data-theme="dark"] .site-nav__brand { color: #ffffff; }
+  :root[data-theme="dark"] .site-nav__links a { color: #c3c2b7; }
+  :root[data-theme="dark"] .site-nav__links a:hover { color: #ffffff; }
+  :root[data-theme="dark"] .site-nav__label { color: #a3a29a; }
+</style>
+<nav class="site-nav">
+  <a class="site-nav__brand" href="index.html">Lot #86 — Site Profile</a>
+  <div class="site-nav__links">
+    <div class="site-nav__group">
+      <span class="site-nav__label">Current state</span>
+      <a href="base-map.html">Base Map</a>
+      <a href="climate.html">Climate</a>
+      <a href="sun-solar.html">Sun &amp; Solar</a>
+      <a href="sectors.html">Sectors</a>
+      <a href="water.html">Water</a>
+      <a href="flood-hazard.html">Flood &amp; Hazard</a>
+      <a href="species-inventory.html">Species Inventory</a>
+      <a href="zones-design.html">Zones &amp; Use</a>
+    </div>
+    <div class="site-nav__group">
+      <span class="site-nav__label">Synthesis</span>
+      <a href="synthesis.html">Findings</a>
+    </div>
+    <div class="site-nav__group">
+      <span class="site-nav__label">Proposal</span>
+      <a href="project-plan.html">Project Plan</a>
+    </div>
+  </div>
+</nav>
+<!-- NAV:END -->
+<div class="viz-root">
+  <div class="wrap">
+    <header>
+      <h1>Synthesis</h1>
+      <p class="subhead">The bridge between what the site is and what it could become. Each part of the profile ends with its own findings for design; this page pulls the most important ones into one site-wide view, lists what still needs checking, and collects the design ideas worth testing. Nothing here is a design decision yet.</p>
+    </header>
+    <ol class="sy-steps" aria-label="How the profile is organized">
+      <li><b>1. Current state</b>The site as it is: context, climate, sun, sectors, water, hazards, species, and current use. Start at the <a href="base-map.html">base map</a>.</li>
+      <li><b>2. Synthesis</b>This page: the site-wide findings and open questions that come before design.</li>
+      <li><b>3. Proposal</b>For this lot, the owner's <a href="project-plan.html">project plan</a>. For a client site, a design brief with phases tied to the owner's goals.</li>
+    </ol>
+
+    <section class="sy-section" aria-labelledby="sy-swot">
+      <h2 id="sy-swot">Site-wide findings</h2>
+      <p class="subhead">The strongest findings from across the profile. Each one links to the page it comes from.</p>
+      <div class="sy-grid">
+      <div class="sy-card"><p class="sy-label">Strengths</p><ul><li>Outside the 100-year floodplain, with low fire and crime risk. <a class="sy-src" href="flood-hazard.html#findings">Flood</a></li><li>Rain in every month, on a lot that is 87% permeable. <a class="sy-src" href="water.html#findings">Water</a></li><li>A wide range of microclimates on 0.43 acres. <a class="sy-src" href="zones-design.html#findings">Zones</a></li><li>Native species already thriving, next to a regional wildlife corridor. <a class="sy-src" href="species-inventory.html#findings">Species</a></li></ul></div>
+      <div class="sy-card"><p class="sy-label">Weaknesses</p><ul><li>Invasive vines and shrubs have overgrown Zone 5 and the property lines. <a class="sy-src" href="zones-design.html#findings">Zones</a></li><li>Plantings are circumstantial; the most-visited zones produce little. <a class="sy-src" href="zones-design.html#findings">Zones</a></li><li>The lawn drives runoff, and the front yard drains to the street. <a class="sy-src" href="water.html#findings">Water</a></li><li>Close neighbors and their trees limit sun and privacy. <a class="sy-src" href="sectors.html#findings">Sectors</a></li></ul></div>
+      <div class="sy-card"><p class="sy-label">Opportunities</p><ul><li>One buffer planting can handle winter wind, summer ozone, noise, and privacy together. <a class="sy-src" href="sectors.html#findings">Sectors</a></li><li>Clearing produces mulch, wood chips, and firewood on site. <a class="sy-src" href="zones-design.html#findings">Zones</a></li><li>Soil building, swales, and roof barrels can keep rain on the lot. <a class="sy-src" href="water.html#findings">Water</a></li><li>Limbing recovers low winter sun under the canopy. <a class="sy-src" href="sun-solar.html#findings">Sun</a></li></ul></div>
+      <div class="sy-card"><p class="sy-label">Threats</p><ul><li>Ice storms and wind (6/10) on weak limbs over paths and structures. <a class="sy-src" href="sectors.html#findings">Sectors</a></li><li>Design storms of 8+ in, with water arriving from upslope to the west. <a class="sy-src" href="water.html#findings">Water</a></li><li>Deer browse on new plantings. <a class="sy-src" href="sectors.html#findings">Sectors</a></li><li>Invasives keep spreading without active control. <a class="sy-src" href="species-inventory.html#findings">Species</a></li></ul></div>
+      </div>
+    </section>
+
+    <section class="sy-section" aria-labelledby="sy-open">
+      <h2 id="sy-open">Open questions before design</h2>
+      <ul class="sy-list">
+        <li>Is there a real view line worth keeping open? Check on site, with leaves on and off. <a class="sy-src" href="sectors.html#views">Sectors</a></li>
+        <li>What does Portland's animal ordinance allow for coop setbacks, flock size, and roosters? <a class="sy-src" href="sectors.html#social">Sectors</a></li>
+        <li>How does runoff split between the street and the backyard? It hasn't been measured. <a class="sy-src" href="water.html#water-balance">Water</a></li>
+        <li>Where is the true low point? The zone brainstorm treats the southeast side yard as the lowest spot; the 2023 lidar puts the low (≈103&nbsp;ft) near the back-east corner. <a class="sy-src" href="water.html#flow-schematic">Water</a></li>
+        <li>Tree and building heights in the 3D sun model are estimates until measured. <a class="sy-src" href="sun-solar.html#sun-path-3d">Sun</a></li>
+      </ul>
+    </section>
+
+    <section class="sy-section" aria-labelledby="sy-ideas">
+      <h2 id="sy-ideas">Design ideas to test</h2>
+      <p class="subhead">Ideas the owner raised while studying the site, carried forward from the <a href="zones-design.html#brainstorm">zone brainstorm</a>. Each still has to hold up against the findings above.</p>
+      <ul class="sy-list">
+        <li>Move the wood pile and work area beside the driveway, so deliveries no longer cross a neighbor's driveway.</li>
+        <li>Shade the pool deck and back path with fruiting vines instead of a built pergola.</li>
+        <li>Add seating in the Zone 2 shade garden, so it becomes a place to stay rather than pass through.</li>
+        <li>Replace the southeast boxwood hedge with a pollarded willow row for fencing material and mulch.</li>
+        <li>Rebuild a three-bin compost system in Zone 4, and pollard the maples for a steady supply of chips.</li>
+        <li>Move to raised beds in Zone 3, and move the shed to the shaded area by the coop.</li>
+      </ul>
+    </section>
+  </div>
+</div>
+<!-- FOOTER:START -->
+<style>
+  .site-footer {
+    font-family: system-ui, -apple-system, "Segoe UI", sans-serif;
+    padding: 20px; text-align: center;
+    font-size: 12px; color: #898781;
+    background: #fcfcfb; border-top: 1px solid rgba(11,11,11,0.10);
+  }
+  .site-footer a { color: #52514e; }
+  @media (prefers-color-scheme: dark) {
+    :root:not([data-theme="light"]) .site-footer { background: #1a1a19; border-top-color: rgba(255,255,255,0.10); }
+    :root:not([data-theme="light"]) .site-footer a { color: #c3c2b7; }
+  }
+  :root[data-theme="dark"] .site-footer { background: #1a1a19; border-top-color: rgba(255,255,255,0.10); }
+  :root[data-theme="dark"] .site-footer a { color: #c3c2b7; }
+</style>
+<footer class="site-footer">
+  <p>Demo site for <a href="https://github.com/keser/site-toolkit">site-toolkit</a>.
+    Example data: Lot #86, 58 Freestone Avenue, Portland, CT 06480.</p>
+</footer>
+<!-- FOOTER:END -->
+</body>
+</html>

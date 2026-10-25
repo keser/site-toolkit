@@ -82,32 +82,46 @@
     background: #fcfcfb; border-bottom: 1px solid rgba(11,11,11,0.10);
   }
   .site-nav__brand { font-weight: 600; font-size: 14px; color: #0b0b0b; text-decoration: none; }
-  .site-nav__links { display: flex; gap: 18px; flex-wrap: wrap; }
+  .site-nav__links { display: flex; gap: 10px 32px; flex-wrap: wrap; }
   .site-nav__links a { font-size: 13px; color: #52514e; text-decoration: none; }
   .site-nav__links a:hover { color: #0b0b0b; }
+  .site-nav__group { display: flex; flex-wrap: wrap; align-items: baseline; gap: 6px 14px; }
+  .site-nav__label { font-size: 11px; font-weight: 700; letter-spacing: 0.04em; text-transform: uppercase; color: #6b6a65; }
   @media (prefers-color-scheme: dark) {
     :root:not([data-theme="light"]) .site-nav { background: #1a1a19; border-bottom-color: rgba(255,255,255,0.10); }
     :root:not([data-theme="light"]) .site-nav__brand { color: #ffffff; }
     :root:not([data-theme="light"]) .site-nav__links a { color: #c3c2b7; }
     :root:not([data-theme="light"]) .site-nav__links a:hover { color: #ffffff; }
+    :root:not([data-theme="light"]) .site-nav__label { color: #a3a29a; }
   }
   :root[data-theme="dark"] .site-nav { background: #1a1a19; border-bottom-color: rgba(255,255,255,0.10); }
   :root[data-theme="dark"] .site-nav__brand { color: #ffffff; }
   :root[data-theme="dark"] .site-nav__links a { color: #c3c2b7; }
   :root[data-theme="dark"] .site-nav__links a:hover { color: #ffffff; }
+  :root[data-theme="dark"] .site-nav__label { color: #a3a29a; }
 </style>
 <nav class="site-nav">
   <a class="site-nav__brand" href="index.html">Lot #86 — Site Profile</a>
   <div class="site-nav__links">
-    <a href="base-map.html">Base Map</a>
-    <a href="sectors.html">Sectors</a>
-    <a href="zones-design.html">Zones &amp; Design</a>
-    <a href="climate.html">Climate</a>
-    <a href="water.html">Water</a>
-    <a href="sun-solar.html">Sun &amp; Solar</a>
-    <a href="flood-hazard.html">Flood &amp; Hazard</a>
-    <a href="species-inventory.html">Species Inventory</a>
-    <a href="project-plan.html">Project Plan</a>
+    <div class="site-nav__group">
+      <span class="site-nav__label">Current state</span>
+      <a href="base-map.html">Base Map</a>
+      <a href="climate.html">Climate</a>
+      <a href="sun-solar.html">Sun &amp; Solar</a>
+      <a href="sectors.html">Sectors</a>
+      <a href="water.html">Water</a>
+      <a href="flood-hazard.html">Flood &amp; Hazard</a>
+      <a href="species-inventory.html">Species Inventory</a>
+      <a href="zones-design.html">Zones &amp; Use</a>
+    </div>
+    <div class="site-nav__group">
+      <span class="site-nav__label">Synthesis</span>
+      <a href="synthesis.html">Findings</a>
+    </div>
+    <div class="site-nav__group">
+      <span class="site-nav__label">Proposal</span>
+      <a href="project-plan.html">Project Plan</a>
+    </div>
   </div>
 </nav>
 <!-- NAV:END -->
@@ -115,13 +129,13 @@
   <div class="wrap">
     <header>
       <h1>Lot #86 — Site Profile</h1>
-      <p class="subhead">A working reference for designing this 0.43-acre property's permaculture future — climate, solar, wind, hazard, watershed, species, and zone data, all in one place.</p>
+      <p class="subhead">A detailed profile of this 0.43-acre property for anyone proposing designs for it: its current state, constraints, and history, then a site-wide synthesis, then the owner's proposal.</p>
       <p class="subhead-muted">58 Freestone Avenue, Portland, CT 06480 &middot; 41&deg;34&prime;22&Prime;N 72&deg;38&prime;04&Prime;W</p>
     </header>
 
     <div class="fact-row">
       <div class="fact"><p class="fact-label">Area</p><p class="fact-value">0.43 ac (&asymp;18,705 ft&sup2;)</p></div>
-      <div class="fact"><p class="fact-label">Elevation</p><p class="fact-value">106&ndash;114 ft</p></div>
+      <div class="fact"><p class="fact-label">Elevation</p><p class="fact-value">103&ndash;107 ft</p></div>
       <div class="fact"><p class="fact-label">Climate</p><p class="fact-value">Dfa &mdash; hot-summer continental</p></div>
       <div class="fact"><p class="fact-label">Hardiness zone</p><p class="fact-value">6b</p></div>
       <div class="fact"><p class="fact-label">Frost-free season</p><p class="fact-value">Apr 14 &ndash; Oct 23</p></div>
@@ -130,13 +144,13 @@
 
     <hr class="divider">
 
-    <h2 class="section-head">Available now</h2>
+    <h2 class="section-head">1. Current state</h2>
     <div class="card-grid">
       <div class="nav-card">
         <a class="card-title" href="base-map.html"><h3>Base Map</h3></a>
         <p>The full-color hand-drawn site plan every other spatial page works from, with a legend.</p>
         <div class="card-stats">
-          <a href="base-map.html">106&ndash;114 ft elevation</a>
+          <a href="base-map.html">103&ndash;107 ft elevation</a>
           <a href="base-map.html">41&deg;34&prime;22.04&Prime;N 72&deg;38&prime;03.90&Prime;W</a>
         </div>
       </div>
@@ -149,7 +163,7 @@
         </div>
       </div>
       <div class="nav-card">
-        <a class="card-title" href="zones-design.html"><h3>Zones &amp; Design</h3></a>
+        <a class="card-title" href="zones-design.html"><h3>Zones &amp; Use</h3></a>
         <p>How the property is used today, its microclimates, and early design ideas for each zone.</p>
         <div class="card-stats">
           <a href="zones-design.html#current-zones">5 zones, house &rarr; wild</a>
@@ -161,7 +175,7 @@
         <p>Temperature, precipitation, wind, and frost-free/hardiness data for the site.</p>
         <div class="card-stats">
           <a href="climate.html#frost-panel">192 frost-free days</a>
-          <a href="climate.html#precipitation">43.5 in/yr, no dry season</a>
+          <a href="water.html#precipitation">43.5 in/yr, no dry season</a>
         </div>
       </div>
       <div class="nav-card">
@@ -193,11 +207,27 @@
           <a href="species-inventory.html#species-catalog">79 observations / 74 species</a>
         </div>
       </div>
+    </div>
+
+    <h2 class="section-head">2. Synthesis</h2>
+    <div class="card-grid">
+      <div class="nav-card">
+        <a class="card-title" href="synthesis.html"><h3>Findings</h3></a>
+        <p>The top strengths, weaknesses, opportunities, and threats from every page, plus the open questions and design ideas to test before design starts.</p>
+        <div class="card-stats">
+          <a href="synthesis.html#sy-open">5 open questions</a>
+          <a href="synthesis.html#sy-ideas">6 design ideas to test</a>
+        </div>
+      </div>
+    </div>
+
+    <h2 class="section-head">3. Proposal</h2>
+    <div class="card-grid">
       <div class="nav-card">
         <a class="card-title" href="project-plan.html"><h3>Project Plan</h3></a>
-        <p>The full phased task list &mdash; what's active, what's next, and what changed most recently on-site.</p>
+        <p>The owner's phased task list &mdash; what's active, what's next, and what changed most recently on site. On a client site, this becomes a design brief with phases tied to the owner's goals.</p>
         <div class="card-stats">
-          <a href="project-plan.html#recent-activity">Last synced 2026-09-18</a>
+          <a href="project-plan.html#recent-activity">Snapshot 2026-10-10</a>
           <a href="project-plan.html">12 tasks in progress</a>
         </div>
       </div>

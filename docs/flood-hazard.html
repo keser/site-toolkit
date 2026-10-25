@@ -234,32 +234,46 @@
     background: #fcfcfb; border-bottom: 1px solid rgba(11,11,11,0.10);
   }
   .site-nav__brand { font-weight: 600; font-size: 14px; color: #0b0b0b; text-decoration: none; }
-  .site-nav__links { display: flex; gap: 18px; flex-wrap: wrap; }
+  .site-nav__links { display: flex; gap: 10px 32px; flex-wrap: wrap; }
   .site-nav__links a { font-size: 13px; color: #52514e; text-decoration: none; }
   .site-nav__links a:hover { color: #0b0b0b; }
+  .site-nav__group { display: flex; flex-wrap: wrap; align-items: baseline; gap: 6px 14px; }
+  .site-nav__label { font-size: 11px; font-weight: 700; letter-spacing: 0.04em; text-transform: uppercase; color: #6b6a65; }
   @media (prefers-color-scheme: dark) {
     :root:not([data-theme="light"]) .site-nav { background: #1a1a19; border-bottom-color: rgba(255,255,255,0.10); }
     :root:not([data-theme="light"]) .site-nav__brand { color: #ffffff; }
     :root:not([data-theme="light"]) .site-nav__links a { color: #c3c2b7; }
     :root:not([data-theme="light"]) .site-nav__links a:hover { color: #ffffff; }
+    :root:not([data-theme="light"]) .site-nav__label { color: #a3a29a; }
   }
   :root[data-theme="dark"] .site-nav { background: #1a1a19; border-bottom-color: rgba(255,255,255,0.10); }
   :root[data-theme="dark"] .site-nav__brand { color: #ffffff; }
   :root[data-theme="dark"] .site-nav__links a { color: #c3c2b7; }
   :root[data-theme="dark"] .site-nav__links a:hover { color: #ffffff; }
+  :root[data-theme="dark"] .site-nav__label { color: #a3a29a; }
 </style>
 <nav class="site-nav">
   <a class="site-nav__brand" href="index.html">Lot #86 — Site Profile</a>
   <div class="site-nav__links">
-    <a href="base-map.html">Base Map</a>
-    <a href="sectors.html">Sectors</a>
-    <a href="zones-design.html">Zones &amp; Design</a>
-    <a href="climate.html">Climate</a>
-    <a href="water.html">Water</a>
-    <a href="sun-solar.html">Sun &amp; Solar</a>
-    <a href="flood-hazard.html">Flood &amp; Hazard</a>
-    <a href="species-inventory.html">Species Inventory</a>
-    <a href="project-plan.html">Project Plan</a>
+    <div class="site-nav__group">
+      <span class="site-nav__label">Current state</span>
+      <a href="base-map.html">Base Map</a>
+      <a href="climate.html">Climate</a>
+      <a href="sun-solar.html">Sun &amp; Solar</a>
+      <a href="sectors.html">Sectors</a>
+      <a href="water.html">Water</a>
+      <a href="flood-hazard.html">Flood &amp; Hazard</a>
+      <a href="species-inventory.html">Species Inventory</a>
+      <a href="zones-design.html">Zones &amp; Use</a>
+    </div>
+    <div class="site-nav__group">
+      <span class="site-nav__label">Synthesis</span>
+      <a href="synthesis.html">Findings</a>
+    </div>
+    <div class="site-nav__group">
+      <span class="site-nav__label">Proposal</span>
+      <a href="project-plan.html">Project Plan</a>
+    </div>
   </div>
 </nav>
 <!-- NAV:END -->
@@ -267,7 +281,7 @@
   <div class="wrap">
     <header class="page-head">
       <h1>Flood Risk</h1>
-      <p class="subhead">Resolves the flood-risk gap flagged in the Site &amp; Regional Challenges report: the parcel's actual FEMA flood zone, checked directly rather than assumed from river distance.</p>
+      <p class="subhead">The parcel's actual FEMA flood zone, checked directly rather than assumed from its distance to the river.</p>
       <p class="subhead-muted">Sources: First Street Foundation property &amp; city climate-risk reports; FEMA Flood Map Service Center (National Flood Hazard Layer).</p>
     </header>
 
@@ -306,8 +320,7 @@
         </tbody>
       </table>
       <p class="callout">
-        This confirms the parcel sits <b>outside</b> FEMA's 100-year floodplain — the check the Site &amp; Regional Challenges
-        report flagged as outstanding. The 0.9–1.25&nbsp;km river buffer previously cited as suggestive evidence is now backed
+        This confirms the parcel sits <b>outside</b> FEMA's 100-year floodplain. Its 0.9–1.25&nbsp;km distance from the river was only suggestive; it is now backed
         by a direct FIRM lookup, not just distance. Two independent sources agree: First Street's own property-level Flood
         Factor (1/10, Minimal) and FEMA's zone determination (Zone X) both read this specific parcel as low risk, even though
         the city overall — driven by its riverfront properties — carries a "major" rating.
@@ -324,7 +337,32 @@
       for this flood-focused report, but the Wind figure is worth a look alongside the <a href="sectors.html#wind">wind</a> and
       <a href="sectors.html#ice">ice</a> sectors.
     </footer>
-  </div>
+  <!-- FINDINGS:START -->
+<style>
+  .fd-root { margin-top: 40px; border-top: 1px solid var(--border); padding-top: 28px; }
+  .fd-root h2 { font-size: 21px; font-weight: 600; margin: 0 0 6px; }
+  .fd-sub { color: var(--text-secondary); font-size: 14px; line-height: 1.5; margin: 0 0 16px; max-width: 72ch; }
+  .fd-sub a { color: inherit; }
+  .fd-grid { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 12px; }
+  @media (max-width: 640px) { .fd-grid { grid-template-columns: 1fr; } }
+  .fd-card { background: var(--surface-1); border: 1px solid var(--border); border-radius: 8px; padding: 14px 16px; }
+  .fd-label { font-size: 12px; font-weight: 700; text-transform: uppercase; letter-spacing: 0.04em; color: var(--text-secondary); margin: 0 0 8px; }
+  .fd-card ul { margin: 0; padding-left: 18px; font-size: 14px; line-height: 1.55; color: var(--text-primary); }
+  .fd-card li + li { margin-top: 6px; }
+  .fd-none { font-size: 14px; color: var(--text-secondary); margin: 0; }
+</style>
+<section class="fd-root" id="findings" aria-labelledby="fd-title">
+    <h2 id="fd-title">Findings for design</h2>
+    <p class="fd-sub">What this part of the profile means for a design, sorted as strengths, weaknesses, opportunities, and threats. The top findings roll up into the <a href="synthesis.html">site-wide synthesis</a>.</p>
+    <div class="fd-grid">
+      <div class="fd-card"><p class="fd-label">Strengths</p><ul><li>FEMA Zone X: outside the 100-year floodplain.</li><li>First Street rates the parcel 1/10 for flood and 1/10 for fire.</li></ul></div>
+      <div class="fd-card"><p class="fd-label">Weaknesses</p><p class="fd-none">None identified yet.</p></div>
+      <div class="fd-card"><p class="fd-label">Opportunities</p><p class="fd-none">None identified yet.</p></div>
+      <div class="fd-card"><p class="fd-label">Threats</p><ul><li>First Street rates wind 6/10 and heat 5/10.</li><li>9.1% of properties in town face flood risk over 30 years, mostly along the river.</li></ul></div>
+    </div>
+</section>
+<!-- FINDINGS:END -->
+</div>
 </div>
 <!-- FOOTER:START -->
 <style>
