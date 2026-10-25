@@ -61,7 +61,8 @@ drifted: the map lines were `#5b4a32` and the key swatch `#5c4a33`. Neither colo
   and the captions on 02. ΔE from the old colors is 4–13, except the Connecticut River line
   (`#2973bf` → cobalt/500, the Base role for lines, about 25).
   - **Visible change:** 09.1's house walls went from warm beige to neutral grey (charcoal/100,
-    /300, /400); the Ramps have no warm neutral.
+    /300, /400); the Ramps have no warm neutral. Kept by the owner (2026-10-24), rather than
+    leaving the walls raw.
 - **Raw by rule, with reasons:**
   - 02's USDA zone swatches are an external standard.
   - 03/04's key swatches are sampled from the reference watershed map.
