@@ -5,8 +5,10 @@ design. Built so the same analysis can be run on any site, not just one.
 
 **Demo:** the `docs/` folder is a published example microsite for one real property
 (Lot #86, Portland, CT — the author's family home and PDC Pro course site, public by the author's
-decision). It is the reference for what a finished site profile looks like. Images in the demo
-are labeled checkerboard placeholders, not real site imagery.
+decision). It is the reference for what a finished site profile looks like. Its images are real
+Lot 86 imagery from high-resolution sources (Figma map sheets, CT ECO orthoimagery, the author's
+own iNaturalist photos), each credited on its page. Images not yet sourced are labeled
+checkerboard placeholders.
 
 ## How work flows
 
@@ -36,7 +38,7 @@ AI to support this kind of workflow, and how that work draws on design-systems p
 | Folder | What it is |
 |---|---|
 | `docs/` | Demo microsite (plain static HTML, GitHub Pages source). |
-| `tools/` | Python helpers: `build_nav.py` stamps shared nav/footer into pages; `port_report.py` wraps a `.viz-root` report fragment into a page. Tests in `tools/tests/`. |
+| `tools/` | Python helpers. Site data: `fetch_ct_eco.py` (Connecticut imagery, lidar, buildings), `fetch_s2cloudless.py` (regional Sentinel-2 imagery). Analysis: `sun_arcs.py` (sun paths), `shade.py` (shadows, sun hours, roof solar), `imagery.py` (NDVI, color-infrared), `terrain.py` (hillshade, contours, canopy height). Design system: `tokens.py`, `check_chart_tokens.py`, `palette_check.py`. Microsite: `build_nav.py`, `port_report.py`. Tests in `tools/tests/`. |
 | `design-language/` | How maps, diagrams, and report pages share one visual system. Figma is the source of truth; this folder documents it and keeps the history. |
 | `template/` | Starting point for a new site workspace. Copy it into a new **private** repo per site. |
 
