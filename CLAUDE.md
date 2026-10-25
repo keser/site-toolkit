@@ -86,7 +86,33 @@ settled.
 - Demo tasks page (`project-plan.html`) is a hand-ported snapshot of the demo site's task data.
   It is the Proposal part for this lot; on a client site it becomes a design brief with phases.
 
+## Figma (Site Toolkit Design Language file)
+- It is the upstream source for every map, key, and data visualization. Check it before using a
+  slide export.
+- **Two audiences for maps.** Brainstorm and practice maps are course work and live in the "Course
+  maps – remove after PDC" section. A property owner gets polished sheets only: current (`NNa`) and
+  proposed (`NNb`). That's a default, not a rule (the owner added the resilience brainstorm as
+  `23a`). When a new map appears, ask which it is. Sheet spec:
+  `design-language/specs/2026-10-15-map-sheet-design.md`.
+- **Legend location field stays hidden** unless a map needs it, to limit exposure of the site's
+  location.
+- **The Styles page is generated documentation.** Swatches are live-bound; captions are static.
+  After a Ramps, Color Roles, Species, or text-style change, re-sync it from the plans
+  (`plans/2026-10-10-map-tokens-v2.md` Task 3, `plans/2026-10-11-map-tokens-v3.md` Task 5,
+  `plans/2026-10-14-species-palette.md` Task 4). Edit frames in place rather than rebuilding them,
+  so the owner's manual tweaks survive. Hue order in docs: magenta, coral, amber, gold, sage, teal,
+  cobalt, violet, slate, charcoal, neutral.
+- **Plugin API gotchas.**
+  - Binding a paint to a variable resets its opacity to 1; restore it afterward.
+  - JetBrains Mono has no SemiBold; use Bold.
+  - Scripts see fonts installed only on the owner's machine as missing. Swap them with
+    `setRangeFontName`, then bind, and skip `hasMissingFont` nodes.
+  - Heavy sheets drop the MCP connection. Render one at a time, never in parallel; warming at
+    960 px before 1920 px sometimes helps.
+
 ## Working rules
+- The course rubric is a floor, not the scope. Track every site view and dataset that makes the
+  design better.
 - Sections first, tools later (see README, "How work flows"). Once a lesson has worked on a real
   site, add its structure to `template/`: headings, questions, data to collect. Generalize tools and
   pages only when a second site actually needs them.
