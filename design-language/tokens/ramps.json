@@ -1,4 +1,10 @@
 {
+  "alpha/amber-400-30": "#f66d1e4d",
+  "alpha/amber-500-20": "#d7550933",
+  "alpha/black-10": "#0000001a",
+  "alpha/cobalt-400-30": "#638bff4d",
+  "alpha/cobalt-500-20": "#476de733",
+  "alpha/white-10": "#ffffff1a",
   "amber/100": "#fdd9c4",
   "amber/200": "#fbb993",
   "amber/300": "#f89359",
@@ -17,6 +23,7 @@
   "charcoal/600": "#605f5b",
   "charcoal/700": "#474644",
   "charcoal/800": "#2e2e2c",
+  "charcoal/900": "#1a1a19",
   "cobalt/100": "#d2e0ff",
   "cobalt/200": "#b4caff",
   "cobalt/300": "#8cacff",

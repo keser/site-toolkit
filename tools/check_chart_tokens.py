@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-"""Checks docs/assets/chart-tokens.css against the chart-token spec, and chart pages' wiring.
+"""Checks docs/assets/chart-tokens.css and page-tokens.css against the token files, and chart pages' wiring.
 
 Usage:
   python3 tools/check_chart_tokens.py tokens
@@ -10,6 +10,8 @@ from pathlib import Path
 
 ROOT = Path(__file__).resolve().parent.parent
 CSS = ROOT / "docs/assets/chart-tokens.css"
+PAGE_CSS = ROOT / "docs/assets/page-tokens.css"
+PAGE = ROOT / "design-language/tokens/page.json"
 SPECIES = ROOT / "design-language/tokens/species.json"
 CHART = ROOT / "design-language/tokens/chart.json"
 RAMPS_JSON = ROOT / "design-language/tokens/ramps.json"
@@ -18,8 +20,6 @@ RAMPS_JSON = ROOT / "design-language/tokens/ramps.json"
 ALLOW_RAW = {
     "--spo-hour-grid",
     "--flow-num-fg",  # white numbers on colored markers: contrast color, not a meaning (plan Task 4 Step 3)
-    "--runoff-on-bar",  # dark text on hard/permeable bars: contrast color, readable in both modes
-    "--shed-on-water",  # dark text on the translucent water fill: contrast color
 }
 RAW = re.compile(r"#[0-9a-fA-F]{3,8}\b|rgba?\(")
 # Words a token-backed value may contain once var() references are removed. Any other word is a
@@ -34,10 +34,12 @@ def is_raw(val):
     rest = re.sub(r"var\(--[a-z0-9-]+\)", "", val)
     return bool(RAW.search(rest)) or any(w.lower() not in VALUE_WORDS for w in re.findall(r"[a-zA-Z][a-zA-Z-]*", rest))
 
-def blocks(css):
-    light = re.search(r"^\.viz-root \{([^}]*)\}", css, re.M)
-    media = re.search(r'@media \(prefers-color-scheme: dark\) \{\s*:root:where\(:not\(\[data-theme="light"\]\)\) \.viz-root \{([^}]*)\}', css)
-    forced = re.search(r':root\[data-theme="dark"\] \.viz-root \{([^}]*)\}', css)
+def blocks(css, scope=r" \.viz-root"):
+    """The light, media-dark, and forced-dark blocks. Chart tokens sit on .viz-root; page tokens
+    on :root (scope="")."""
+    light = re.search(r"^" + (scope.strip() or ":root") + r" \{([^}]*)\}", css, re.M)
+    media = re.search(r'@media \(prefers-color-scheme: dark\) \{\s*:root:where\(:not\(\[data-theme="light"\]\)\)' + scope + r' \{([^}]*)\}', css)
+    forced = re.search(r':root\[data-theme="dark"\]' + scope + r' \{([^}]*)\}', css)
     return [m.group(1) if m else None for m in (light, media, forced)]
 
 def decls(block):
@@ -57,16 +59,31 @@ def check_tokens():
     for cls in ("chart-title", "chart-label", "chart-value", "chart-note"):
         if f".{cls}" not in css: fails.append(f"class .{cls} missing")
     fails += check_species_tokens(css)
+    if not PAGE_CSS.exists():
+        return fails + [f"missing {PAGE_CSS.relative_to(ROOT)}"]
+    page_css = PAGE_CSS.read_text()
+    fails += check_collection_tokens(page_css, PAGE, "--", scope="")
+    for block in blocks(page_css, scope=""):
+        if block and re.search(r"^(?!\s*(--|color-scheme))\s*\S", block, re.M):
+            fails.append("page-tokens.css block holds more than variables and color-scheme")
+    # A missing stylesheet fails silently: the var() resolves to nothing and the mark disappears.
+    for page in sorted((ROOT / "docs").glob("*.html")):
+        html = page.read_text()
+        if '<link rel="stylesheet" href="assets/page-tokens.css">' not in html:
+            fails.append(f"{page.name}: page-tokens.css link missing")
+        if re.search(r"var\(--(chart|species)-", html) and 'href="assets/chart-tokens.css"' not in html:
+            fails.append(f"{page.name}: uses chart tokens without linking chart-tokens.css")
     return fails
 
-def check_collection_tokens(css, path, prefix):
+def check_collection_tokens(css, path, prefix, scope=r" \.viz-root"):
     """Each token in a collection file (Ramps steps per mode) must equal its CSS variable,
-    <prefix><name with / as ->, in the light block and both dark blocks."""
+    <prefix><name with / as -> unless the token names one in `css`, in the light block and both
+    dark blocks."""
     ramps, tokens = json.loads(RAMPS_JSON.read_text()), json.loads(Path(path).read_text())["tokens"]
-    light, media, forced = (decls(b) for b in blocks(css))
+    light, media, forced = (decls(b) for b in blocks(css, scope))
     fails = []
     for token, steps in tokens.items():
-        prop = prefix + token.replace("/", "-")
+        prop = steps.get("css") or prefix + token.replace("/", "-")
         unknown = [steps.get(m) for m in ("light", "dark") if steps.get(m) not in ramps]
         if unknown: fails.append(f"{prop}: unknown Ramps step {', '.join(map(str, unknown))}"); continue
         want_l, want_d = ramps[steps["light"]], ramps[steps["dark"]]

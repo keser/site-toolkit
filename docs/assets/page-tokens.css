@@ -1,0 +1,77 @@
+/* Page tokens — mirrors the Site Toolkit Design Language "Page" collection (page chrome and status
+   chips). Values live in design-language/tokens/page.json as Ramps steps; copied by hand,
+   guarded by tools/check_chart_tokens.py tokens.
+   Spec: design-language/specs/2026-10-25-page-tokens-design.md
+   Set on :root so the nav and footer partials, which sit outside .viz-root, share them. */
+
+:root {
+  color-scheme: light;
+  --page: #ffffff;
+  --surface-1: #ffffff;
+  --badge-bg: #f0f0ee;
+  --text-primary: #000000;
+  --text-secondary: #474644;
+  --text-muted: #605f5b;
+  --text-on-fill: #1a1a19;
+  --grid: #e0dfdd;
+  --baseline: #cbcac7;
+  --border: #0000001a;
+  --accent: #d75509;
+  --status-good: #516920;
+  --status-good-bg: #eaf5da;
+  --status-active: #3353c1;
+  --status-active-bg: #eaf0ff;
+  --status-hold: #725d00;
+  --status-hold-bg: #fcf0c9;
+  --status-serious: #ad1e26;
+  --status-serious-bg: #ffebe9;
+  --status-pending-bg: #f0f0ee;
+}
+@media (prefers-color-scheme: dark) {
+  :root:where(:not([data-theme="light"])) {
+    color-scheme: dark;
+    --page: #000000;
+    --surface-1: #1a1a19;
+    --badge-bg: #2e2e2c;
+    --text-primary: #ffffff;
+    --text-secondary: #cbcac7;
+    --text-muted: #b1afac;
+    --text-on-fill: #1a1a19;
+    --grid: #2e2e2c;
+    --baseline: #474644;
+    --border: #ffffff1a;
+    --accent: #f66d1e;
+    --status-good: #bed49c;
+    --status-good-bg: #263307;
+    --status-active: #b4caff;
+    --status-active-bg: #142668;
+    --status-hold: #e2c975;
+    --status-hold-bg: #382d00;
+    --status-serious: #ffb5ae;
+    --status-serious-bg: #5b030b;
+    --status-pending-bg: #2e2e2c;
+  }
+}
+:root[data-theme="dark"] {
+  color-scheme: dark;
+  --page: #000000;
+  --surface-1: #1a1a19;
+  --badge-bg: #2e2e2c;
+  --text-primary: #ffffff;
+  --text-secondary: #cbcac7;
+  --text-muted: #b1afac;
+  --text-on-fill: #1a1a19;
+  --grid: #2e2e2c;
+  --baseline: #474644;
+  --border: #ffffff1a;
+  --accent: #f66d1e;
+  --status-good: #bed49c;
+  --status-good-bg: #263307;
+  --status-active: #b4caff;
+  --status-active-bg: #142668;
+  --status-hold: #e2c975;
+  --status-hold-bg: #382d00;
+  --status-serious: #ffb5ae;
+  --status-serious-bg: #5b030b;
+  --status-pending-bg: #2e2e2c;
+}

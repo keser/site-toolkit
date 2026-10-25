@@ -1,0 +1,105 @@
+{
+  "about": "Figma Page collection (page chrome and status chips), as Ramps steps per mode. Each token names its CSS variable in `css` (kept from the original page variables). Spec: design-language/specs/2026-10-25-page-tokens-design.md.",
+  "tokens": {
+    "surface/page": {
+      "light": "neutral/White",
+      "dark": "neutral/Black",
+      "css": "--page"
+    },
+    "surface/raised": {
+      "light": "neutral/White",
+      "dark": "charcoal/900",
+      "css": "--surface-1"
+    },
+    "surface/badge": {
+      "light": "charcoal/50",
+      "dark": "charcoal/800",
+      "css": "--badge-bg"
+    },
+    "text/primary": {
+      "light": "neutral/Black",
+      "dark": "neutral/White",
+      "css": "--text-primary"
+    },
+    "text/secondary": {
+      "light": "charcoal/700",
+      "dark": "charcoal/200",
+      "css": "--text-secondary"
+    },
+    "text/muted": {
+      "light": "charcoal/600",
+      "dark": "charcoal/300",
+      "css": "--text-muted"
+    },
+    "text/on-fill": {
+      "light": "charcoal/900",
+      "dark": "charcoal/900",
+      "css": "--text-on-fill"
+    },
+    "line/grid": {
+      "light": "charcoal/100",
+      "dark": "charcoal/800",
+      "css": "--grid"
+    },
+    "line/baseline": {
+      "light": "charcoal/200",
+      "dark": "charcoal/700",
+      "css": "--baseline"
+    },
+    "line/border": {
+      "light": "alpha/black-10",
+      "dark": "alpha/white-10",
+      "css": "--border"
+    },
+    "accent": {
+      "light": "amber/500",
+      "dark": "amber/400",
+      "css": "--accent"
+    },
+    "status/good": {
+      "light": "sage/600",
+      "dark": "sage/200",
+      "css": "--status-good"
+    },
+    "status/good/bg": {
+      "light": "sage/50",
+      "dark": "sage/800",
+      "css": "--status-good-bg"
+    },
+    "status/active": {
+      "light": "cobalt/600",
+      "dark": "cobalt/200",
+      "css": "--status-active"
+    },
+    "status/active/bg": {
+      "light": "cobalt/50",
+      "dark": "cobalt/800",
+      "css": "--status-active-bg"
+    },
+    "status/hold": {
+      "light": "gold/600",
+      "dark": "gold/200",
+      "css": "--status-hold"
+    },
+    "status/hold/bg": {
+      "light": "gold/50",
+      "dark": "gold/800",
+      "css": "--status-hold-bg"
+    },
+    "status/serious": {
+      "light": "coral/600",
+      "dark": "coral/200",
+      "css": "--status-serious"
+    },
+    "status/serious/bg": {
+      "light": "coral/50",
+      "dark": "coral/800",
+      "css": "--status-serious-bg"
+    },
+    "status/pending/bg": {
+      "light": "charcoal/50",
+      "dark": "charcoal/800",
+      "css": "--status-pending-bg"
+    }
+  }
+}

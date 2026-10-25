@@ -2,16 +2,10 @@
   .site-footer {
     font-family: system-ui, -apple-system, "Segoe UI", sans-serif;
     padding: 20px; text-align: center;
-    font-size: 12px; color: #898781;
-    background: #fcfcfb; border-top: 1px solid rgba(11,11,11,0.10);
+    font-size: 12px; color: var(--text-muted);
+    background: var(--surface-1); border-top: 1px solid var(--border);
   }
-  .site-footer a { color: #52514e; }
-  @media (prefers-color-scheme: dark) {
-    :root:not([data-theme="light"]) .site-footer { background: #1a1a19; border-top-color: rgba(255,255,255,0.10); }
-    :root:not([data-theme="light"]) .site-footer a { color: #c3c2b7; }
-  }
-  :root[data-theme="dark"] .site-footer { background: #1a1a19; border-top-color: rgba(255,255,255,0.10); }
-  :root[data-theme="dark"] .site-footer a { color: #c3c2b7; }
+  .site-footer a { color: var(--text-secondary); }
 </style>
 <footer class="site-footer">
   <p>Demo site for <a href="https://github.com/keser/site-toolkit">site-toolkit</a>.

@@ -50,10 +50,15 @@ settled.
 - Long-form pages (`water`, `sun-solar`, `zones-design`) are sequences of `<section class="page-section" id="…">`
   with a `.badge-row` of anchor pills. Adding a visualization: prefix every non-shared CSS
   property, class, and bare selector uniquely, and wrap scripts in an IIFE. Shared identifiers
-  (do not prefix): `--surface-1 --page --text-primary --text-secondary --text-muted --grid
-  --baseline --border --badge-bg --accent`, every `--chart-*` token, `.viz-root .wrap .subhead
+  (do not prefix): every variable in `docs/assets/page-tokens.css` (`--surface-1 --page
+  --text-* --grid --baseline --border --badge-bg --accent --status-*`), every `--chart-*` token, `.viz-root .wrap .subhead
   .badge-row .badge .panel .panel-title .panel-sub svg.chart .tooltip .data-table`, and the
   `.chart-title .chart-label .chart-value .chart-note` classes.
+- **Page chrome colors come from `docs/assets/page-tokens.css`** (on `:root`, so the nav and footer
+  use them too). It mirrors the Figma "Page" collection; values live in
+  `design-language/tokens/page.json` as Ramps steps. Every page links it; never redefine its
+  variables in a page. Amber is the accent; status colors never use it. Spec:
+  `design-language/specs/2026-10-25-page-tokens-design.md`.
 - **Chart colors and chart text come from `docs/assets/chart-tokens.css`.** It mirrors the chart
   collections in the Site Toolkit Design Language Figma library (formerly PDC Pro Vision); the spec
   is `design-language/specs/2026-10-14-chart-tokens-design.md`. Its `--chart-*` values live in

@@ -1,5 +1,5 @@
 {
-  "about": "Figma Chart Semantic (season, water, land, emphasis, alert), Chart Neutral (neutral/*) and Chart Categorical (categorical/N = slot-N-<hue>), as Ramps steps per mode. CSS name: --chart-<name with / as ->.",
+  "about": "Figma Chart Semantic (season, water, land, emphasis, focus, flood depth, alert), Chart Neutral (neutral/*) and Chart Categorical (categorical/N = slot-N-<hue>), as Ramps steps per mode. CSS name: --chart-<name with / as ->.",
   "tokens": {
     "season/winter": {
       "light": "cobalt/500",
@@ -42,8 +42,28 @@
       "dark": "amber/400"
     },
     "emphasis/fill": {
-      "light": "amber/100",
-      "dark": "amber/800"
+      "light": "alpha/amber-500-20",
+      "dark": "alpha/amber-400-30"
+    },
+    "focus": {
+      "light": "cobalt/500",
+      "dark": "cobalt/400"
+    },
+    "focus/fill": {
+      "light": "alpha/cobalt-500-20",
+      "dark": "alpha/cobalt-400-30"
+    },
+    "flood/depth-1": {
+      "light": "cobalt/100",
+      "dark": "cobalt/200"
+    },
+    "flood/depth-2": {
+      "light": "cobalt/400",
+      "dark": "cobalt/400"
+    },
+    "flood/depth-3": {
+      "light": "cobalt/700",
+      "dark": "cobalt/700"
     },
     "alert": {
       "light": "coral/600",

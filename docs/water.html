@@ -5,30 +5,8 @@
 <meta charset="UTF-8">
 <title>Water — Lot #86</title>
 <link rel="stylesheet" href="assets/chart-tokens.css">
+<link rel="stylesheet" href="assets/page-tokens.css">
 <style>
-  .viz-root {
-    color-scheme: light;
-    --surface-1: #fcfcfb; --page: #f9f9f7; --text-primary: #0b0b0b;
-    --text-secondary: #52514e; --text-muted: #898781; --grid: #e1e0d9;
-    --baseline: #c3c2b7; --border: rgba(11,11,11,0.10);
-    --badge-bg: #eef0ea; --accent: #e07b39;
-  }
-  @media (prefers-color-scheme: dark) {
-    :root:where(:not([data-theme="light"])) .viz-root {
-      color-scheme: dark;
-      --surface-1: #1a1a19; --page: #0d0d0d; --text-primary: #ffffff;
-      --text-secondary: #c3c2b7; --text-muted: #898781; --grid: #2c2c2a;
-      --baseline: #383835; --border: rgba(255,255,255,0.10);
-      --badge-bg: #23261f; --accent: #e8935a;
-    }
-  }
-  :root[data-theme="dark"] .viz-root {
-    color-scheme: dark;
-    --surface-1: #1a1a19; --page: #0d0d0d; --text-primary: #ffffff;
-    --text-secondary: #c3c2b7; --text-muted: #898781; --grid: #2c2c2a;
-    --baseline: #383835; --border: rgba(255,255,255,0.10);
-    --badge-bg: #23261f; --accent: #e8935a;
-  }
   * { box-sizing: border-box; }
   body { margin: 0; }
   .viz-root {
@@ -58,7 +36,7 @@
   section.page-section:last-of-type { border-bottom: none; }
 
   /* ---- precipitation-by-month.html (precip-) ---- */
-  .viz-root { --precip-band-et: color-mix(in srgb, var(--chart-emphasis) 14%, transparent); --precip-band-et-line: var(--chart-emphasis); --precip-mean-line: var(--chart-neutral-reference); --precip-series-precip: var(--chart-water-rain); }
+  .viz-root { --precip-band-et: var(--chart-emphasis-fill); --precip-band-et-line: var(--chart-emphasis); --precip-mean-line: var(--chart-neutral-reference); --precip-series-precip: var(--chart-water-rain); }
   .precip-ax { fill: var(--chart-neutral-label-muted); font: var(--chart-font-label); text-transform: uppercase; }
   .precip-val { fill: var(--chart-neutral-label-muted); font: var(--chart-font-value); paint-order: stroke; stroke: var(--surface-1); stroke-width: 3px; stroke-linejoin: round; }
   .precip-gl { stroke: var(--chart-neutral-grid); stroke-width: 1; }
@@ -71,7 +49,7 @@
   .precip-src { font-size: 11.5px; color: var(--text-muted); margin: 14px 2px 0; }
 
   /* ---- runoff-by-surface.html (runoff-) ---- */
-  .viz-root { --runoff-hard: var(--chart-water-rain); --runoff-hard-2: var(--chart-water-flow); --runoff-perm: var(--chart-land-permeable); --runoff-perm-2: color-mix(in srgb, var(--chart-land-permeable) 75%, var(--chart-neutral-label)); --runoff-on-bar: #1a1a19; }
+  .viz-root { --runoff-hard: var(--chart-water-rain); --runoff-hard-2: var(--chart-water-flow); --runoff-perm: var(--chart-land-permeable); --runoff-perm-2: color-mix(in srgb, var(--chart-land-permeable) 75%, var(--chart-neutral-label)); --runoff-on-bar: var(--text-on-fill); }
   .runoff-axt { fill: var(--chart-neutral-label-muted); font: var(--chart-font-label); text-transform: uppercase; }
   .runoff-gl { stroke: var(--chart-neutral-grid); stroke-width: 1; }
   .runoff-headline { background: var(--badge-bg); border: 1px solid var(--border); border-left: 3px solid var(--accent); border-radius: 6px; padding: 10px 12px; font-size: 13.5px; line-height: 1.5; margin: 0 0 20px; }
@@ -94,7 +72,7 @@
   .wbal-src { font-size: 11.5px; color: var(--text-muted); margin: 14px 2px 0; }
 
   /* ---- elevation-sections.html (elev-) ---- */
-  .viz-root { --elev-divide: var(--chart-emphasis); --elev-ground: var(--chart-land-ground); --elev-ground-fill: var(--chart-neutral-surface); --elev-lot: color-mix(in srgb, var(--chart-categorical-1) 16%, transparent); --elev-lot-line: var(--chart-categorical-1); }
+  .viz-root { --elev-divide: var(--chart-emphasis); --elev-ground: var(--chart-land-ground); --elev-ground-fill: var(--chart-neutral-surface); --elev-lot: var(--chart-focus-fill); --elev-lot-line: var(--chart-focus); }
   .elev-axt { fill: var(--chart-neutral-label-muted); font: var(--chart-font-label); text-transform: uppercase; }
   .elev-gl { stroke: var(--chart-neutral-grid); stroke-width: 1; }
   .elev-note { fill: var(--chart-neutral-label-muted); font: var(--chart-font-note); text-transform: uppercase; }
@@ -113,7 +91,7 @@
   .flow-src { font-size: 11.5px; color: var(--text-muted); margin: 12px 2px 0; }
 
   /* ---- design-storm-frequency.html (storm-) ---- */
-  .viz-root { --storm-curve: var(--chart-water-flow); --storm-curve-dot: var(--chart-water-rain); --storm-evt: color-mix(in srgb, var(--chart-emphasis) 18%, transparent); --storm-evt-line: var(--chart-emphasis); --storm-rec: var(--chart-alert); }
+  .viz-root { --storm-curve: var(--chart-water-flow); --storm-curve-dot: var(--chart-water-rain); --storm-evt: var(--chart-emphasis-fill); --storm-evt-line: var(--chart-emphasis); --storm-rec: var(--chart-alert); }
   .storm-axl { fill: var(--chart-neutral-label-muted); font: var(--chart-font-label); text-transform: uppercase; }
   .storm-axt { fill: var(--chart-neutral-label-muted); font: var(--chart-font-label); text-transform: uppercase; }
   .storm-dot-lbl { fill: var(--chart-neutral-label); font: var(--chart-font-value); }
@@ -124,7 +102,7 @@
   .storm-src { font-size: 11.5px; color: var(--text-muted); margin: 12px 2px 0; }
 
   /* ---- macro-watershed-scale.html (shed-) ---- */
-  .viz-root { --shed-land: var(--chart-neutral-surface); --shed-land-line: var(--chart-land-ground); --shed-river: var(--chart-water-flow); --shed-site: var(--chart-emphasis); --shed-water: var(--chart-water-rain); --shed-on-water: #1a1a19; }
+  .viz-root { --shed-land: var(--chart-neutral-surface); --shed-land-line: var(--chart-land-ground); --shed-river: var(--chart-water-flow); --shed-site: var(--chart-emphasis); --shed-water: var(--chart-water-rain); --shed-on-water: var(--text-on-fill); }
   .shed-axt { fill: var(--chart-neutral-label-muted); font: var(--chart-font-label); text-transform: uppercase; }
   .shed-maplbl { fill: var(--chart-neutral-label-muted); font: var(--chart-font-label); text-transform: uppercase; }
   .shed-maplbl-b { fill: var(--chart-neutral-label); font: var(--chart-font-note); text-transform: uppercase; }
@@ -135,7 +113,7 @@
   .shed-src { font-size: 11.5px; color: var(--text-muted); margin: 12px 2px 0; }
 
   /* ---- water-use-by-season.html (wuse-) ---- */
-  .viz-root { --wuse-base: var(--chart-neutral-reference); --wuse-excess: color-mix(in srgb, var(--chart-emphasis) 16%, transparent); --wuse-excess-line: var(--chart-emphasis); --wuse-fall: var(--chart-season-fall); --wuse-spring: var(--chart-season-spring); --wuse-summer: var(--chart-season-summer); --wuse-winter: var(--chart-season-winter); }
+  .viz-root { --wuse-base: var(--chart-neutral-reference); --wuse-excess: var(--chart-emphasis-fill); --wuse-excess-line: var(--chart-emphasis); --wuse-fall: var(--chart-season-fall); --wuse-spring: var(--chart-season-spring); --wuse-summer: var(--chart-season-summer); --wuse-winter: var(--chart-season-winter); }
   .wuse-axl { fill: var(--chart-neutral-label-muted); font: var(--chart-font-label); text-transform: uppercase; }
   .wuse-axt { fill: var(--chart-neutral-label-muted); font: var(--chart-font-label); text-transform: uppercase; }
   .wuse-dot-lbl { fill: var(--chart-neutral-label); font: var(--chart-font-value); }
@@ -157,26 +135,14 @@
     font-family: system-ui, -apple-system, "Segoe UI", sans-serif;
     display: flex; flex-wrap: wrap; align-items: center; justify-content: space-between;
     gap: 12px; padding: 14px 20px;
-    background: #fcfcfb; border-bottom: 1px solid rgba(11,11,11,0.10);
+    background: var(--surface-1); border-bottom: 1px solid var(--border);
   }
-  .site-nav__brand { font-weight: 600; font-size: 14px; color: #0b0b0b; text-decoration: none; }
+  .site-nav__brand { font-weight: 600; font-size: 14px; color: var(--text-primary); text-decoration: none; }
   .site-nav__links { display: flex; gap: 10px 32px; flex-wrap: wrap; }
-  .site-nav__links a { font-size: 13px; color: #52514e; text-decoration: none; }
-  .site-nav__links a:hover { color: #0b0b0b; }
+  .site-nav__links a { font-size: 13px; color: var(--text-secondary); text-decoration: none; }
+  .site-nav__links a:hover { color: var(--text-primary); }
   .site-nav__group { display: flex; flex-wrap: wrap; align-items: baseline; gap: 6px 14px; }
-  .site-nav__label { font-size: 11px; font-weight: 700; letter-spacing: 0.04em; text-transform: uppercase; color: #6b6a65; }
-  @media (prefers-color-scheme: dark) {
-    :root:not([data-theme="light"]) .site-nav { background: #1a1a19; border-bottom-color: rgba(255,255,255,0.10); }
-    :root:not([data-theme="light"]) .site-nav__brand { color: #ffffff; }
-    :root:not([data-theme="light"]) .site-nav__links a { color: #c3c2b7; }
-    :root:not([data-theme="light"]) .site-nav__links a:hover { color: #ffffff; }
-    :root:not([data-theme="light"]) .site-nav__label { color: #a3a29a; }
-  }
-  :root[data-theme="dark"] .site-nav { background: #1a1a19; border-bottom-color: rgba(255,255,255,0.10); }
-  :root[data-theme="dark"] .site-nav__brand { color: #ffffff; }
-  :root[data-theme="dark"] .site-nav__links a { color: #c3c2b7; }
-  :root[data-theme="dark"] .site-nav__links a:hover { color: #ffffff; }
-  :root[data-theme="dark"] .site-nav__label { color: #a3a29a; }
+  .site-nav__label { font-size: 11px; font-weight: 700; letter-spacing: 0.04em; text-transform: uppercase; color: var(--text-muted); }
 </style>
 <nav class="site-nav">
   <a class="site-nav__brand" href="index.html">Lot #86 — Site Profile</a>
@@ -1047,16 +1013,10 @@
   .site-footer {
     font-family: system-ui, -apple-system, "Segoe UI", sans-serif;
     padding: 20px; text-align: center;
-    font-size: 12px; color: #898781;
-    background: #fcfcfb; border-top: 1px solid rgba(11,11,11,0.10);
+    font-size: 12px; color: var(--text-muted);
+    background: var(--surface-1); border-top: 1px solid var(--border);
   }
-  .site-footer a { color: #52514e; }
-  @media (prefers-color-scheme: dark) {
-    :root:not([data-theme="light"]) .site-footer { background: #1a1a19; border-top-color: rgba(255,255,255,0.10); }
-    :root:not([data-theme="light"]) .site-footer a { color: #c3c2b7; }
-  }
-  :root[data-theme="dark"] .site-footer { background: #1a1a19; border-top-color: rgba(255,255,255,0.10); }
-  :root[data-theme="dark"] .site-footer a { color: #c3c2b7; }
+  .site-footer a { color: var(--text-secondary); }
 </style>
 <footer class="site-footer">
   <p>Demo site for <a href="https://github.com/keser/site-toolkit">site-toolkit</a>.
