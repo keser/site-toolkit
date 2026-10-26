@@ -163,7 +163,9 @@ Site file: Lot 86 – Site Plan (`iFt6im4itRdGt8UJ44GHyc`). Spike sheet: `25a Su
   - Left as is: the 1990 infrared and 1934 aerial keys credit Connecticut statewide surveys. They
     name a state, not a site.
 - **Step 12 done in the repos (2026-10-25):** the Lot 86 scripts and docs point at the site file.
-- **Remaining:** step 8 (publish both), step 10 (deck), step 11 (paste-properties test).
+- **Step 8 done (2026-10-25).** Andrew renamed the library **Site Design Toolkit** and published
+  both files. This spec keeps the old name above as a record.
+- **Remaining:** step 10 (deck), step 11 (paste-properties test).
 - **Lessons:**
   - Setting a text to its current value records no override. Change it and set it back.
   - Text bound to a component property records as an override on the instance that owns it.

@@ -63,7 +63,7 @@ settled.
   a `var()` that nothing defines, which the browser would drop without an error. Amber is the accent; status colors never use it. Spec:
   `design-language/specs/2026-10-25-page-tokens-design.md`.
 - **Chart colors and chart text come from `docs/assets/chart-tokens.css`.** It mirrors the chart
-  collections in the Site Toolkit Design Language Figma library (formerly PDC Pro Vision); the spec
+  collections in the Site Design Toolkit Figma library (formerly PDC Pro Vision); the spec
   is `design-language/specs/2026-10-14-chart-tokens-design.md`. Its `--chart-*` values live in
   `design-language/tokens/chart.json` (Ramps steps per mode), which the check resolves.
   A new chart's prefixed variables reference `--chart-*` tokens, not raw hex, and its SVG text uses
@@ -98,7 +98,7 @@ settled.
 
 ## Figma (library and site files)
 - **Two kinds of file** (split 2026-10-25; spec `design-language/specs/2026-10-25-figma-library-split-design.md`).
-  - **Site Toolkit Design Language** (`aF9SVeTLwFN8PCEiU2OSBQ`) is the published library: Cover
+  - **Site Design Toolkit** (`aF9SVeTLwFN8PCEiU2OSBQ`) is the published library: Cover
     (with Permaculture resources), Styles, Components, Demo – Lot 86, Assets (patterns). It holds
     no site content except the demo page, and never mentions the course.
   - **One site file per site**, which uses the library. Lot 86's is Lot 86 – Site Plan

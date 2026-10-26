@@ -5,7 +5,7 @@ Permaculture site analysis and design workspace for <site>. **Private repo.** Cr
 
 ## First steps
 1. Fill in `CLAUDE.md` (owner, stakeholders, privacy rules for this site).
-2. Create the site's Figma file in the same team as the Site Toolkit Design Language library, and
+2. Create the site's Figma file in the same team as the Site Design Toolkit library, and
    enable that library. Start each map sheet from the library's Sheet template; keep the file's
    colors, text, and keys as library variables, styles, and components, not local copies. Link the
    file in `CLAUDE.md`.

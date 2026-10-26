@@ -6,9 +6,9 @@ One visual system for maps, diagrams, slides, and report pages.
 The system lives in Figma, not in this repo. This folder documents it and keeps the history of
 how it was built.
 
-- **Library:** Site Toolkit Design Language (named PDC Pro Vision until 2026-10-15, which is the
-  name older specs and plans use) —
-  https://www.figma.com/design/aF9SVeTLwFN8PCEiU2OSBQ/Site-Toolkit-Design-Language
+- **Library:** Site Design Toolkit (named Site Toolkit Design Language until 2026-10-25, and
+  PDC Pro Vision until 2026-10-15; older specs and plans use those names) —
+  https://www.figma.com/design/aF9SVeTLwFN8PCEiU2OSBQ/Site-Design-Toolkit
 - **Site files**, one per site, using the library. The demo site's is Lot 86 – Site Plan —
   https://www.figma.com/design/iFt6im4itRdGt8UJ44GHyc/Lot-86-%E2%80%93-Site-Plan
 - Slides: AKeser-PDCPro-26-Course-Template —
