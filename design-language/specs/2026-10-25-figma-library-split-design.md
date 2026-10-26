@@ -165,7 +165,11 @@ Site file: Lot 86 – Site Plan (`iFt6im4itRdGt8UJ44GHyc`). Spike sheet: `25a Su
 - **Step 12 done in the repos (2026-10-25):** the Lot 86 scripts and docs point at the site file.
 - **Step 8 done (2026-10-25).** Andrew renamed the library **Site Design Toolkit** and published
   both files. This spec keeps the old name above as a record.
-- **Remaining:** step 10 (deck), step 11 (paste-properties test).
+- **Step 10 done (2026-10-25).** All 43 deck slides hold live sheet instances in place of PNGs;
+  the cover slide credits the site file. Spot renders (07a, R2, 16a) match.
+- **Library change after publishing:** the `doc-header` default label now reads SITE DESIGN
+  TOOLKIT. It reaches the site file on the next library publish.
+- **Remaining:** step 11 (paste-properties test).
 - **Lessons:**
   - Setting a text to its current value records no override. Change it and set it back.
   - Text bound to a component property records as an override on the instance that owns it.
