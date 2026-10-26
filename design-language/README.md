@@ -32,7 +32,8 @@ after the Cover opens with a `Contents` section: a linked list of its sections. 
    shows its CSS name (its Figma code syntax). Swatches are bound to the variables; captions are
    static text, so update them by hand when a collection changes.
 3. **Components:** Documentation, Map keys & legends (placeholder text), Map samples, Base map
-   symbols, and the Sheet template (`00`) that new sheets start from.
+   symbols, and the Sheet template section: `00` for map sheets, `00P` for profile sheets (charts,
+   tables, findings), and the `profile-findings` panel.
 4. **Demo – Lot 86:** dated image exports of finished Lot 86 sheets and charts, linking to the
    site file.
 5. **Assets:** patterns.

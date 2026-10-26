@@ -1,6 +1,6 @@
 # Site Profile page and profile sheets — design
 
-**Date:** 2026-10-26 · **Status:** approved, not built · Scope mode: personal project (HLSD),
+**Date:** 2026-10-26 · **Status:** in progress (library built 2026-10-26) · Scope mode: personal project (HLSD),
 opinionated.
 
 ## Why
@@ -63,6 +63,41 @@ elevation profiles) if keeping them in sync by hand becomes a chore.
 3. Deck: add a slide per profile sheet after the map sheets, grouped by section.
 4. Docs: the toolkit README, `design-language/README.md` (site file pages), the toolkit and Lot 86
    CLAUDE.md files, and a "sync the site profile" checklist next to the project-plan sync.
+
+## Built in the library (2026-10-26)
+- **`00P Profile sheet template`** (`2168:2034`), a copy of `00`: the key shell at one column (485
+  wide, title "Sheet title") at top left, a `profile-findings` instance under it, and the chart
+  area (`content – chart area`, 1315 × 860 at (565, 40)). The legend hides scale, north,
+  elevation, and area, and shows source; it's centered.
+- **`profile-findings`** (`2168:2031`): a panel the width of a one-column key, with text
+  properties `Title` (default "Findings for design") and `Body`. Body text is `Mono/20/Bold`,
+  not caps, so a quoted finding reads as a sentence.
+- **`map-legend` gets `Show scale & north`** (boolean, default on), bound to `map-scale` and the
+  variant's own north arrow. Each variant's other north arrow stays hidden and unbound. Map
+  sheets don't change.
+
+## Site file sheets
+Each findings panel quotes the matching page's findings that the chart supports, prefixed with
+their quadrant (Strength, Weakness, Opportunity, Threat). Charts move in as they are, scaled to
+the chart area; their title line moves into the key title.
+
+| ID | Sheet | From (Data Visualizations) | Microsite page |
+|---|---|---|---|
+| SUN1 | Sun path charts | Sun path charts | sun-solar |
+| SUN2 | Garden horizon and solar section | Garden solar analysis (top two) | sun-solar |
+| SUN3 | Garden day length and roof | Garden solar analysis (bottom two) | sun-solar |
+| CLIM1 | Climate survey | Climate survey charts | climate |
+| CLIM2 | Seasonal wind roses | Seasonal wind roses | climate |
+| WATER1 | Seasonal rain and precipitation | Water charts (first two) | water |
+| WATER2 | Storms and runoff | Water charts (next two) | water |
+| WATER3 | Water balance | Water charts (sankey) | water |
+| WATER4 | Elevation cross-sections | Elevation cross-sections | water |
+| WATER5 | Elevation profile A–B | Elevation profile A–B | water |
+| FLOOD1 | Flood risk | Flood risk | flood-hazard |
+| SPEC1 | Species inventory | Species inventory | species-inventory |
+
+The Sun section's overlay and 3D diagram duplicate map sheets 09 and 09.1, so the page links to
+those maps instead. Sectors has no chart; its section links to map sheets 05, 06, and 08a.
 
 ## Left to the builder
 - The template's exact layout (chart area and findings panel proportions), within the sheet
