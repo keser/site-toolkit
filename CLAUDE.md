@@ -115,6 +115,13 @@ settled.
   token, clone a sibling row or swatch, rebind its fills, and resize the section to fit. Give a
   translucent (alpha) swatch an explicit backing: white for Light, charcoal/900 for Dark. Hue order in docs: magenta, coral, amber, gold, sage, teal,
   cobalt, violet, slate, charcoal, neutral.
+- **Navigation is generated too.** Each page (except Cover) has a `Contents` section left of its
+  content: a to-scale map of the page's top-level sections and a linked list built from
+  `doc-toc-item` instances (Components › Documentation). Each entry's summary is the first sentence
+  of that section's `doc-title` body. The Cover has a `Pages` frame beside the cover with one
+  linked card per page. These are snapshots: after adding, renaming, or moving a section, or
+  adding a page, rebuild that page's `Contents` and the `Pages` frame. Delete the old one by name,
+  then build fresh; nothing else references them.
 - **Translucent colors are copies.** Figma can't alias a color and change its alpha, so each
   `alpha/<hue>-<step>-<percent>` Ramps variable copies its base step. After changing a Ramps value
   or a hue's Tint step: update the matching `alpha/*` copies in Figma (the Tint/25 and /50 fill
