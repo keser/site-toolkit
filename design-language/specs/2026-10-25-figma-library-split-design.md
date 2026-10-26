@@ -141,6 +141,23 @@ Site file: Lot 86 – Site Plan (`iFt6im4itRdGt8UJ44GHyc`). Spike sheet: `25a Su
   name-to-key map is stored on a temporary `_migration (delete)` page in the site file for the
   batch scripts, and deleted in step 6.
 
+## Progress
+
+- **Steps 4–6 done (2026-10-25)** in Lot 86 – Site Plan (`iFt6im4itRdGt8UJ44GHyc`).
+  - Swapped every library-bound instance, nested ones included, and rebound every variable, style,
+    and explicit mode. The gate found 0 local references across 16,672 nodes.
+  - Deleted the copy's 11 local collections and 93 local styles.
+  - Pages now: Cover, Components (Lot 86 only), Map Set, Data Visualizations, Inspiration,
+    Assets, Course.
+  - All 43 Map Set sheets are components. Old frame IDs → component IDs are recorded for step 12.
+  - Spot renders (07a, 18a, 25a, R4) match the original.
+- **Lessons:**
+  - Text snapshots taken by walking nodes are unreliable inside instances, because Figma loads
+    instance children lazily. Verify by render.
+  - A sheet that overrides a nested variant (North=Up legends) keeps pointing at the local variant
+    after the main component is swapped. Swap nested instances too, outermost first.
+  - Text-on-path nodes keep a node-level fill binding that range edits don't clear.
+
 ## Demo – Lot 86 page
 
 - Image exports of finished work: one context sheet, the current base map, one proposed sheet, and
