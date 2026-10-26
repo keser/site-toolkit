@@ -105,13 +105,19 @@ settled.
   location.
 - **The Styles page is generated documentation.** Swatches are live-bound; captions are static.
   After a Ramps, Color Roles, Species, or text-style change, re-sync it from the plans
-  (`plans/2026-10-10-map-tokens-v2.md` Task 3, `plans/2026-10-11-map-tokens-v3.md` Task 5,
+  (`plans/2026-10-11-map-tokens-v3.md` Task 5,
   `plans/2026-10-14-species-palette.md` Task 4). Edit frames in place rather than rebuilding them,
   so the owner's manual tweaks survive. The page is now one section per collection (Color ramps, Color roles,
-  Fill styles, Stroke, Typography, Charts, Species, Sheet & map display, Map semantic). To add a
+  Fill styles, Stroke, Typography, Charts, Species, Sheet & map display, Map semantic, Page). To add a
   token, clone a sibling row or swatch, rebind its fills, and resize the section to fit. Give a
   translucent (alpha) swatch an explicit backing: white for Light, charcoal/900 for Dark. Hue order in docs: magenta, coral, amber, gold, sage, teal,
   cobalt, violet, slate, charcoal, neutral.
+- **Translucent colors are copies.** Figma can't alias a color and change its alpha, so each
+  `alpha/<hue>-<step>-<percent>` Ramps variable copies its base step. After changing a Ramps value
+  or a hue's Tint step: update the matching `alpha/*` copies in Figma (the Tint/25 and /50 fill
+  styles reach them through Color Roles `<hue>/Tint/<25|50>`), mirror them in
+  `design-language/tokens/ramps.json`, and run `tools/check_chart_tokens.py tokens`, which fails
+  on any copy that no longer matches. Don't run map-tokens v2 Task 3; it would unbind the styles.
 - **Plugin API gotchas.**
   - Binding a paint to a variable writes the variable's alpha into the paint's opacity, so an opaque
     variable resets it to 1. A translucent style binds a Color Roles variable (`<hue>/Tint/50`)

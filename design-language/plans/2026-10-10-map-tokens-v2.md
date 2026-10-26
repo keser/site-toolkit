@@ -306,6 +306,12 @@ git commit -m "Map tokens v2 Task 2: Stroke weight collection"
 
 ### Task 3: Fill styles (50; 90 before 2026-10-11)
 
+> **Superseded 2026-10-25 for /25 and /50 — do not re-run Steps 2–3 as written.** Those styles now
+> bind Color Roles `<hue>/Tint/<25|50>`, which alias Ramps `alpha/<hue>-<step>-<25|50>` copies. Step 3
+> would overwrite them with raw colors, and Step 2 would flag them as bound. The current re-sync is
+> in `site-toolkit/CLAUDE.md` (Figma section). Design log: `specs/2026-10-10-map-tokens-v2-design.md`.
+
+
 **Files:**
 - Modify (Figma): local paint styles
 - Modify: this plan (ledger and checkboxes)
@@ -391,7 +397,7 @@ return { renamed: renamed.length, created: created.length };
 
 Expected on first run: `renamed: 20, created: 30` (the 2026-10-10 run created 70 of the original 90-style set; 40 Shade/Base 25/50 styles were deleted on 2026-10-11 after confirming no layer used them).
 
-**Re-sync rule (2026-10-11):** the /25 and /50 styles don't follow color changes on their own. After
+**Re-sync rule (2026-10-11; superseded 2026-10-25, see the note at the top of this task):** the /25 and /50 styles don't follow color changes on their own. After
 any change to a Ramps value or a `Color Roles` alias, re-run this Step 3 script, then the Step 2
 verification. Its drift check lists any /25 or /50 style whose color no longer matches its role.
 

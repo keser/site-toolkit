@@ -76,7 +76,8 @@ gold 100, sage 400, amber 300.
   color** (revised 2026-10-11). Figma overwrites a variable-bound paint's opacity with the variable's
   alpha, so bound /25 and /50 styles rendered at 100%. The cost: after any Ramps or `Map Overlay`
   change, the 20 translucent styles must be re-synced (plan Task 3 re-sync rule, with a drift
-  check).
+  check). **Superseded 2026-10-25:** they now bind Color Roles `<hue>/Tint/<25|50>`, aliasing Ramps
+  alpha copies (see the Translucent styles rows in the table above).
 - The 20 existing paint styles are **renamed**, not recreated, so anything using them keeps its
   style ID:
   - `<hue>/Shade` becomes `<hue>/Shade/100`;
