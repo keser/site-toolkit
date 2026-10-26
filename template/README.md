@@ -5,13 +5,17 @@ Permaculture site analysis and design workspace for <site>. **Private repo.** Cr
 
 ## First steps
 1. Fill in `CLAUDE.md` (owner, stakeholders, privacy rules for this site).
-2. Interview the stakeholders and fill in the People and Goals sections of `site-plan/design-brief.md`.
-3. Start `site-plan/site-profile.md`. Its sections list the questions to answer and the data to
+2. Create the site's Figma file in the same team as the Site Toolkit Design Language library, and
+   enable that library. Start each map sheet from the library's Sheet template; keep the file's
+   colors, text, and keys as library variables, styles, and components, not local copies. Link the
+   file in `CLAUDE.md`.
+3. Interview the stakeholders and fill in the People and Goals sections of `site-plan/design-brief.md`.
+4. Start `site-plan/site-profile.md`. Its sections list the questions to answer and the data to
    collect, and each links to the finished example in the toolkit demo.
-4. Once the profile sections have findings, fill in `site-plan/synthesis.md`.
-5. Define phases in `site-plan/phases.md` from the goals and constraints, then add tasks to
+5. Once the profile sections have findings, fill in `site-plan/synthesis.md`.
+6. Define phases in `site-plan/phases.md` from the goals and constraints, then add tasks to
    `site-plan/tasks.md`.
-6. Keep `site-plan/progress-log.md` as you go.
+7. Keep `site-plan/progress-log.md` as you go.
 
 ## What's in `site-plan/`
 | File | What it holds |

@@ -6,33 +6,44 @@ One visual system for maps, diagrams, slides, and report pages.
 The system lives in Figma, not in this repo. This folder documents it and keeps the history of
 how it was built.
 
-- Maps and keys: Site Toolkit Design Language (design file; named PDC Pro Vision until
-  2026-10-15, which is the name older specs and plans use) —
+- **Library:** Site Toolkit Design Language (named PDC Pro Vision until 2026-10-15, which is the
+  name older specs and plans use) —
   https://www.figma.com/design/aF9SVeTLwFN8PCEiU2OSBQ/Site-Toolkit-Design-Language
+- **Site files**, one per site, using the library. The demo site's is Lot 86 – Site Plan —
+  https://www.figma.com/design/iFt6im4itRdGt8UJ44GHyc/Lot-86-%E2%80%93-Site-Plan
 - Slides: AKeser-PDCPro-26-Course-Template —
   https://www.figma.com/slides/4HO6wuq75jFhX7OuMpqPNs/AKeser-PDCPro-26-Course-Template?node-id=2463-5803
 
-Both files are course-named and were built for course deliverables. The map system and slide
-template are intended to be generalized into library files that any site file can consume.
-That hasn't been done yet.
+The slide template is still course-named; generalizing it is a separate job. The library/site
+split is recorded in `specs/2026-10-25-figma-library-split-design.md`.
 
-## File layout (since 2026-10-20)
-Pages, in order. Every page's content sits in labeled sections that use the `doc-header`,
-`doc-title`, `doc-section-label`, and `doc-toc-item` components from Components > Documentation.
-Every page after the Cover opens with a `Contents` section: a linked list of its sections.
+## File layout (since 2026-10-25)
+Every page's content sits in labeled sections that use the `doc-header`, `doc-title`,
+`doc-section-label`, and `doc-toc-item` components from Components > Documentation. Every page
+after the Cover opens with a `Contents` section: a linked list of its sections. Each Cover has a
+`Pages` frame beside it that links to every page.
 
-1. **Cover:** title, Andrew Keser, andrewkeser.com, Highlands Land Systems Design, and a `Pages`
-   frame beside it that links to every page and each page's Contents.
+**Library**, pages in order:
+
+1. **Cover:** title, Andrew Keser, andrewkeser.com, Highlands Land Systems Design, the `Pages`
+   frame, and Permaculture resources, which frame what the tools are for.
 2. **Styles:** one section per collection: color ramps, color roles, fill styles, stroke,
    typography, charts, species, sheet & map display, map semantic, page. Every color token's label
    shows its CSS name (its Figma code syntax). Swatches are bound to the variables; captions are
    static text, so update them by hand when a collection changes.
-3. **Components:** Documentation, Map keys & legends, Map samples, Base map symbols, Lot 86.
-4. **Map Set – Lot 86:** Template, Regional & overlay, Property – current, Property – proposed,
-   Course maps – remove after PDC.
-5. **Data Visualizations:** Sun, Wind, Climate, Water, Flood, Elevation, Species.
-6. **Mood Board**, 7. **Permaculture Resources**, 8. **Assets** (images, textures, patterns).
+3. **Components:** Documentation, Map keys & legends (placeholder text), Map samples, Base map
+   symbols, and the Sheet template (`00`) that new sheets start from.
+4. **Demo – Lot 86:** dated image exports of finished Lot 86 sheets and charts, linking to the
+   site file.
+5. **Assets:** patterns.
 
+**Site file** (Lot 86 – Site Plan), pages in order: Cover, Components (the site's base map,
+site-legend, and sector diagram), Map Set (Regional & overlay, Property – current, Property –
+proposed; each sheet is a component), Data Visualizations (Sun, Wind, Climate, Water, Flood,
+Elevation, Species), Inspiration, Assets (site imagery and textures), and Course (deleted after the
+course ends).
+
+The 2026-10-20 single-file layout is in the library's version history, saved before the split.
 The earlier per-topic pages (Keys and its style Inventory, Base Map, Solar Paths, Elevation,
 Sector Analysis, Water & Watershed, Soil, Species, Site Data Visualizations) are preserved in
 the Figma version "Before reorganization: style inventory and per-map pages". Older specs and

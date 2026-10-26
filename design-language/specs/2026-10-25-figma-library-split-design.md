@@ -151,7 +151,22 @@ Site file: Lot 86 – Site Plan (`iFt6im4itRdGt8UJ44GHyc`). Spike sheet: `25a Su
     Assets, Course.
   - All 43 Map Set sheets are components. Old frame IDs → component IDs are recorded for step 12.
   - Spot renders (07a, 18a, 25a, R4) match the original.
+- **Steps 7 and 9 done (2026-10-25).** Andrew saved a version and a local copy of the library first.
+  - Library pages now: Cover (with Permaculture resources), Styles, Components, Demo – Lot 86,
+    Assets (patterns only).
+  - The Template sheet moved to Components as "Sheet template". It held a Lot 86 legend, which was
+    detached and reset to the generic `map-legend`.
+  - Six Map keys & legends variants got placeholder text. Before that, the site file's 92 instance
+    texts that showed the defaults (R3–R7, 10a) were pinned as overrides.
+  - Demo – Lot 86 holds five exports: R2, 07a, 21b, Elevation profile A–B, Water charts.
+  - Contents and Pages rebuilt in both files.
+  - Left as is: the 1990 infrared and 1934 aerial keys credit Connecticut statewide surveys. They
+    name a state, not a site.
+- **Step 12 done in the repos (2026-10-25):** the Lot 86 scripts and docs point at the site file.
+- **Remaining:** step 8 (publish both), step 10 (deck), step 11 (paste-properties test).
 - **Lessons:**
+  - Setting a text to its current value records no override. Change it and set it back.
+  - Text bound to a component property records as an override on the instance that owns it.
   - Text snapshots taken by walking nodes are unreliable inside instances, because Figma loads
     instance children lazily. Verify by render.
   - A sheet that overrides a nested variant (North=Up legends) keeps pointing at the local variant

@@ -96,11 +96,24 @@ settled.
 - Demo tasks page (`project-plan.html`) is a hand-ported snapshot of the demo site's task data.
   It is the Proposal part for this lot; on a client site it becomes a design brief with phases.
 
-## Figma (Site Toolkit Design Language file)
-- It is the upstream source for every map, key, and data visualization. Check it before using a
-  slide export.
-- **Two audiences for maps.** Brainstorm and practice maps are course work and live in the "Course
-  maps – remove after PDC" section. A property owner gets polished sheets only: current (`NNa`) and
+## Figma (library and site files)
+- **Two kinds of file** (split 2026-10-25; spec `design-language/specs/2026-10-25-figma-library-split-design.md`).
+  - **Site Toolkit Design Language** (`aF9SVeTLwFN8PCEiU2OSBQ`) is the published library: Cover
+    (with Permaculture resources), Styles, Components, Demo – Lot 86, Assets (patterns). It holds
+    no site content except the demo page, and never mentions the course.
+  - **One site file per site**, which uses the library. Lot 86's is Lot 86 – Site Plan
+    (`iFt6im4itRdGt8UJ44GHyc`): its maps, charts, inspiration, imagery, and course work. Its map
+    sheets are components, so its decks place them live. It is the upstream source for every Lot 86
+    map and chart; check it before using a slide export.
+- **Demo – Lot 86 is a snapshot**: dated image exports of finished site-file work, linking to the
+  site file. Refresh it on request, like the microsite's project plan page.
+- **Map keys & legends ship placeholder text** ("Project site", "Name, address"). A site sheet
+  overrides every row. Never type a site's details into a library component.
+- **Scripts that edit a site file import library assets by key** (`importVariableByKeyAsync`,
+  `importStyleByKeyAsync`, `importComponentByKeyAsync`). A site file has no local variables or
+  styles, and the team-library API lists nothing for these files.
+- **Two audiences for maps.** Brainstorm and practice maps are course work and live on the site
+  file's Course page until the course ends. A property owner gets polished sheets only: current (`NNa`) and
   proposed (`NNb`). That's a default, not a rule (the owner added the resilience brainstorm as
   `23a`). When a new map appears, ask which it is. Sheet spec:
   `design-language/specs/2026-10-15-map-sheet-design.md`.
@@ -115,7 +128,7 @@ settled.
   token, clone a sibling row or swatch, rebind its fills, and resize the section to fit. Give a
   translucent (alpha) swatch an explicit backing: white for Light, charcoal/900 for Dark. Hue order in docs: magenta, coral, amber, gold, sage, teal,
   cobalt, violet, slate, charcoal, neutral.
-- **Navigation is generated too.** Each page (except Cover) has a `Contents` section left of its
+- **Navigation is generated too, in both files.** Each page (except Cover) has a `Contents` section left of its
   content: a linked list of the page's top-level sections, built from `doc-toc-item` instances
   (Components › Documentation). Each entry's summary is the first sentence
   of that section's `doc-title` body. The Cover has a `Pages` frame beside the cover with one
@@ -137,6 +150,9 @@ settled.
     `setRangeFontName`, then bind, and skip `hasMissingFont` nodes.
   - Heavy sheets drop the MCP connection. Render one at a time, never in parallel; warming at
     960 px before 1920 px sometimes helps.
+  - Don't call `setCurrentPageAsync` on an image-heavy page; it drops the connection. Use
+    `page.loadAsync()` and `getNodeByIdAsync`.
+  - A dropped response doesn't mean the script failed. Read the canvas before retrying.
 
 ## Working rules
 - The course rubric is a floor, not the scope. Track every site view and dataset that makes the
