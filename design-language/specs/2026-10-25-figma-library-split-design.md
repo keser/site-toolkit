@@ -124,6 +124,23 @@ sheet.
 Steps 6 and 7 delete content. Each runs only after the step before it is verified, and Figma's
 version history holds the pre-split state (name a version "Before library split" at step 2).
 
+## Spike results (2026-10-25)
+
+Site file: Lot 86 – Site Plan (`iFt6im4itRdGt8UJ44GHyc`). Spike sheet: `25a Sun hours – growing season`
+(image fill, Lot 86 legend, Map Semantic colors), plus the `Lot 86 / site-legend` main.
+
+- **Passed.** Swapping the legend main's nested `map-legend` to the library kept every sheet's text
+  overrides (checked on 25a and 07a). The map key swap kept all six row overrides. No local
+  variable, style, or mode reference was left. The sheet renders identically to the original.
+- **Node IDs carry over** in a duplicate, so links into the site file need only the new file key.
+  **Except:** converting a frame to a component gives it a new ID (`1868:12634` → `4008:986`), so
+  links to a sheet itself must use the component's ID.
+- **Run scripts without `setCurrentPageAsync`.** On the image-heavy Map Set page it drops the MCP
+  connection; `page.loadAsync()` loads in milliseconds.
+- The team-library API lists nothing for this file, but import by key works. The library's
+  name-to-key map is stored on a temporary `_migration (delete)` page in the site file for the
+  batch scripts, and deleted in step 6.
+
 ## Demo – Lot 86 page
 
 - Image exports of finished work: one context sheet, the current base map, one proposed sheet, and
