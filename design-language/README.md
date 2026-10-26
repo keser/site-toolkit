@@ -19,8 +19,7 @@ That hasn't been done yet.
 ## File layout (since 2026-10-20)
 Pages, in order. Every page's content sits in labeled sections that use the `doc-header`,
 `doc-title`, `doc-section-label`, and `doc-toc-item` components from Components > Documentation.
-Every page after the Cover opens with a `Contents` section: a to-scale map of its sections and a
-linked list of them.
+Every page after the Cover opens with a `Contents` section: a linked list of its sections.
 
 1. **Cover:** title, Andrew Keser, andrewkeser.com, Highlands Land Systems Design, and a `Pages`
    frame beside it that links to every page and each page's Contents.
