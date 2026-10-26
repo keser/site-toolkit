@@ -1,6 +1,6 @@
 # Figma library split: toolkit library and per-site files — design
 
-Status: proposed, 2026-10-25. Scope mode: personal project (HLSD), opinionated.
+Status: approved, 2026-10-25. Prerequisite met: one team on Professional (Andrew, 2026-10-25). Scope mode: personal project (HLSD), opinionated.
 
 ## Intent
 
