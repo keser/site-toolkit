@@ -31,7 +31,9 @@ settled.
   CT ECO imagery, lidar, and building layers into the site repo), `sun_arcs.py` (sun positions, a
   top-down sun-path projection, and a Google Earth camera model), `shade.py` (shadow masks, hours
   of direct sun, skyline profiles and roof solar access from a lidar surface), `imagery.py` (NDVI and color-infrared from 4-band imagery), `terrain.py` (hillshade, contours,
-  canopy height), `tokens.py` (token colors for raster renders, resolved through the Ramps), and `tests/`.
+  canopy height), `fetch_s2cloudless.py` (regional Sentinel-2 imagery), `tokens.py` (token colors
+  for raster renders, resolved through the Ramps), `check_chart_tokens.py` (token CSS against the
+  token files, and page wiring), `palette_check.py` (palette validation), and `tests/`.
   The tools are an installable package (`pyproject.toml`, top-level modules). Locally they live in
   the shared environment `~/Code/keser/.venv`, installed editable, so site repos import them
   without path hacks. Run tests with `~/Code/keser/.venv/bin/python -m pytest`. New dependencies go in
@@ -57,7 +59,8 @@ settled.
 - **Page chrome colors come from `docs/assets/page-tokens.css`** (on `:root`, so the nav and footer
   use them too). It mirrors the Figma "Page" collection; values live in
   `design-language/tokens/page.json` as Ramps steps. Every page links it; never redefine its
-  variables in a page. Amber is the accent; status colors never use it. Spec:
+  variables in a page. After renaming any variable, run `check_chart_tokens.py tokens`: it fails on
+  a `var()` that nothing defines, which the browser would drop without an error. Amber is the accent; status colors never use it. Spec:
   `design-language/specs/2026-10-25-page-tokens-design.md`.
 - **Chart colors and chart text come from `docs/assets/chart-tokens.css`.** It mirrors the chart
   collections in the Site Toolkit Design Language Figma library (formerly PDC Pro Vision); the spec

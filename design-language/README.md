@@ -21,9 +21,10 @@ Pages, in order. Every page's content sits in labeled sections that use the `doc
 `doc-title`, and `doc-section-label` components from Components > Documentation.
 
 1. **Cover:** title, Andrew Keser, andrewkeser.com, Highlands Land Systems Design.
-2. **Styles:** one section per doc: color ramps, color roles, fill styles, stroke, typography,
-   charts, species, sheet & map display, map semantic. Every color token's label shows its CSS name
-   (its Figma code syntax).
+2. **Styles:** one section per collection: color ramps, color roles, fill styles, stroke,
+   typography, charts, species, sheet & map display, map semantic, page. Every color token's label
+   shows its CSS name (its Figma code syntax). Swatches are bound to the variables; captions are
+   static text, so update them by hand when a collection changes.
 3. **Components:** Documentation, Map keys & legends, Map samples, Base map symbols, Lot 86.
 4. **Map Set – Lot 86:** Template, Regional & overlay, Property – current, Property – proposed,
    Course maps – remove after PDC.
@@ -36,23 +37,41 @@ the Figma version "Before reorganization: style inventory and per-map pages". Ol
 plans refer to those pages by name.
 
 ## Pieces
-- **Map system:** "Map Overlay" color variables (aliased to a "Ramps" primitive collection), Shade/Base/Tint
-  variables, fill styles, stroke weights, dash patterns, marker shapes, and key, legend, and
-  sample components on the Components page. History: `specs/2026-09-28-map-design-system-design.md` and
-  `specs/2026-10-10-map-tokens-v2-design.md`, with matching plans in `plans/`.
-- **Charts:** "Chart Semantic" and "Chart Neutral" collections, mirrored for the microsite in
-  `docs/assets/chart-tokens.css` and checked by `tools/check_chart_tokens.py`. History:
-  `specs/2026-10-14-chart-tokens-design.md` and its plan.
-- **Map Semantic:** single-mode aliases to the Ramps for the map color scales that rasters and keys
-  share: `sun/*` (sun hours, roof solar), `vigor/*` (vegetation index), `terrain/*` (elevation tint,
-  contours). Mirrored in `tokens/map.json`; Python renders read it through `tools/tokens.py`, so a
-  raster and its key can't drift. History: `plans/2026-10-24-map-semantic-tokens.md`.
-- **Microsite:** the `.viz-root` pattern (light/dark aware, inline SVG, self-contained pages).
-  See `microsite-patterns.md`.
+Every color variable aliases a **Ramps** primitive; no other collection holds a raw value.
 
-## Known gap
-The microsite's CSS variables (`--surface-1`, `--accent`, …) don't yet match the map tokens.
-Plan: aim both at one tokens file when the microsite is aligned to the map styles. Not built yet.
+- **Ramps:** ten hues of nine steps (50 → 800), plus charcoal/900, neutral white and black, and
+  translucent `alpha/<hue>-<step>-<percent>` copies. Figma can't alias a color and change its
+  alpha, so each alpha entry copies its base step; the check below fails if one drifts.
+- **Color Roles and fill styles:** each hue's Tint, Base, and Shade, plus Tint at 50% and 25%. The
+  50 paint styles all bind these. History: `specs/2026-09-28-map-design-system-design.md`,
+  `specs/2026-10-10-map-tokens-v2-design.md`, and `specs/2026-10-11-map-tokens-v3-design.md`.
+- **Charts:** Chart Semantic, Chart Neutral, and Chart Categorical, Light and Dark. History:
+  `specs/2026-10-14-chart-tokens-design.md`.
+- **Species:** native, naturalized, cultivated, and invasive status colors, plus plant layers.
+  History: `specs/2026-10-14-species-palette-design.md`.
+- **Map Semantic:** one-mode color scales that a raster and its key share: `sun/*`, `vigor/*`,
+  `terrain/*`. History: `plans/2026-10-24-map-semantic-tokens.md`.
+- **Page:** microsite chrome and status chips, Light and Dark. Amber is the accent. History:
+  `specs/2026-10-25-page-tokens-design.md`.
+- **Sheet, Map display, Stroke:** map sheet canvas, panels, text, and marks (Light and Dark); the
+  plant-label toggle; stroke weights xs to 2xl.
+
+### Where the code reads them
+`tokens/` holds each collection as Ramps steps per mode (`ramps.json`, `chart.json`,
+`species.json`, `map.json`, `page.json`). Two consumers read them:
+
+1. **The microsite.** `docs/assets/page-tokens.css` (on `:root`) and `chart-tokens.css` (on
+   `.viz-root`) are hand-kept mirrors. `tools/check_chart_tokens.py tokens` resolves every
+   variable through `ramps.json` and fails on drift, on a page missing a stylesheet, and on any
+   `var()` a page uses that nothing defines.
+2. **Python renders.** `tools/tokens.py` returns a token's color, so a raster and its key can't
+   drift. `tools/palette_check.py` validates the palette itself.
+
+After any Figma color change, update the matching JSON and CSS and run both checks.
+
+### Microsite
+The `.viz-root` pattern (light/dark aware, inline SVG, self-contained pages). See
+`microsite-patterns.md`.
 
 ## specs/ and plans/
 Historical design docs and implementation plans from the demo site's build. They are records,

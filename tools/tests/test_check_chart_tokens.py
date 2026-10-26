@@ -103,3 +103,14 @@ def test_chart_token_drift_is_reported():
 def test_chart_json_matches_the_published_css():
     from check_chart_tokens import check_collection_tokens, CHART, CSS
     assert check_collection_tokens(CSS.read_text(), CHART, "--chart-") == []
+
+
+def test_flags_var_with_no_definition():
+    from check_chart_tokens import undefined_vars
+    html = "<style>.a { background: var(--status-done-bg); color: var(--x); --x: red; }</style>"
+    assert undefined_vars(html, {"--status-good-bg"}) == ["--status-done-bg"]
+
+
+def test_skips_names_built_in_script():
+    from check_chart_tokens import undefined_vars
+    assert undefined_vars("<script>el.style.fill = `var(--spo-month-${m})`</script>", set()) == []

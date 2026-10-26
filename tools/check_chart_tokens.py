@@ -70,8 +70,14 @@ def check_tokens():
         if block and re.search(r"^(?!\s*(--|color-scheme))\s*\S", block, re.M):
             fails.append("page-tokens.css block holds more than variables and color-scheme")
     # A missing stylesheet fails silently: the var() resolves to nothing and the mark disappears.
+    shared = set(re.findall(r"(--[\w-]+)\s*:", css + page_css))
+    for part in sorted((ROOT / "docs/_partials").glob("*.html")):
+        for name in undefined_vars(part.read_text(), shared):
+            fails.append(f"_partials/{part.name}: var({name}) is never defined")
     for page in sorted((ROOT / "docs").glob("*.html")):
         html = page.read_text()
+        for name in undefined_vars(html, shared):
+            fails.append(f"{page.name}: var({name}) is never defined")
         if '<link rel="stylesheet" href="assets/page-tokens.css">' not in html:
             fails.append(f"{page.name}: page-tokens.css link missing")
         if re.search(r"var\(--(chart|species)-", html) and 'href="assets/chart-tokens.css"' not in html:
@@ -125,6 +131,13 @@ def check_map_tokens(css):
 def check_species_tokens(css):
     """--species-* values in all three blocks must equal species.json resolved through ramps.json."""
     return check_collection_tokens(css, SPECIES, "--species-")
+
+def undefined_vars(html, shared):
+    """var(--x) uses that neither the page nor the shared stylesheets define. A dangling var()
+    fails silently (a renamed token leaves its mark transparent). Names built in a template
+    string (`var(--spo-month-${m})`) end in '-' and are skipped."""
+    defined = shared | set(re.findall(r"(--[\w-]+)\s*:", html)) | set(re.findall(r"setProperty\(\s*['\"](--[\w-]+)", html))
+    return sorted({u for u in re.findall(r"var\(\s*(--[\w-]+)", html) if not u.endswith("-")} - defined)
 
 def check_page(path, prefixes):
     return check_html((ROOT / path).read_text(), prefixes)
