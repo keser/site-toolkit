@@ -1,6 +1,6 @@
 # Site Profile page and profile sheets — design
 
-**Date:** 2026-10-26 · **Status:** in progress (library built 2026-10-26) · Scope mode: personal project (HLSD),
+**Date:** 2026-10-26 · **Status:** built 2026-10-26, except the deck slides (waiting on a site file publish) · Scope mode: personal project (HLSD),
 opinionated.
 
 ## Why
@@ -98,6 +98,21 @@ the chart area; their title line moves into the key title.
 
 The Sun section's overlay and 3D diagram duplicate map sheets 09 and 09.1, so the page links to
 those maps instead. Sectors has no chart; its section links to map sheets 05, 06, and 08a.
+
+## Built in the site file (2026-10-26)
+- The page is renamed Site Profile. Six sections (Sun & solar, Climate, Water, Flood, Species,
+  Sectors) each have a doc header and title, a "Maps:" line whose names link to the map sheets,
+  and the sheets three to a row. Contents and the Cover card point at them.
+- The 12 sheets are components built from library parts: the key shell (title only; its rows slot
+  is hidden), `profile-findings`, and `map-legend` (North=Up, scale and north off, source on,
+  author heading "created by"). Charts are clones of the old sections' charts, scaled to the
+  chart area.
+- Course framing was removed from two chart captions on the way in: CLIM1's caption now quotes
+  the climate page's source line instead of the course material it was digitized from, and FLOOD1
+  drops a reference to course work.
+- The old sections are kept below, named "Superseded – …", until the owner confirms they can go.
+  The plugin API can't save a named version, so deleting them would rely on Figma's autosave
+  history.
 
 ## Left to the builder
 - The template's exact layout (chart area and findings panel proportions), within the sheet

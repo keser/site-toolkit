@@ -40,8 +40,8 @@ after the Cover opens with a `Contents` section: a linked list of its sections. 
 
 **Site file** (Lot 86 – Site Plan), pages in order: Cover, Components (the site's base map,
 site-legend, and sector diagram), Map Set (Regional & overlay, Property – current, Property –
-proposed; each sheet is a component), Data Visualizations (Sun, Wind, Climate, Water, Flood,
-Elevation, Species), Inspiration, Assets (site imagery and textures), and Course (deleted after the
+proposed; each sheet is a component), Site Profile (one section per microsite page: Sun & solar,
+Climate, Water, Flood, Species, Sectors; each chart is a 1920 × 1080 profile sheet component), Inspiration, Assets (site imagery and textures), and Course (deleted after the
 course ends).
 
 The 2026-10-20 single-file layout is in the library's version history, saved before the split.
