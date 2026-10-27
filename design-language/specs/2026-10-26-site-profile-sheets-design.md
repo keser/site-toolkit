@@ -110,9 +110,8 @@ those maps instead. Sectors has no chart; its section links to map sheets 05, 06
 - Course framing was removed from two chart captions on the way in: CLIM1's caption now quotes
   the climate page's source line instead of the course material it was digitized from, and FLOOD1
   drops a reference to course work.
-- The old sections are kept below, named "Superseded – …", until the owner confirms they can go.
-  The plugin API can't save a named version, so deleting them would rely on Figma's autosave
-  history.
+- The old sections were parked below as "Superseded – …", then deleted by the owner the same day.
+  They survive only in Figma's version history.
 
 ## Deck (2026-10-26)
 One "Site profile" row of 12 slides, in section order, before "Property – proposed": the
