@@ -1,4 +1,4 @@
-/* Chart tokens — mirrors Site Toolkit Design Language "Chart Semantic" (incl. focus and flood depth), "Chart Neutral", "Chart Categorical",
+/* Chart tokens — mirrors Site Design Toolkit "Chart Semantic" (incl. focus and flood depth), "Chart Neutral", "Chart Categorical",
    and "Species" (values in design-language/tokens/species.json), plus "Map Semantic" as --map-*
    (tokens/map.json; one mode, so it sits in the light block only and dark mode inherits it).
    Source of truth: Figma library. Values copied by hand; tools/check_chart_tokens.py guards them.

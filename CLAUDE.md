@@ -63,7 +63,8 @@ settled.
   a `var()` that nothing defines, which the browser would drop without an error. Amber is the accent; status colors never use it. Spec:
   `design-language/specs/2026-10-25-page-tokens-design.md`.
 - **Chart colors and chart text come from `docs/assets/chart-tokens.css`.** It mirrors the chart
-  collections in the Site Design Toolkit Figma library (formerly PDC Pro Vision); the spec
+  collections in the Site Design Toolkit Figma library (named Site Toolkit Design Language until
+  2026-10-25, and PDC Pro Vision before that); the spec
   is `design-language/specs/2026-10-14-chart-tokens-design.md`. Its `--chart-*` values live in
   `design-language/tokens/chart.json` (Ramps steps per mode), which the check resolves.
   A new chart's prefixed variables reference `--chart-*` tokens, not raw hex, and its SVG text uses
@@ -95,6 +96,13 @@ settled.
   `water.html#water-balance`, `#flow-schematic`, `sun-solar.html#sun-path-3d`, `zones-design.html#brainstorm`.
 - Demo tasks page (`project-plan.html`) is a hand-ported snapshot of the demo site's task data.
   It is the Proposal part for this lot; on a client site it becomes a design brief with phases.
+- **The site file's Site Profile page mirrors the microsite** (spec
+  `design-language/specs/2026-10-26-site-profile-sheets-design.md`). Each chart is a 1920 × 1080
+  profile sheet, built from the library's `00P` template parts, in a section per microsite page.
+  The two outputs are built separately and may differ in layout; they must agree on data, tokens,
+  and findings. A sheet's findings panel quotes its page's "Findings for design" word for word, so
+  when a page's numbers or findings change, update the matching sheets too. Each site repo keeps
+  the sync checklist (Lot 86: "Site Profile Sync" in its CLAUDE.md).
 
 ## Figma (library and site files)
 - **Two kinds of file** (split 2026-10-25; spec `design-language/specs/2026-10-25-figma-library-split-design.md`).
