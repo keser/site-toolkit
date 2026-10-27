@@ -1,6 +1,6 @@
 # Site Profile page and profile sheets — design
 
-**Date:** 2026-10-26 · **Status:** built 2026-10-26, except the deck slides (waiting on a site file publish) · Scope mode: personal project (HLSD),
+**Date:** 2026-10-26 · **Status:** built 2026-10-26 · Scope mode: personal project (HLSD),
 opinionated.
 
 ## Why
@@ -113,6 +113,11 @@ those maps instead. Sectors has no chart; its section links to map sheets 05, 06
 - The old sections are kept below, named "Superseded – …", until the owner confirms they can go.
   The plugin API can't save a named version, so deleting them would rely on Figma's autosave
   history.
+
+## Deck (2026-10-26)
+One "Site profile" row of 12 slides, in section order, before "Property – proposed": the
+profile describes the current state, so it comes ahead of the design. Each slide holds a live
+instance of its sheet.
 
 ## Left to the builder
 - The template's exact layout (chart area and findings panel proportions), within the sheet
