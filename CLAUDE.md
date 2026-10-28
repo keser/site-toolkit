@@ -100,18 +100,12 @@ settled.
   styles reach them through Color Roles `<hue>/Tint/<25|50>`), mirror them in
   `design-language/tokens/ramps.json`, and run `tools/check_chart_tokens.py tokens`, which fails
   on any copy that no longer matches. Don't run map-tokens v2 Task 3; it would unbind the styles.
-- **Plugin API gotchas.**
+- **Plugin API gotchas.** General MCP gotchas (connection drops, fonts, retries) are in
+  `~/Code/keser/CLAUDE.md`.
   - Binding a paint to a variable writes the variable's alpha into the paint's opacity, so an opaque
     variable resets it to 1. A translucent style binds a Color Roles variable (`<hue>/Tint/50`)
     that aliases an `alpha/*` Ramps copy.
   - JetBrains Mono has no SemiBold; use Bold.
-  - Scripts see fonts installed only on the owner's machine as missing. Swap them with
-    `setRangeFontName`, then bind, and skip `hasMissingFont` nodes.
-  - Heavy sheets drop the MCP connection. Render one at a time, never in parallel; warming at
-    960 px before 1920 px sometimes helps.
-  - Don't call `setCurrentPageAsync` on an image-heavy page; it drops the connection. Use
-    `page.loadAsync()` and `getNodeByIdAsync`.
-  - A dropped response doesn't mean the script failed. Read the canvas before retrying.
 
 ## Working rules
 - The course rubric is a floor, not the scope. Track every site view and dataset that makes the
