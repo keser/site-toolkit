@@ -12,3 +12,6 @@ __pycache__/
 # Python packaging (editable install)
 *.egg-info/
 .venv/
+
+# Path-scoped Claude Code rules are shared guidance; the global gitignore hides .claude/*
+!.claude/rules/

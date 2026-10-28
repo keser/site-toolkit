@@ -27,13 +27,7 @@ settled.
 ## Layout
 - `docs/` — demo microsite, GitHub Pages source (`main` / `/docs`). Plain static HTML, no
   generator, no build step at serve time. Must remain `docs/` (Pages only serves root or `/docs`).
-- `tools/` — `build_nav.py [site_dir]`, `port_report.py`, `fetch_ct_eco.py` (a Connecticut site's
-  CT ECO imagery, lidar, and building layers into the site repo), `sun_arcs.py` (sun positions, a
-  top-down sun-path projection, and a Google Earth camera model), `shade.py` (shadow masks, hours
-  of direct sun, skyline profiles and roof solar access from a lidar surface), `imagery.py` (NDVI and color-infrared from 4-band imagery), `terrain.py` (hillshade, contours,
-  canopy height), `fetch_s2cloudless.py` (regional Sentinel-2 imagery), `tokens.py` (token colors
-  for raster renders, resolved through the Ramps), `check_chart_tokens.py` (token CSS against the
-  token files, and page wiring), `palette_check.py` (palette validation), and `tests/`.
+- `tools/` — Python tools; each module's docstring says what it does, and `tests/` covers them.
   The tools are an installable package (`pyproject.toml`, top-level modules). Locally they live in
   the shared environment `~/Code/keser/.venv`, installed editable, so site repos import them
   without path hacks. Run tests with `~/Code/keser/.venv/bin/python -m pytest`. New dependencies go in
@@ -43,66 +37,23 @@ settled.
   not in any site repo.
 - `template/` — copy into a new private repo for each site, at `~/Code/keser/site-plans/<site-name>/`.
 
-## Microsite conventions (docs/)
-- Internal links stay **relative** (`climate.html`, not `/climate.html`): project-scoped Pages site.
-- Hand-authored pages need `body { margin: 0; }` explicitly.
-- Shared nav/footer: `docs/_partials/nav.html` and `footer.html` are the source of truth; pages
-  carry `<!-- NAV:START -->…<!-- NAV:END -->` and `<!-- FOOTER:START -->…<!-- FOOTER:END -->` markers.
-  Re-run `python3 tools/build_nav.py` after editing a partial or adding a page, before committing.
-- Long-form pages (`water`, `sun-solar`, `zones-design`) are sequences of `<section class="page-section" id="…">`
-  with a `.badge-row` of anchor pills. Adding a visualization: prefix every non-shared CSS
-  property, class, and bare selector uniquely, and wrap scripts in an IIFE. Shared identifiers
-  (do not prefix): every variable in `docs/assets/page-tokens.css` (`--surface-1 --page
-  --text-* --grid --baseline --border --badge-bg --accent --status-*`), every `--chart-*` token, `.viz-root .wrap .subhead
-  .badge-row .badge .panel .panel-title .panel-sub svg.chart .tooltip .data-table`, and the
-  `.chart-title .chart-label .chart-value .chart-note` classes.
-- **Page chrome colors come from `docs/assets/page-tokens.css`** (on `:root`, so the nav and footer
-  use them too). It mirrors the Figma "Page" collection; values live in
-  `design-language/tokens/page.json` as Ramps steps. Every page links it; never redefine its
-  variables in a page. After renaming any variable, run `check_chart_tokens.py tokens`: it fails on
-  a `var()` that nothing defines, which the browser would drop without an error. Amber is the accent; status colors never use it. Spec:
-  `design-language/specs/2026-10-25-page-tokens-design.md`.
-- **Chart colors and chart text come from `docs/assets/chart-tokens.css`.** It mirrors the chart
-  collections in the Site Design Toolkit Figma library (named Site Toolkit Design Language until
-  2026-10-25, and PDC Pro Vision before that); the spec
-  is `design-language/specs/2026-10-14-chart-tokens-design.md`. Its `--chart-*` values live in
-  `design-language/tokens/chart.json` (Ramps steps per mode), which the check resolves.
-  A new chart's prefixed variables reference `--chart-*` tokens, not raw hex, and its SVG text uses
-  `font: var(--chart-font-<role>)`. Chart fills and strokes never use the page variables
-  (`--grid`, `--baseline`, `--accent`, `--text-*`); the check flags them. Run
-  `python3 tools/check_chart_tokens.py page <file> <prefixes…>` before committing a chart page, and
-  `python3 tools/check_chart_tokens.py tokens` after any palette change.
-- **Species colors come from the `--species-*` tokens** in the same file. Their values live in
-  `design-language/tokens/species.json` (Ramps steps per mode); `check_chart_tokens.py tokens`
-  fails if the CSS drifts from it, and `tools/palette_check.py` validates the palette itself.
-- **Map colors in the microsite come from the `--map-*` tokens** in `chart-tokens.css`, mirroring
-  Map Semantic (`design-language/tokens/map.json`). One mode, so they sit in the light block only.
+## Microsite and profile (cross-cutting)
+- Microsite conventions (links, partials, prefixing, page and chart tokens, findings, anchors) live
+  in `.claude/rules/microsite.md` and load when working under `docs/`. After any palette or token
+  change, run `python3 tools/check_chart_tokens.py tokens`.
 - **Raster renders take colors from tokens, not hex.** A build script that colors a map raster calls
   `tokens.rgb("map" | "species", name)`; the values live in `design-language/tokens/map.json` and
   `species.json`, mirroring Figma's Map Semantic and Species collections. External palettes (USDA
   zones, colors sampled from a photo) stay raw, with their source noted.
-- **Three-part structure** (decided 2026-10-25; spec `design-language/specs/2026-10-25-profile-synthesis-proposal-design.md`).
-  The audience is designers and engineers proposing work for the owner, so write for them, not a
-  course rubric. Nav groups pages as Current state, Synthesis (`synthesis.html`), and Proposal
-  (`project-plan.html`).
-  Each current-state page ends with a `#findings` block ("Findings for design", `.fd-*` classes,
-  inside the page's `.wrap`) sorted as strengths, weaknesses, opportunities, threats. Only write
-  findings the page's own content supports; an empty quadrant reads "None identified yet."
-  `synthesis.html` rolls up the strongest findings and links each one back to its page.
 - Cite original data sources (NOAA, station IDs, lidar, USGS), never course lessons or private
   repo paths.
-- Anchor contracts: `sectors.html` links to `sun-solar.html#sun-path-charts` and `climate.html#wind`;
-  `synthesis.html` links to each page's `#findings` and to `sectors.html#views`, `#social`,
-  `water.html#water-balance`, `#flow-schematic`, `sun-solar.html#sun-path-3d`, `zones-design.html#brainstorm`.
-- Demo tasks page (`project-plan.html`) is a hand-ported snapshot of the demo site's task data.
-  It is the Proposal part for this lot; on a client site it becomes a design brief with phases.
 - **The site file's Site Profile page mirrors the microsite** (spec
   `design-language/specs/2026-10-26-site-profile-sheets-design.md`). Each chart is a 1920 × 1080
   profile sheet, built from the library's `00P` template parts, in a section per microsite page.
   The two outputs are built separately and may differ in layout; they must agree on data, tokens,
   and findings. A sheet's findings panel quotes its page's "Findings for design" word for word, so
   when a page's numbers or findings change, update the matching sheets too. Each site repo keeps
-  the sync checklist (Lot 86: "Site Profile Sync" in its CLAUDE.md).
+  the sync checklist (Lot 86: the `site-profile-sync` skill in its `.claude/skills/`).
 
 ## Figma (library and site files)
 - **Two kinds of file** (split 2026-10-25; spec `design-language/specs/2026-10-25-figma-library-split-design.md`).
