@@ -67,15 +67,17 @@ def hour_marks(day, lat, lon, tz):
 
 def sunrise_sunset(day, lat, lon, tz, horizon=-0.833):
     """Almanac sunrise and sunset to the minute: sun's centre 0.833° below the horizon
-    (refraction plus the sun's radius)."""
+    (refraction plus the sun's radius). (None, None) when the sun never rises."""
     up = [_at(day, m, lat, lon, tz) for m in range(0, 24 * 60)]
     up = [p for p in up if p["alt"] > horizon]
+    if not up:  # polar night
+        return None, None
     return up[0]["time"], up[-1]["time"]
 
 
 def solar_noon(day, lat, lon, tz):
     """Highest sun of the day, to the minute."""
-    return max((_at(day, m, lat, lon, tz) for m in range(10 * 60, 15 * 60)), key=lambda p: p["alt"])
+    return max((_at(day, m, lat, lon, tz) for m in range(24 * 60)), key=lambda p: p["alt"])
 
 
 def polar_offset(az, alt, radius):

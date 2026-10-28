@@ -4,6 +4,9 @@
 - shadow_mask: which cells a given sun position leaves in shadow. A cell is shaded when, looking
   from it toward the sun, any surface along the ray rises above the line of sight.
 - sun_hours: hours of direct sun per cell over a list of sun positions (from sun_arcs.day_arc).
+- horizon_profile: the skyline seen from one cell, as elevation angles by azimuth.
+- plane_factor and clear_sky_dni: incidence on a sloped plane, and a clear-sky weighting.
+- solar_access: share of the clear-sky direct sun a surface gets after shading (roof solar).
 
 Grids are north-up (row 0 is the north edge, column 0 the west edge), in feet. `surface` is the
 first-return or max surface (roofs, canopy); `receptor` is the height to test at each cell, such

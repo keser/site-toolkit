@@ -80,7 +80,7 @@ def check_tokens():
             fails.append(f"{page.name}: var({name}) is never defined")
         if '<link rel="stylesheet" href="assets/page-tokens.css">' not in html:
             fails.append(f"{page.name}: page-tokens.css link missing")
-        if re.search(r"var\(--(chart|species)-", html) and 'href="assets/chart-tokens.css"' not in html:
+        if re.search(r"var\(--(chart|species|map)-", html) and 'href="assets/chart-tokens.css"' not in html:
             fails.append(f"{page.name}: uses chart tokens without linking chart-tokens.css")
     return fails
 
@@ -172,6 +172,8 @@ def check_html(html, prefixes):
 
 if __name__ == "__main__":
     mode = sys.argv[1] if len(sys.argv) > 1 else "tokens"
+    if mode not in ("tokens", "page") or (mode == "page" and len(sys.argv) < 3):
+        sys.exit("usage: check_chart_tokens.py tokens | page <file> [prefix ...]")
     fails = check_tokens() if mode == "tokens" else check_page(sys.argv[2], sys.argv[3:])
     for f in fails: print("FAIL", f)
     print("OK" if not fails else f"{len(fails)} failure(s)")

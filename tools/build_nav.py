@@ -11,6 +11,7 @@ Re-run this after editing either partial, or after adding a new page, before
 committing.
 """
 import re
+import sys
 from pathlib import Path
 
 DOCS = Path(__file__).resolve().parent.parent / "docs"
@@ -41,6 +42,9 @@ def build(docs_dir: Path = DOCS) -> list[Path]:
     changed = []
     for page in sorted(docs_dir.glob("*.html")):
         original = page.read_text()
+        for name in partial_contents:
+            if f"<!-- {name}:START -->" not in original:
+                print(f"warning: {page.name} has no {name} markers", file=sys.stderr)
         updated = original
         for name, content in partial_contents.items():
             updated = stamp(updated, name, content)

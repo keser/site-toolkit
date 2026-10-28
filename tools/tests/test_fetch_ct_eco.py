@@ -102,3 +102,17 @@ def test_mosaic_1934_layer_is_magics_statewide_fairchild_mosaic():
     assert m["service"].endswith("/images/Mosaic_1934_MAGIC/ImageServer")
     assert m["fmt"] == "png" and m.get("bands") is None  # one gray band
     assert "1934" in m["what"]
+
+
+def test_fetch_raises_when_the_buildings_query_returns_an_arcgis_error(tmp_path, monkeypatch):
+    import io
+    import json
+
+    class Resp(io.BytesIO):
+        def __enter__(self): return self
+        def __exit__(self, *a): return False
+
+    monkeypatch.setattr(f, "urlopen", lambda url, timeout=0: Resp(json.dumps({"error": {"code": 400}}).encode()))
+    with pytest.raises(RuntimeError, match="buildings query failed"):
+        f.fetch(41.5728, -72.6344, tmp_path, only=["buildings.geojson"])
+    assert not (tmp_path / "buildings.geojson").exists()

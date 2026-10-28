@@ -99,3 +99,9 @@ def test_cli_entry_point_writes_file_via_subprocess(tmp_path):
     assert dest_path.exists()
     assert dest_path.read_text() == port(FRAGMENT)
     assert f"wrote {dest_path}" in result.stdout
+
+
+def test_port_links_page_tokens_and_zeroes_body_margin():
+    out = port('<meta charset="utf-8"><title>T</title><div class="viz-root">x</div>')
+    assert '<link rel="stylesheet" href="assets/page-tokens.css">' in out
+    assert "body { margin: 0; }" in out

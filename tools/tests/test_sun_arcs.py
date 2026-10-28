@@ -68,3 +68,13 @@ def test_sunrise_and_sunset_include_refraction():
     early = (arc[0]["time"] - rise).total_seconds() / 60
     late = (sset - arc[-1]["time"]).total_seconds() / 60
     assert 2 <= early <= 8 and 2 <= late <= 8
+
+
+def test_sunrise_sunset_is_none_in_polar_night():
+    assert s.sunrise_sunset(date(2026, 12, 21), 78.2, 15.6, "Arctic/Longyearbyen") == (None, None)
+
+
+def test_solar_noon_is_found_outside_the_old_10_to_15_window():
+    # Far western China keeps Beijing time, so solar noon falls after 15:00 on the clock.
+    noon = s.solar_noon(date(2026, 6, 21), 39.5, 73.5, "Asia/Shanghai")
+    assert noon["time"].hour >= 15

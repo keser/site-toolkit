@@ -98,3 +98,10 @@ def test_build_returns_list_of_changed_files(tmp_path):
 
     assert changed == [changed_page]
     assert unchanged_page not in changed
+
+
+def test_build_warns_about_a_page_without_markers(tmp_path, capsys):
+    docs_dir = _make_docs(tmp_path)
+    (docs_dir / "bare.html").write_text("<html><body>no markers</body></html>")
+    build(docs_dir)
+    assert "bare.html has no NAV markers" in capsys.readouterr().err

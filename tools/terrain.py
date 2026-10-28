@@ -1,9 +1,10 @@
 #!/usr/bin/env python3
 """Terrain and canopy views from lidar rasters.
 
+- slope_aspect: slope in degrees and the direction each cell faces.
 - hillshade: relief shading of a bare-earth grid, so the ground under tree canopy reads.
 - contour_segments: marching-squares contour line segments at one level, in fractional grid
-  (row, col) coordinates. Segments are not stitched; draw them as one path per level.
+  (row, col) coordinates. stitch joins them into polylines; simplify thins a polyline.
 - canopy_height: height of whatever stands on the ground (surface minus bare earth), with
   CT ECO's "0 = no lidar return" cells treated as bare ground.
 
@@ -25,11 +26,7 @@ def slope_aspect(dem, cell):
 
 def hillshade(dem, cell, az=315, alt=45):
     """0..1 shading for a sun at azimuth az (clockwise from north) and altitude alt."""
-    dem = np.asarray(dem, float)
-    d_row, d_col = np.gradient(dem, cell)
-    dz_east, dz_north = d_col, -d_row
-    slope = np.arctan(np.hypot(dz_east, dz_north))
-    aspect = np.arctan2(-dz_east, -dz_north)  # direction the slope faces, clockwise from north
+    slope, aspect = (np.radians(v) for v in slope_aspect(dem, cell))
     a, h = math.radians(az), math.radians(alt)
     shade = math.sin(h) * np.cos(slope) + math.cos(h) * np.sin(slope) * np.cos(a - aspect)
     return np.clip(shade, 0, 1)

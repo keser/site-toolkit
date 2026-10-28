@@ -9,7 +9,7 @@ Usage:
 --width-ft/--height-ft fetch a rectangle instead of the square, and --pixel-ft coarsens every
 layer, for wide context views (a neighborhood) that would exceed the server's 4100 px limit.
 
-Every raster covers the same square box in CT State Plane feet (EPSG:6434), centered on the
+Every raster covers the same box (square, or the --width-ft rectangle) in CT State Plane feet (EPSG:6434), centered on the
 site, so the layers stack pixel for pixel. Writes manifest.json with each file's source,
 request, fetch date, and citation. Connecticut only: CT ECO serves the state's flights.
 
@@ -184,6 +184,8 @@ def fetch(lat, lon, out, radius_ft=300, year=2023, only=None, width_ft=None, hei
         url = buildings_query_url(box)
         with urlopen(url, timeout=120) as r:
             geo = json.load(r)
+        if "error" in geo:  # ArcGIS reports errors as HTTP 200 JSON
+            raise RuntimeError(f"buildings query failed: {geo['error']}")
         (out / "buildings.geojson").write_text(json.dumps(geo))
         manifest["files"].append({"file": "buildings.geojson", "url": url,
                                   "what": f"{len(geo.get('features', []))} building footprints from the 2023 "

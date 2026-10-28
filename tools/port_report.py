@@ -23,6 +23,8 @@ TEMPLATE = """<!DOCTYPE html>
 <html lang="en">
 <head>
 <meta name="viewport" content="width=device-width, initial-scale=1">
+<link rel="stylesheet" href="assets/page-tokens.css">
+<style>body {{ margin: 0; }}</style>
 {head}
 </head>
 <body>

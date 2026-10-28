@@ -96,3 +96,10 @@ def test_horizon_profile_can_skip_obstacles_closer_than_a_minimum_distance():
     surface = wall_ew()                       # wall 10 ft north of row 30
     angles = shade.horizon_profile(surface, 1.0, 30, 25, 0.0, [0], max_dist_ft=60, min_dist_ft=12)
     assert np.isclose(angles[0], 0.0)
+
+
+def test_clear_sky_dni_is_zero_below_the_horizon_and_rises_with_the_sun():
+    assert shade.clear_sky_dni(0) == 0.0
+    assert shade.clear_sky_dni(-5) == 0.0
+    assert abs(shade.clear_sky_dni(90) - 1353 * 0.7) < 1e-6  # air mass 1
+    assert shade.clear_sky_dni(10) < shade.clear_sky_dni(30) < shade.clear_sky_dni(60)

@@ -114,3 +114,46 @@ def test_flags_var_with_no_definition():
 def test_skips_names_built_in_script():
     from check_chart_tokens import undefined_vars
     assert undefined_vars("<script>el.style.fill = `var(--spo-month-${m})`</script>", set()) == []
+
+
+def _write(path, data):
+    import json
+    path.write_text(json.dumps(data))
+    return path
+
+
+def test_alpha_ramps_accept_a_correct_copy_and_round_half_up(tmp_path, monkeypatch):
+    import check_chart_tokens as c
+    ramps = {"sage/300": "#a0b080", "neutral/Black": "#000000",
+             "alpha/sage-300-30": "#a0b0804d", "alpha/black-50": "#00000080"}
+    monkeypatch.setattr(c, "RAMPS_JSON", _write(tmp_path / "ramps.json", ramps))
+    assert c.check_alpha_ramps() == []
+
+
+def test_alpha_ramps_flag_drift_and_bad_names(tmp_path, monkeypatch):
+    import check_chart_tokens as c
+    ramps = {"sage/300": "#a0b080", "alpha/sage-300-30": "#a0b0804c", "alpha/Sage30": "#000000"}
+    monkeypatch.setattr(c, "RAMPS_JSON", _write(tmp_path / "ramps.json", ramps))
+    fails = c.check_alpha_ramps()
+    assert len(fails) == 2
+    assert any("doesn't parse" in f for f in fails)
+
+
+def test_map_tokens_live_in_the_light_block_only(tmp_path, monkeypatch):
+    import check_chart_tokens as c
+    monkeypatch.setattr(c, "RAMPS_JSON", _write(tmp_path / "ramps.json", {"gold/100": "#f5e6b8"}))
+    monkeypatch.setattr(c, "MAP", _write(tmp_path / "map.json", {"tokens": {"sun/full": "gold/100"}}))
+    good = (".viz-root { --map-sun-full: #f5e6b8; }\n"
+            '@media (prefers-color-scheme: dark) { :root:where(:not([data-theme="light"])) .viz-root { } }\n'
+            ':root[data-theme="dark"] .viz-root { }')
+    assert c.check_map_tokens(good) == []
+    bad = good.replace(':root[data-theme="dark"] .viz-root { }',
+                       ':root[data-theme="dark"] .viz-root { --map-sun-full: #000000; }')
+    assert any("overridden" in f for f in c.check_map_tokens(bad))
+
+
+def test_unknown_mode_prints_usage():
+    import subprocess
+    script = Path(__file__).resolve().parents[1] / "check_chart_tokens.py"
+    r = subprocess.run([sys.executable, str(script), "token"], capture_output=True, text=True)
+    assert r.returncode != 0 and "usage" in r.stderr
