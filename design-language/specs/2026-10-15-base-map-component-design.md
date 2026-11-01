@@ -359,3 +359,6 @@ pixels off. The old frames stay on their pages until Andrew retires them.
   (59 × 59 px), centered on the old shed's spot. Its roof panels are dashed [6, 4] to mark it
   tentative, following the camper's dashed outline. Update its size and drop the dashes once the
   design is final.
+- **Moved 2026-11-01** to the NE end of the fruit row, outside the netting (top-left 1238, 548), per
+  the Lesson 8 design brief: the new shed replaces the plastic shed rather than taking its spot. See
+  the map sheet spec, "Lesson 8 maps moved in".

@@ -60,6 +60,10 @@ settled.
   - **Site Design Toolkit** (`aF9SVeTLwFN8PCEiU2OSBQ`) is the published library: Cover
     (with Permaculture resources), Styles, Components, Demo – Lot 86, Assets (patterns). It holds
     no site content except the demo page, and never mentions the course.
+  - **Slide components** (Components page, `Slides` section, since 2026-11-01): `header–deck`,
+    `section-tag`, table cells, sub-heading, footer, all with placeholder text. Figma Slides can't
+    bind component properties and links from a library open a new tab, so each deck pastes a local
+    copy of the header and adds its own slide number field and in-deck links there.
   - **One site file per site**, which uses the library. Lot 86's is Lot 86 – Site Plan
     (`iFt6im4itRdGt8UJ44GHyc`): its maps, charts, inspiration, imagery, and course work. Its map
     sheets are components, so its decks place them live. It is the upstream source for every Lot 86

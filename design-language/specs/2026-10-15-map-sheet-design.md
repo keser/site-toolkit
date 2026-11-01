@@ -188,8 +188,9 @@ yet. The **Proposed** column is filled in as designs are made.
 | 19 | Plant inventory (ID → species table) | table | light | [to make] | — |
 | 20 | Succession | property | light | Succession | |
 | 21 | Thematic design | property | light | — | Thematic Design |
-| 22 | Garden detail (veg garden & chicken run) | property | light | `22 Garden detail` | [to make] |
+| 22 | Garden detail (veg garden & chicken run) | property | light | `22 Garden detail` | `22b Garden detail – proposed` (2026-11-01) |
 | 23 | Resilience brainstorm | property | light | Resilience Brainstorm page | — |
+| 31 | Animals & wildlife | property | light | — | `31b Animals & wildlife – proposed` (2026-11-01) |
 
 Thematic Design is the one existing proposal. The current dark sector duplicates (`155:2782`,
 `155:2916`, `169:4139`) fold into their light sheets via the `Sheet` mode.
@@ -490,6 +491,7 @@ untouched. Delete the section after the course. 23a Resilience brainstorm stays 
 | C02 | Contour practice (`1613:14124`) | 07a + original overlays and `Contour Practice` key | The 18 flow and drainage arrows lived inside the old base-map frame; they're in a `flow arrows` frame in `annotations`. |
 | C03 | Water brainstorm (`1613:14247`) | 07a + original overlays and `Water Brainstorm` key | |
 | C04 | Soil brainstorm (`1613:14461`) | 07a + original overlays and `Soil Brainstorm` key | Sample 1's marker sits half under the key, as in the original. |
+| C06 | Thematic area (course) (`4068:15880`) | PDC deck slide 171 (Lesson 8), pasted in | Added 2026-11-01; see "Lesson 8 maps moved in". |
 
 All four use the `Lot 86 / base map` instance, the Lot 86 site legend (title and date from the
 original), and `Sheet=Light`, `Map display=Labels off` like 12a. Overlays keep their original
@@ -741,3 +743,63 @@ Three Property – current sheets, built from the CT 2023 lidar with `tools/shad
    (azimuth 100–260°) raises April 15 – October 15 direct sun from 2.1 h a day to 3.2 h (within 30 ft,
    about 800 ft²), 4.2 h (40 ft, about 1,300 ft²) or 5.3 h (60 ft, about 2,400 ft²). Six hours a day
    needs neighbors' trees cut too. A crown reduction to 15 ft matches removal out to 30 ft.
+
+### Lesson 8 maps moved in (2026-11-01)
+
+The three Lesson 8 maps were built straight in the PDC deck on 2026-10-23, before the site file
+existed. They now live in the site file, which is the source; the deck slides become instances of
+these sheets after Lesson 8 is graded.
+
+| Deck slide | Sheet | Section | Node |
+|---|---|---|---|
+| 171 Thematic area · existing elements | `C06 Thematic area (course)` (frame) | Course maps – remove after PDC | `4068:15880` |
+| 173 Netted Garden & Orchard · detail | `22b Garden detail – proposed` (component) | Property – proposed | `4083:709` |
+| 181 Animals: domestic & wildlife | `31b Animals & wildlife – proposed` (component) | Property – proposed | `4083:2341` |
+
+1. **How they came over.** Plugin calls on the PDC deck drop the MCP connection, so Andrew pasted
+   each slide's layers into the site file and the frames were converted in place. Positions, key
+   text and markers are the slide's, unchanged.
+2. **Classification (Andrew):** 171 is a rubric exercise, so it's a course map. 181 is a new sheet
+   type, numbered 31 (next free number). 173 is the planned 22 proposed sheet.
+3. **22b keeps the slide's 1″ = 12′ scale** (5/3 × the lot drawing), not 22's 1″ = 5′. The design
+   spans the whole netted enclosure and the fruit row, which don't fit at 1″ = 5′. Widening 22 to
+   match is a later option.
+4. **22b and 31b use `state=proposed`; C06 uses `state=current`.** All three now point at the site
+   file's own base map and `Lot 86 / site-legend`. The pasted instances pointed at an older
+   published version, from before the 2026-10-22 boundary correction and legend audit, so the
+   legends now read 103–110 ft and 18,705 ft². The woodland (Theme 5) ellipses on 31b and C06 run
+   past the corrected rear line, like Theme 5 on 21b; left as drawn.
+5. **Proposed base map: the new shed moved** to the NE end of the fruit row, outside the netting
+   (base map 1238, 548), following the Lesson 8 brief §4.2: the 10 × 10 shed replaces the 10 × 8
+   plastic shed. 22b's hand-drawn shed was deleted; the base map draws it now.
+6. **Keys** are `map-key-shell` instances holding the slides' original `map-key-row` instances in
+   the Rows slot: 421 px rows (two columns) on 22b and 31b, 874 px (one column) on C06. The slot's
+   wrap gap is 8 on 22b and C06 so the key clears the legend and the tow-lane label.
+7. **Plants on 22b are `Vegetation` (Grayscale) instances** with their fills bound to the same
+   `layer/*` variables, as on 17a: trees as Deciduous Tree, shrubs as Shrub, herb rings as
+   Perennial, bramble rows as Hedgerow. They stay on 22b until the design settles and the plants
+   get P### IDs; then they move into the proposed base map.
+8. **Colors bound to the library:** enclosures `coral/Shade` stroke with the `coral/Tint/25` fill
+   style; kennel door `coral/Shade`; woodland `sage/Tint/25`; stone wall `charcoal/Base`; tunnel
+   `Black`; nursery bed `land/ground`.
+
+**No library match (for Andrew's toolkit review after the lesson).** These stay as shapes local to
+the sheets, bound to library colors:
+
+| Element | Sheets | Drawn as | Notes |
+|---|---|---|---|
+| Netted enclosure / exclusion line | 22b, 31b, C06 | dashed rectangle, `coral` | Boundary-outline component with netting, temporary-fence, exclusion variants? |
+| Gates (front, back) and kennel door | 22b | filled bars | Gate component with width and orientation? |
+| Netting posts + work lights | 22b | 12 px squares + 10 px circles | Post component with a light toggle? Could serve the bat pole. |
+| Rotation tunnel, walkway | 22b, 31b | dashed vectors, `Black` | Movable/temporary line style. |
+| Swale | 22b | 6 px vector, `cobalt/Shade` | Water line style next to the flow arrows. |
+| Rain barrel | 22b | circle, `cobalt/Shade` | Water storage point. |
+| Nursery bed | 22b | rectangle, `land/ground` | `structure` instance, or a bed component? |
+| Old stone wall | 31b | dashed 10 px vector, `charcoal/Base` | Wall line style. |
+| Groundcover patch | 22b | rectangle, `layer/groundcover` | `Vegetation` has no groundcover type. |
+| Groundnut, maypop | 22b | `Vegetation` Perennial, `layer/vine` | `Vegetation` has no vine type (grapes use Perennial too). |
+| Songbird / woodland habitat areas | 31b | ellipses, `sage` | Same drawing as 21b's theme areas; a shared area overlay? |
+
+Still to do: publish the site file, then add 22b and 31b to the Lot 86 Map Set deck (duplicate a
+slide, swap its instance). After Lesson 8 is graded, swap PDC deck slides 171, 173 and 181 to
+instances of C06, 22b and 31b.
