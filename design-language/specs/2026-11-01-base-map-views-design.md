@@ -1,6 +1,7 @@
 # Base map views: one drawing, many crops
 
-Status: approach agreed 2026-11-01; not built. Build after the PDC Lesson 8 submission.
+Status: approach agreed 2026-11-01; not built. Revised 2026-11-14 (see "Frame and keys" below):
+the whole-lot frame stays, and the rear-line overlay redraws are dropped.
 
 ## Problem
 
@@ -56,10 +57,29 @@ Andrew will still measure from the pins on the next site visit. Keep the hidden
 line (Theme 5 on 21b, 31b, C06; Zone 5 on 12a, 14a, C01; succession on 20a; goals on C04; flow
 arrows on 10a and 11a) get redrawn, after the views exist.
 
+## Frame and keys (2026-11-14)
+
+1. **Keep the whole-lot frame.** Sheets keep today's 1920×1080 frame instead of tightening it to
+   the 0.43 ac line. The spare space outside the lot holds the keys, so keys stop covering
+   on-lot elements. Place keys over off-lot ground with no design content (on 21b: top left over
+   Lot 85, and the bottom band over Lot 87 and the street). Those spots cover most maps. When a
+   map's focus is the ground those keys would cover, the rear woodland area can hold the key
+   instead (a sector map, for example).
+2. **Overlays may cross the rear line.** All adjacent owners have approved the work (site plan
+   R18), and rear woodland work extends onto the rear neighbor's lot. The overlay redraws listed under "Lot
+   boundary" are dropped. Keep the lot boundary visible and above every overlay so on-lot and
+   shared work stay readable.
+3. **Views A and B are likely unnecessary.** The whole-lot frame already serves as both. Region
+   views (C–F) remain, built when a detail map needs one.
+4. **Concept plan groups in `state=proposed` (PDC Lesson 9).** Five layer groups (Water, Zones &
+   Access, Vegetation, Structures & Energy, Soil & Animals) live in a `Concept plan` frame in the
+   proposed variant, each hidden by default. A sheet shows one group through an instance override;
+   the integrated plan shows all five. Existing sheets on `state=proposed` don't change.
+
 ## Order
 
 1. Finish the Lesson 8 round: review, publish the site file, Map Set slides.
 2. Stroke comparison and decision.
 3. Views A and B; move the lot sheets onto B. About 40 sheets, so small batches.
 4. Views C–F with the detail-plant layer; split dense sheets front/back with side-panel keys.
-5. Redraw overlays that overrun the rear line.
+5. ~~Redraw overlays that overrun the rear line.~~ Dropped 2026-11-14.
