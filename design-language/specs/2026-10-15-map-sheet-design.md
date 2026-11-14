@@ -141,6 +141,8 @@ another property. Instead:
 - **The library keeps a `map-key` shell:** title, panel, light and dark, and a slot for
   `map-key-row` instances.
 - **Each sheet builds its key from `map-key-row` instances** in its own file.
+- **Marker rows don't repeat the number in the heading** (2026-11-01). The numbered marker swatch
+  already shows it, so the heading is the label alone ("Coop + covered run", not "1 · Coop + covered run").
 - **Lot 86's 16 variants stay** as the demo set's keys until each sheet migrates. After that they're
   removed.
 
