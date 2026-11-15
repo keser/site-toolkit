@@ -1,7 +1,7 @@
 # Microsite patterns
 
-Extracted from the demo site's conventions. The authoritative copy for rules is `../CLAUDE.md`;
-this file is the rationale.
+Extracted from the demo site's conventions. The authoritative copy for rules is
+`../.claude/rules/microsite.md`; this file is the rationale.
 
 - **Plain static HTML.** Chosen over Jekyll/Docusaurus to match the self-contained `.viz-root`
   report pattern and avoid a build step. Pages serves `docs/` as committed (`docs/.nojekyll`).

@@ -1,7 +1,9 @@
 # Map sheet: standard canvas for the property map set
 
 **Date:** 2026-10-15
-**Status:** Andrew answered the open questions on 2026-10-15 (see **Decisions**). Nothing built yet.
+**Status:** Andrew answered the open questions on 2026-10-15 (see **Decisions**). Built in steps
+from 2026-10-15; see **Built** and the dated sections after it. Latest: Lesson 9 concept plan
+sheets (2026-11-14).
 **Scope:** personal project, so there's latitude to be opinionated.
 **Builds on:** `2026-10-15-property-map-set-audit.md` (inventory, findings, Andrew's answers).
 
@@ -189,10 +191,16 @@ yet. The **Proposed** column is filled in as designs are made.
 | 18 | Species – function | property | light | Species – Function | |
 | 19 | Plant inventory (ID → species table) | table | light | [to make] | — |
 | 20 | Succession | property | light | Succession | |
-| 21 | Thematic design | property | light | — | Thematic Design |
+| 21 | Thematic design | property | light | — | Thematic Design; `21.1b Thematic area` (2026-11-14, formerly C06) |
 | 22 | Garden detail (veg garden & chicken run) | property | light | `22 Garden detail` | `22b Garden detail – proposed` (2026-11-01) |
 | 23 | Resilience brainstorm | property | light | Resilience Brainstorm page | — |
 | 31 | Animals & wildlife | property | light | — | `31b Animals & wildlife – proposed` (2026-11-01) |
+| 32 | Concept plan – integrated | property | light | — | `32b` overview, `32.1b` detail (2026-11-14) |
+| 33 | Concept plan – water | property | light | — | `33b`, `33.1b` (2026-11-14) |
+| 34 | Concept plan – zones & access | property | light | — | `34b`, `34.1b` (2026-11-14) |
+| 35 | Concept plan – vegetation | property | light | — | `35b`, `35.1b` (2026-11-14) |
+| 36 | Concept plan – structures & energy | property | light | — | `36b`, `36.1b` (2026-11-14) |
+| 37 | Concept plan – soil & animals | property | light | — | `37b`, `37.1b` (2026-11-14) |
 
 Thematic Design is the one existing proposal. The current dark sector duplicates (`155:2782`,
 `155:2916`, `169:4139`) fold into their light sheets via the `Sheet` mode.
@@ -266,6 +274,8 @@ On the Keys page:
   - `Garden detail` (0 / 5′ / 10′)
   - `Regional` (`Mid label` and `End label` text properties, default 50 mi / 100 mi)
   - Label frames no longer clip, so long labels stay centered on their ticks.
+  - `Base map 2×` (0 / 10′ / 20′) and `Base map 4⁄3×` (0 / 15′ / 30′), added 2026-11-14 for the
+    zoomed views (`2217:13`, `2217:46`). Both are clones of `Base map`, so 231.7 px reads 20 ft or 30 ft.
   - It's exposed in both legend variants.
 - **`Lot 86 / site-legend`** (`1517:9914`): wraps a `North=Rotated` legend at 1920 × 140, exposed.
 - **All 28 existing instances:**
@@ -493,7 +503,7 @@ untouched. Delete the section after the course. 23a Resilience brainstorm stays 
 | C02 | Contour practice (`1613:14124`) | 07a + original overlays and `Contour Practice` key | The 18 flow and drainage arrows lived inside the old base-map frame; they're in a `flow arrows` frame in `annotations`. |
 | C03 | Water brainstorm (`1613:14247`) | 07a + original overlays and `Water Brainstorm` key | |
 | C04 | Soil brainstorm (`1613:14461`) | 07a + original overlays and `Soil Brainstorm` key | Sample 1's marker sits half under the key, as in the original. |
-| C06 | Thematic area (course) (`4068:15880`) | PDC deck slide 171 (Lesson 8), pasted in | Added 2026-11-01; see "Lesson 8 maps moved in". |
+| C06 | Thematic area (course) (`4068:15880`) | PDC deck slide 171 (Lesson 8), pasted in | Added 2026-11-01; see "Lesson 8 maps moved in". Now `21.1b` in Property – proposed (2026-11-14). |
 
 All four use the `Lot 86 / base map` instance, the Lot 86 site legend (title and date from the
 original), and `Sheet=Light`, `Map display=Labels off` like 12a. Overlays keep their original
@@ -805,3 +815,22 @@ the sheets, bound to library colors:
 Still to do: publish the site file, then add 22b and 31b to the Lot 86 Map Set deck (duplicate a
 slide, swap its instance). After Lesson 8 is graded, swap PDC deck slides 171, 173 and 181 to
 instances of C06, 22b and 31b.
+
+### Lesson 9 concept plan sheets (2026-11-14)
+
+Thirteen sheets in Map Set › Property – proposed, all on `state=proposed`:
+
+| Sheets | What they show |
+|---|---|
+| `32b`–`37b` | Concept plan overviews: integrated, water, zones & access, vegetation, structures & energy, soil & animals |
+| `32.1b`–`37.1b` | Detail views of the same six, in the same order. They place the crop views C, D and E (base map views spec) |
+| `21.1b` | Thematic area, formerly `C06` (Lesson 8) |
+
+1. **Layers come from the base map.** Each sheet turns on one of the concept plan groups in
+   `Lot 86 / base map` through its boolean properties. See the base map views spec, "Frame and
+   keys", item 4. Recording the properties here waits until the sheets settle.
+2. **Keys are local frames** built from library `map-key-row` instances, as the **Key** section
+   asks. Converting them to the library key shell is a logged cleanup.
+3. **Zones are 1 and 2 only.** Lot 86 dropped Zones 3–5 on 2026-11-14; the five Lesson 7 themes
+   are now called regions. The library's `Zones – Current` key variant still lists Zones 1–5, a
+   known follow-up.

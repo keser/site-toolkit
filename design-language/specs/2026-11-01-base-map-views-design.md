@@ -1,7 +1,8 @@
 # Base map views: one drawing, many crops
 
-Status: approach agreed 2026-11-01; not built. Revised 2026-11-14 (see "Frame and keys" below):
-the whole-lot frame stays, and the rear-line overlay redraws are dropped.
+Status: approach agreed 2026-11-01. Revised 2026-11-14 (see "Frame and keys" below): the
+whole-lot frame stays, and the rear-line overlay redraws are dropped. Views C, D and E built
+2026-11-14 (see "Built"); the open questions closed the same day.
 
 ## Problem
 
@@ -39,15 +40,18 @@ their keys cover map detail. Zooming in today means rescaling a whole base-map i
    region views (Show toggle or a Map display mode). One source; whole-lot views stay clean.
 7. **Close views put the key beside the map, not over it** (for example a 1280-wide map area and a
    600-wide key panel). Dense sheets split front and back so keys stay short.
-8. **Standard scales** become `map-scale` variants (candidates: 1″ = 20′, 12′, 8′, 5′) instead of
-   typed overrides.
+8. **Standard scales** become `map-scale` variants instead of typed overrides. The built views set
+   two of them, added 2026-11-14: `Base map 2×` (1″ = 10′, views C and D) and `Base map 4⁄3×`
+   (1″ = 15′, view E). The detail sheets still carry typed labels until they switch over. Add others
+   (12′, 8′, 5′) when a view needs them.
 
-## Open
+## Closed (2026-11-14)
 
-- **Stroke weight when zoomed.** Scaling an instance scales its strokes. Options: bind base-map
-  stroke weights to variables with a mode per zoom level, or accept heavier lines. Decide after a
-  side-by-side comparison of both at 5/3 × and 4×.
-- **Crop bounds, rotations and scales per view**, to be proposed for approval before building.
+- **Stroke weight when zoomed.** Accept the heavier lines. Views C–E were built at 2× and 4⁄3× and
+  read well on the Lesson 9 detail sheets. Variable stroke modes per zoom level stay an option if a
+  4× view looks too heavy.
+- **Crop bounds, rotations and scales per view.** Set by the built views C–E (see "Built").
+  Views A, B and F get proposed the same way if they're ever built.
 
 ## Lot boundary (2026-11-01)
 
@@ -73,13 +77,31 @@ arrows on 10a and 11a) get redrawn, after the views exist.
    views (C–F) remain, built when a detail map needs one.
 4. **Concept plan groups in `state=proposed` (PDC Lesson 9).** Five layer groups (Water, Zones &
    Access, Vegetation, Structures & Energy, Soil & Animals) live in a `Concept plan` frame in the
-   proposed variant, each hidden by default. A sheet shows one group through an instance override;
-   the integrated plan shows all five. Existing sheets on `state=proposed` don't change.
+   proposed variant, each hidden by default. Each group is bound to a boolean property: `Show water`,
+   `Show zones & access`, `Show vegetation`, `Show structures & energy`, `Show soil & animals`. A
+   sixth, `Show layer detail` (default on), shows the analysis detail. A sheet turns on one group.
+   The integrated plan shows all five and turns layer detail off. Existing sheets on `state=proposed` don't change.
 
 ## Order
 
 1. Finish the Lesson 8 round: review, publish the site file, Map Set slides.
-2. Stroke comparison and decision.
-3. Views A and B; move the lot sheets onto B. About 40 sheets, so small batches.
+2. ~~Stroke comparison and decision.~~ Closed 2026-11-14: accept heavier lines (see "Closed").
+3. ~~Views A and B; move the lot sheets onto B.~~ Likely unnecessary (2026-11-14, "Frame and
+   keys" item 3).
 4. Views C–F with the detail-plant layer; split dense sheets front/back with side-panel keys.
+   C, D and E are built; see "Built".
 5. ~~Redraw overlays that overrun the rear line.~~ Dropped 2026-11-14.
+
+## Built (2026-11-14)
+
+Three view components in the site file's Components page, Lot 86 section, "views". Each exposes
+its base-map instance, so a sheet sets the concept plan toggles on the view. The Lesson 9 detail
+sheets (`32.1b`–`37.1b`) place them.
+
+| View | Component | Scale |
+|---|---|---|
+| C | `view C – house & front` | 2× (1″ = 10′) |
+| D | `view D – shade garden` | 2× (1″ = 10′) |
+| E | `view E – garden end` | 4⁄3× (1″ = 15′) |
+
+Views A, B and F aren't built.

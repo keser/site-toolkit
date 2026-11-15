@@ -1,6 +1,6 @@
 # Map Tokens v2 — Shade / Base / Tint, Fill Styles, Stroke Weights
 
-Status: built 2026-10-11 — see site-plan/plans/2026-10-10-map-tokens-v2.md; manual follow-ups and open decisions listed there. Extends
+Status: built 2026-10-11 — see design-language/plans/2026-10-10-map-tokens-v2.md; manual follow-ups and open decisions listed there. Extends
 [2026-09-28-map-design-system-design.md](2026-09-28-map-design-system-design.md), which is
 complete. That spec's Phase 6 ("Layer Styles") introduced the two-step `Shade`/`Tint` tone
 axis that this spec replaces.

@@ -39,7 +39,7 @@ after the Cover opens with a `Contents` section: a linked list of its sections. 
 5. **Assets:** patterns.
 
 **Site file** (Lot 86 – Site Plan), pages in order: Cover, Components (the site's base map,
-site-legend, and sector diagram), Map Set (Regional & overlay, Property – current, Property –
+site-legend, sector diagram, and crop views), Map Set (Regional & overlay, Property – current, Property –
 proposed; each sheet is a component), Site Profile (one section per microsite page: Sun & solar,
 Climate, Water, Flood, Species, Sectors; each chart is a 1920 × 1080 profile sheet component), Inspiration, Assets (site imagery and textures), and Course (deleted after the
 course ends).

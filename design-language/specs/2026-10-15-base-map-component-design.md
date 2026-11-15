@@ -3,7 +3,8 @@
 **Date:** 2026-10-15
 **Status:** Andrew answered the four open questions on 2026-10-15 (see **Decisions**). The plant list is
 settled (see **Plant list**). `Lot 86 / base map` is built (`1543:617`, Base Map page) on 2026-10-16
-(see **Build notes**).
+(see **Build notes**). Since the 2026-10-25 library split it lives in the site file's Components
+page, Lot 86 section (`2026-10-25-figma-library-split-design.md`).
 **Scope:** personal project, so there's latitude to be opinionated.
 **Builds on:** `2026-10-15-map-sheet-design.md` (the sheet's `content` layer holds this component),
 `2026-10-15-property-map-set-audit.md` (finding 2: four plant inventories).
@@ -353,7 +354,7 @@ pixels off. The old frames stay on their pages until Andrew retires them.
   8′ × 10′ (47 × 59 px at 5.85 px/ft), long side running north–south along the tree line. It had been
   drawn 40 × 41; it was resized about its center.
 - **The shed spot holds two structures over time.** The current shed is a temporary plastic and metal
-  kit that has already collapsed in storms. A sturdy replacement, engineered by Andrew's dad, is planned
+  kit that has already collapsed in storms. A sturdy replacement, engineered by Thomas Keser, is planned
   for a spring build. It will store the lawn tractor, tools, and supplies. Its design isn't done.
 - **In `state=proposed`** the shed is `new tool shed (tentative)` (`1597:6927`): 10′ × 10′
   (59 × 59 px), centered on the old shed's spot. Its roof panels are dashed [6, 4] to mark it
