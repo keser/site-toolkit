@@ -1,5 +1,7 @@
 # Base map component: one grayscale base map for every property sheet
 
+> **Amended 2026-11-15:** the base map holds current fixtures only. Its `state=proposed` variant and concept toggles are retired; proposals live in the `Lot 86 / concept plan` overlay, placed in each sheet's `annotations` layer. Drawn shapes in overlays are frames, not rectangles or ellipses. See `2026-11-15-concept-plan-overlay-design.md`.
+
 **Date:** 2026-10-15
 **Status:** Andrew answered the four open questions on 2026-10-15 (see **Decisions**). The plant list is
 settled (see **Plant list**). `Lot 86 / base map` is built (`1543:617`, Base Map page) on 2026-10-16

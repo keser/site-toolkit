@@ -1,5 +1,7 @@
 # Map sheet: standard canvas for the property map set
 
+> **Amended 2026-11-15:** the base map holds current fixtures only. Its `state=proposed` variant and concept toggles are retired; proposals live in the `Lot 86 / concept plan` overlay, placed in each sheet's `annotations` layer. Drawn shapes in overlays are frames, not rectangles or ellipses. See `2026-11-15-concept-plan-overlay-design.md`.
+
 **Date:** 2026-10-15
 **Status:** Andrew answered the open questions on 2026-10-15 (see **Decisions**). Built in steps
 from 2026-10-15; see **Built** and the dated sections after it. Latest: Lesson 9 concept plan
