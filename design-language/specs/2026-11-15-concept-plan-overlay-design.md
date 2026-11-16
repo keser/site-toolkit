@@ -1,6 +1,9 @@
 # Concept plan overlay: proposals above the base map, not inside it
 
-Status: built 2026-11-15 (overlay `4175:1896`); site file publish and deck accept pending. Amends `2026-10-15-base-map-component-design.md` and
+Status: **superseded the same day (2026-11-15) by local drawings.** The overlay component was built,
+then Andrew found it too complicated: editing meant switching between the Components page, toggles
+and the Map Set page. See "Revision: local drawings" at the end. The rule stands: proposals sit
+above the base map, never inside it.
 `2026-10-15-map-sheet-design.md`.
 
 ## Why
@@ -148,3 +151,28 @@ Every Map Set sheet has a 6 px inside stroke bound to the toolkit's black color 
 - Batch size per call, with a before and after screenshot of each sheet.
 - The order: build the overlay first; delete the proposed variant last.
 - Record the change in both amended specs and the Lesson 9 follow-ups.
+
+## Revision: local drawings (2026-11-15, Andrew)
+
+**Why:** the overlay component and the `Lot 86 / cell labels` set were too complicated to edit.
+Andrew wants to draw proposals right on the sheet, over the base map, the same way keys are local
+to each sheet rather than managed elsewhere.
+
+**Now:**
+- Each proposed sheet holds its own drawing in `annotations`, in a frame named
+  `concept plan (local)` that holds only the layer groups the sheet shows:
+  - the overviews 32b–37b
+  - the details 32.1b–37.1b
+  - 22b and 31b, which have two frames: fixtures at the bottom, labels on top
+- **Detail sheets:** `annotations` is cropped to the view (1280×940) and drawn at the view's zoom.
+- **Views C, D and E** hold only the base map again.
+- **Deleted:** `Lot 86 / concept plan` and `Lot 86 / cell labels`. Figma version history has them.
+
+**Kept from the design above:**
+- the base map holds current fixtures only
+- shapes are frames
+- cell labels are the toolkit `caption` (Black, LG), drawn at 1× size on every sheet
+- every sheet has a 6 px border
+
+**Trade-off accepted:** a change to a proposal (like the shed move) is repeated on each sheet that
+shows it, as with keys.
