@@ -56,6 +56,11 @@ settled.
   the sync checklist (Lot 86: the `site-profile-sync` skill in its `.claude/skills/`).
 
 ## Figma (library and site files)
+- **Toolkit floor** (2026-11-15; map-sheet spec, "Toolkit floor"). In site files and decks, every
+  paint binds a toolkit variable or style, every text node uses a toolkit text style, and stroke
+  weights bind `Stroke`. Any ramp or alpha is fine; semantic tokens are optional until a color
+  graduates. Nothing from the slide template file. Reusable map views get library keys; concept
+  maps may keep local keys. Bring a sheet up to the floor before editing it by hand.
 - **Two kinds of file** (split 2026-10-25; spec `design-language/specs/2026-10-25-figma-library-split-design.md`).
   - **Site Design Toolkit** (`aF9SVeTLwFN8PCEiU2OSBQ`) is the published library: Cover
     (with Permaculture resources), Styles, Components, Demo – Lot 86, Assets (patterns). It holds

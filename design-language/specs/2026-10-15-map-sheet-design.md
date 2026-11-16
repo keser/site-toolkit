@@ -82,6 +82,28 @@ sheet frame too. Both switches sit on the sheet:
 - `Sheet`: Light or Dark
 - `Map display`: Labels on or off
 
+### Toolkit floor (Andrew, 2026-11-15)
+
+Every sheet meets this floor, including site-specific design maps. It applies to the Figma
+files (site files and decks), not to the microsite. Audit and reasons:
+`2026-11-15-toolkit-usage-audit.md`.
+
+- **Color:** every paint binds a toolkit variable or style. Any Ramps step, `alpha/*` copy,
+  Color Roles entry, semantic variable or toolkit paint style is fine. A semantic token is not
+  required; design maps pick whatever ramp suits what they show.
+- **Text:** every text node uses a toolkit text style.
+- **Stroke weight:** binds the `Stroke` collection.
+- **Nothing from the slide template file** (`Template – PDC-PRO`): no `Pill`, no
+  `TEMPLATE: PDC PRO` variables, no `Custom Style` variables.
+
+**Graduating to semantic tokens.** A color or style becomes a candidate for a semantic variable
+when either of these is true:
+1. It belongs to a reusable map view (see Key). Graduate it when the view is built.
+2. The same meaning repeats on three or more sheets, or on a second site.
+
+Graduating means: add the variable to Map Semantic (or a sibling collection), add the library key
+variant if the view has one, mirror it in `tokens/*.json`, and run `check_chart_tokens.py tokens`.
+
 ## Legend
 
 ### Fields
@@ -149,6 +171,15 @@ another property. Instead:
   already shows it, so the heading is the label alone ("Coop + covered run", not "1 · Coop + covered run").
 - **Lot 86's 16 variants stay** as the demo set's keys until each sheet migrates. After that they're
   removed.
+
+**Which keys live in the library** (Andrew, 2026-11-15):
+- **Reusable map views** get a library key: a view every lot needs, whatever the design. Examples:
+  watershed, hardiness, bioregion, sector compass, water flow, catchment, microclimates, sun
+  hours, shadow, vegetation index, terrain, canopy height, roof solar, species status, layer and
+  function. Their rows and colors are defined once, with placeholder text where a row names the
+  site.
+- **Design and concept maps** (`NNb` proposals) may keep local keys. They are site-specific and
+  change fast. Local keys are still built from `map-key-row` instances and meet the floor above.
 
 ## The set
 
