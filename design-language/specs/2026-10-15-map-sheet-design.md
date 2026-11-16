@@ -92,7 +92,11 @@ files (site files and decks), not to the microsite. Audit and reasons:
   Color Roles entry, semantic variable or toolkit paint style is fine. A semantic token is not
   required; design maps pick whatever ramp suits what they show.
 - **Text:** every text node uses a toolkit text style.
-- **Stroke weight:** binds the `Stroke` collection.
+- **Stroke weight:** binds the `Stroke` collection. Off-token weights snap to a neighbor
+  (1.5 → 2, 2.5 → 3, 5 → 4, or 6 for emphasis). **Exempt:** dot rows (a dash pattern starting
+  under 1, round caps), where the weight sets the dot size. They are a drawing-kit candidate.
+- **Alphas:** a translucent color binds an `alpha/<hue>-<step>-<percent>` Ramps copy. If the step
+  you need has none, add it (Ramps, `tokens/ramps.json`, Styles page) rather than typing hex.
 - **Nothing from the slide template file** (`Template – PDC-PRO`): no `Pill`, no
   `TEMPLATE: PDC PRO` variables, no `Custom Style` variables.
 
