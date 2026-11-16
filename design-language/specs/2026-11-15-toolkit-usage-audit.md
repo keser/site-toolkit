@@ -53,6 +53,32 @@ the Phase 0 sweep below.
 - Page text is `system-ui`. About 220 raw `font-size` declarations. No typography JSON, so the
   check can't see type drift.
 
+## Phase 0 sweep log (2026-11-15)
+
+**Property – proposed** (16 sheets) swept to the floor:
+- Raw paints were bound to the nearest Ramps step when ΔE < 5. Most were exact Ramps hex pasted
+  in. `#262626` → charcoal/800, `#e6e6e6` and `#d9d9d9` → charcoal/100, `#cccccc` → charcoal/200.
+  Compost `#d9bf8c` → gold/100 (ΔE 12, Andrew's call).
+- Template variables were rebound to toolkit targets: `Black` → neutral/Black, `Neutral 500`
+  (an alias of charcoal/800) → charcoal/800.
+- `Pill` ×8 → toolkit `caption` (Black, LG). Their template main component no longer resolved,
+  so they rendered empty.
+- Stroke weights were bound to `Stroke`. Detail sheets use Option A (Andrew): each stroke takes
+  its overview counterpart's token, matched by layer path, so a token means the same width on
+  every sheet. Dot rows are exempt.
+- Raw JetBrains Mono Bold 16 labels → `Mono/16/Bold`.
+
+**Library:**
+- New `alpha/violet-500-25` and `alpha/white-85`.
+- `caption` fills and text bound (the White style uses `alpha/white-85`). `roof-panel` strokes
+  bound.
+
+**Finding:** a fill bound to a variable doesn't keep a manual paint opacity; it reads back at
+100%. Any translucent color needs an `alpha/*` copy. This settles the Phase 1 alpha question.
+
+**Gotcha:** instances inside a hidden frame don't load their children through the Plugin API.
+Edit a clone in a visible frame, then move it in.
+
 ## Plan (Andrew, 2026-11-15)
 Maps and slides first; the microsite and charts align later.
 
