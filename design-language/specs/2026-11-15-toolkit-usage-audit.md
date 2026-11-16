@@ -73,6 +73,16 @@ the Phase 0 sweep below.
 - `caption` fills and text bound (the White style uses `alpha/white-85`). `roof-panel` strokes
   bound.
 
+**Base-map symbols** default to grayscale (see the base-map component spec, amended 2026-11-15).
+
+**Deck** (Option A, Andrew): 5,454 template-neutral bindings on all 269 slides were rebound to
+Ramps: `Neutral 500` → charcoal/800, `Neutral 400` → charcoal/700, `Neutral 50` (cream) →
+charcoal/50 (nearest, ΔE 2.9; pure white is the alternative), White and Black → neutral, `Accent 2`
+→ sage/50. The template values were not aliases, so submitted slides shift by up to ΔE 5.1.
+**Left for Phase 2:** the template accents, about 740 bindings (`Green 100` ×402, `Blue 100` ×300,
+Yellow, Red, Green 500, Magenta). Retire them, or graduate them as slide accents. The three
+duplicate `TEMPLATE: PDC PRO` collections stay until then.
+
 **Finding:** a fill bound to a variable doesn't keep a manual paint opacity; it reads back at
 100%. Any translucent color needs an `alpha/*` copy. This settles the Phase 1 alpha question.
 
