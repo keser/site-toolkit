@@ -127,6 +127,16 @@ constraints, and component property references (visibility toggles).
    264) against before-screenshots.
 4. Check 22b and 31b's sheets, which aren't in the Lesson 9 deck except 22b on 250.
 
+### Cell labels keep one size (added 2026-11-15)
+Sheets zoom the map: 1× on the overviews and 31b, 1.33× in view E, 1.67× on 22b, 2× in views C and D.
+Labels inside the overlay scaled with it, so the pills grew on zoomed sheets. Andrew prefers the 1×
+size.
+
+`Lot 86 / cell labels` (`4178:1754`) has a `Map scale` variant (1×, 1.33×, 1.67×, 2×). Each variant
+shrinks the pills by the inverse amount around their centers. The overlay's `Cell labels` group holds
+one exposed instance of it, so each view or sheet picks the scale that matches its zoom. A new zoom
+level needs a new variant.
+
 ## Left to the builder
 - Batch size per call, with a before and after screenshot of each sheet.
 - The order: build the overlay first; delete the proposed variant last.
