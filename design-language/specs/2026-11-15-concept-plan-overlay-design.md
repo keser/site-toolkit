@@ -137,6 +137,13 @@ shrinks the pills by the inverse amount around their centers. The overlay's `Cel
 one exposed instance of it, so each view or sheet picks the scale that matches its zoom. A new zoom
 level needs a new variant.
 
+The labels are the toolkit's `caption` (Style=Black, Size=LG, 88×31), not the slide template's `Pill`
+(Andrew, 2026-11-15: the design language comes from the toolkit; see ROADMAP).
+
+### Sheet border
+Every Map Set sheet has a 6 px inside stroke bound to the toolkit's black color variable, as 21b and
+22b had (15 sheets added 2026-11-15, including all 12 concept sheets). Keys keep their 4 px border.
+
 ## Left to the builder
 - Batch size per call, with a before and after screenshot of each sheet.
 - The order: build the overlay first; delete the proposed variant last.
