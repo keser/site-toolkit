@@ -2,6 +2,8 @@
 
 > **Amended 2026-11-15:** the base map holds current fixtures only. Its `state=proposed` variant and concept toggles are retired; proposals are drawn locally in each sheet's `annotations` layer (a short-lived overlay component was retired the same day). Drawn shapes in overlays are frames, not rectangles or ellipses. See `2026-11-15-concept-plan-overlay-design.md`.
 
+> **Amended 2026-11-15 (symbols):** grayscale is the base map's primary use, so the library's base-map symbols now default to grayscale, all bound to Ramps (Andrew). Surfaces use charcoal steps: structure and roof 200, paving 200, brick and fire pit 100, street 500, driveway 800, garden bed 300, vegetable garden 100, turf 50 (outline 400). Strokes and labels are `neutral/Black` or `neutral/White`. Utilities keep their hue as a signal, also bound: water cobalt/600, electric gold/300, pole amber/700, wires magenta/400 and cobalt/600. A color map overrides fills per instance. The loose `deciduous tree`, `coniferous tree`, `hedgerow`, `shrub` and `perennial` symbols are deprecated in favor of `Vegetation` (`Color=Grayscale` / `Full Color`).
+
 **Date:** 2026-10-15
 **Status:** Andrew answered the four open questions on 2026-10-15 (see **Decisions**). The plant list is
 settled (see **Plant list**). `Lot 86 / base map` is built (`1543:617`, Base Map page) on 2026-10-16
