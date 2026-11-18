@@ -90,7 +90,9 @@ files (site files and decks), not to the microsite. Audit and reasons:
 
 - **Color:** every paint binds a toolkit variable or style. Any Ramps step, `alpha/*` copy,
   Color Roles entry, semantic variable or toolkit paint style is fine. A semantic token is not
-  required; design maps pick whatever ramp suits what they show.
+  required; design maps pick whatever ramp suits what they show. An industry palette (USDA
+  hardiness, a photo's own colors) binds the **Reference** collection, on its own map type only
+  (2026-11-18).
 - **Text:** every text node uses a toolkit text style.
 - **Stroke weight:** binds the `Stroke` collection. Off-token weights snap to a neighbor
   (1.5 → 2, 2.5 → 3, 5 → 4, or 6 for emphasis). **Exempt:** dot rows (a dash pattern starting
@@ -184,6 +186,20 @@ another property. Instead:
   site.
 - **Design and concept maps** (`NNb` proposals) may keep local keys. They are site-specific and
   change fast. Local keys are still built from `map-key-row` instances and meet the floor above.
+
+**Phase 1 inventory (2026-11-18).** The reusable list above, plus sun paths, succession, soil
+sample, zones (every lot has them; rows differ per site), the regional placeholder set (community
+resources, county, state, region, bioregion), lidar terrain, color infrared and historic aerial.
+Course keys (water, contour, soil and resilience brainstorms, thematic design) leave the library
+once their sheets migrate.
+- **Rows name the kind of thing, not the site's values.** "Lot boundary / Source and area", not
+  "1993 plan, 0.43 ac". Sheets override every row. Placeholder pass and pinning method:
+  `2026-11-15-toolkit-usage-audit.md`, Phase 1 log.
+- **Variants renamed or retired:** `Bioregion NA10` → `Bioregion` (the old One Earth outline key
+  was retired; sheet 01 keeps a detached copy); `Aerial 1934` → `Historic Aerial` (H1 and H3 both
+  use it). `Macro Watershed` and `State Watershed` merge into one `Watershed` key (open: see the
+  audit log).
+- **Imagery sheets** use `map-site-marker` `Contrast=High` on the map and in the key.
 
 ## The set
 

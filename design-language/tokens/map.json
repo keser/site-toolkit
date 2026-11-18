@@ -12,6 +12,9 @@
     "terrain/mid": "gold/50",
     "terrain/high": "gold/200",
     "terrain/contour": "slate/400",
-    "terrain/contour-index": "slate/600"
+    "terrain/contour-index": "slate/600",
+    "ecoregion/site": "alpha/gold-100-50",
+    "ecoregion/2": "alpha/teal-300-50",
+    "ecoregion/3": "alpha/violet-300-50"
   }
 }

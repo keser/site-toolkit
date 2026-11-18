@@ -89,6 +89,81 @@ duplicate `TEMPLATE: PDC PRO` collections stay until then.
 **Gotcha:** instances inside a hidden frame don't load their children through the Plugin API.
 Edit a clone in a visible frame, then move it in.
 
+## Phase 1 log (2026-11-18)
+
+### Inventory
+Read-only pass over the site file's Map Set and the library's `map-key` (36 variants).
+- Every reusable view but `24a Shadow study` and `26a Color infrared` already places a library
+  key. The work was making those keys reusable, not creating them.
+- **Lot 86 text in library rows:** "Lot boundary · 1993 plan, 0.43 ac" in nine variants; sector
+  compass bodies (Route 17 & 66); catchment, microclimate, zone and succession descriptions; R-series
+  source notes.
+- **Raw swatches** in seven variants: Microclimates (four Ramps steps at 50%), Zones (violet/300 at
+  25%), Macro and State watershed, the old Bioregion, Hardiness, CIR 1990, Aerial 1934. Plus 37 raw
+  white overrides on marker numbers inside key rows. A scan has to walk into instances to see those.
+- `H3 Aerial survey 1957` used the `Aerial 1934` variant. The sector compass's winter and summer
+  sun rows carried the wind rows' text.
+- **Watershed:** 03 and 04 share identical rows, but each map is a Google Earth raster with its
+  own HUC colors (HUC 8 is mauve on 03, pink on 04), so no single key matches both. A hidden vector
+  "nested scale" graphic on both uses cobalt/700, coral/300, gold/400, magenta/400.
+- On imagery, charcoal markers (R3) and white-outline-only ecoregions (R7) lose contrast.
+
+### Decisions (Andrew)
+1. Reusable list: the spec's fifteen plus sun paths, succession, soil sample, zones, the regional
+   placeholder set, lidar, and the historic aerials.
+2. Industry palettes go in a new **Reference** collection, not Ramps.
+3. Merge the watershed keys. Retire the old Bioregion for NA10, and give NA10 color fills. Add a
+   high-contrast marker for imagery.
+
+### Done
+**Library**
+- `Reference` collection: `usda-hardiness/5a`–`7b`, `cir-1990/vegetation|built|water`. Hardiness
+  and CIR swatches bound.
+- Ramps: `alpha/cobalt-700-50`, `alpha/coral-300-50`, `alpha/gold-400-50`. Microclimates swatches
+  bound to them (and the existing `magenta-400-50`); Zones' zone 2 to `alpha/violet-300-25`; Aerial
+  and Soil brainstorm black to `neutral/Black`; the 37 marker-number overrides to `neutral/White`.
+  No pixel changed.
+- Map Semantic `ecoregion/site|2|3` (gold-100, teal-300, violet-300, all at 50%).
+- `map-site-marker` gains `Contrast=Standard|High`. High: white fill, black stroke and number.
+  Existing instances map to Standard. Keys for Community Resources, County, State, Region and
+  Bioregion use High.
+- Placeholder text in the eighteen reusable variants that named Lot 86. `Bioregion NA10` →
+  `Bioregion` with three area rows (site's ecoregion, two neighbors); `Aerial 1934` →
+  `Historic Aerial`; the old `Bioregion` variant deleted.
+- Styles page: three alpha swatches, an Ecoregion block under Map semantic, a new Reference
+  section, and its Contents entry.
+
+**Site file**
+- **Pinning before the text change.** Setting a row property to the value it already has records
+  no override, so an update would replace it. Setting it to a temporary value and back records one
+  that survives. Done for every row, title and note in the 24 sheets whose key text changed.
+- Sector compass (05, 06, 08a): winter sun path → "Low 25° winter arc through the southern sky;
+  keep it open to the ground"; summer → "Near-overhead 72° summer sun; shade hot beds in the
+  afternoon" (from the Lesson 3 sector analysis).
+- R7: per-ecoregion fills under the outlines, from new per-ecoregion rings in the Lot 86 repo's
+  `context_maps_build.py` (`ecoregion_<id>` in `context.json`; the JPG rebuilt byte-identical).
+  Bound to the Ramps alphas until the library publishes, then to `ecoregion/*`.
+- 01 Bioregion's key detached, so the old variant could be deleted. Its map has no stated license;
+  R7 is the publishable sheet.
+
+**Repo:** `tokens/ramps.json`, `map.json`, new `reference.json`; `--map-ecoregion-*` in
+`chart-tokens.css`; `check_chart_tokens.py tokens` passes.
+
+### After the library publishes (site file)
+1. Accept the update; confirm pinned sheets kept their text.
+2. R7 key rows: the three ecoregion names; rebind R7 fills to `ecoregion/*`.
+3. Markers on R3, R4, R5, R6, R7 → `Contrast=High`.
+4. `24a` gets the `Shadow Study` key. `26a` needs a key (none fits yet).
+
+### Open
+- **Watershed merge.** Redraw 03/04 from the USGS Watershed Boundary Dataset as vectors over
+  imagery, like R7, so one `Watershed` key can bind graduated `watershed/*` tokens? Or merge the keys
+  now and accept the raster mismatch until a redraw?
+- Floor sweeps on reusable sheets: sun paths (57–146 unbound strokes), 03/04 (18 unstyled texts
+  each), 20a and 24a strokes, 12a and 14a raw paints and 14a's local key.
+- Remaining graduation: sector compass, water flow, catchment, succession, soil sample, and species
+  function still bind Color Roles directly.
+
 ## Plan (Andrew, 2026-11-15)
 Maps and slides first; the microsite and charts align later.
 

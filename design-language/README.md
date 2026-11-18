@@ -64,7 +64,12 @@ Every color variable aliases a **Ramps** primitive; no other collection holds a 
 - **Species:** native, naturalized, cultivated, and invasive status colors, plus plant layers.
   History: `specs/2026-10-14-species-palette-design.md`.
 - **Map Semantic:** one-mode color scales that a raster and its key share: `sun/*`, `vigor/*`,
-  `terrain/*`. History: `plans/2026-10-24-map-semantic-tokens.md`.
+  `terrain/*`, and `ecoregion/*` (translucent fills over imagery, 2026-11-18). History:
+  `plans/2026-10-24-map-semantic-tokens.md`.
+- **Reference:** industry palettes kept at their source values instead of snapped to Ramps:
+  `usda-hardiness/*` (USDA 2023 legend) and `cir-1990/*` (sampled from the 1990 color-infrared
+  aerial). Each variable's description cites its source. Use them only on the map type they come
+  from. History: `specs/2026-11-15-toolkit-usage-audit.md`, Phase 1.
 - **Page:** microsite chrome and status chips, Light and Dark. Amber is the accent. History:
   `specs/2026-10-25-page-tokens-design.md`.
 - **Sheet, Map display, Stroke:** map sheet canvas, panels, text, and marks (Light and Dark); the
@@ -72,7 +77,8 @@ Every color variable aliases a **Ramps** primitive; no other collection holds a 
 
 ### Where the code reads them
 `tokens/` holds each collection as Ramps steps per mode (`ramps.json`, `chart.json`,
-`species.json`, `map.json`, `page.json`). Two consumers read them:
+`species.json`, `map.json`, `page.json`), plus `reference.json` for the Reference collection's raw
+values. Two consumers read them:
 
 1. **The microsite.** `docs/assets/page-tokens.css` (on `:root`) and `chart-tokens.css` (on
    `.viz-root`) are hand-kept mirrors. `tools/check_chart_tokens.py tokens` resolves every

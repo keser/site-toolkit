@@ -44,7 +44,9 @@ settled.
 - **Raster renders take colors from tokens, not hex.** A build script that colors a map raster calls
   `tokens.rgb("map" | "species", name)`; the values live in `design-language/tokens/map.json` and
   `species.json`, mirroring Figma's Map Semantic and Species collections. External palettes (USDA
-  zones, colors sampled from a photo) stay raw, with their source noted.
+  zones, colors sampled from a photo) live in Figma's **Reference** collection and
+  `design-language/tokens/reference.json` at their source values, with the source in each
+  variable's description; a raster may use them raw with the source noted.
 - Cite original data sources (NOAA, station IDs, lidar, USGS), never course lessons or private
   repo paths.
 - **The site file's Site Profile page mirrors the microsite** (spec
@@ -61,6 +63,15 @@ settled.
   weights bind `Stroke`. Any ramp or alpha is fine; semantic tokens are optional until a color
   graduates. Nothing from the slide template file. Reusable map views get library keys; concept
   maps may keep local keys. Bring a sheet up to the floor before editing it by hand.
+- **Library keys hold placeholder text** (2026-11-18). A reusable `map-key` variant's rows name
+  the kind of thing ("Lot boundary / Source and area"), never Lot 86's values; each sheet
+  overrides them. Before changing a library key's text, pin the site sheets' current text as
+  overrides: set each row property to a temporary value and back. Setting the same value records
+  nothing, and an unpinned row takes the new library text on update, on the sheets and on the live
+  deck slides.
+- **Markers over imagery use `map-site-marker` `Contrast=High`** (white fill, black stroke and
+  number). `Standard` (charcoal fill) is for drawn base maps. Keys placed on imagery sheets use the
+  same contrast as their map.
 - **Two kinds of file** (split 2026-10-25; spec `design-language/specs/2026-10-25-figma-library-split-design.md`).
   - **Site Design Toolkit** (`aF9SVeTLwFN8PCEiU2OSBQ`) is the published library: Cover
     (with Permaculture resources), Styles, Components, Demo – Lot 86, Assets (patterns). It holds
