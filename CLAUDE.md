@@ -63,14 +63,14 @@ settled.
   weights bind `Stroke`. Any ramp or alpha is fine; semantic tokens are optional until a color
   graduates. Nothing from the slide template file. Reusable map views get library keys; concept
   maps may keep local keys. Bring a sheet up to the floor before editing it by hand.
-- **Library keys hold placeholder text** (2026-11-18). A reusable `map-key` variant's rows name
-  the kind of thing ("Lot boundary / Source and area"), never Lot 86's values; each sheet
-  overrides them. Before changing a library key's text, pin the site sheets' current text as
-  overrides: set each row property to a temporary value and back. Setting the same value records
-  nothing, and an unpinned row takes the new library text on update, on the sheets and on the live
-  deck slides.
+- **Map keys are local to each sheet** (Andrew, 2026-11-18). A site sheet's `key` is a frame on
+  the sheet, detached from the library's `map-key`, so the map and its key are edited together.
+  Its rows stay `map-key-row` instances and its title, note and panel keep toolkit styles and
+  variables, so the floor still holds. The library's `map-key` variants are examples with
+  placeholder labels ("Lot boundary / Source and area"): to start a key, place one and detach it,
+  or copy a neighboring sheet's key. Never put a site's values in a library variant.
 - **Markers over imagery use `map-site-marker` `Theme=Light`** (white fill, black stroke and
-  number). `Dark` (charcoal fill) is for drawn base maps. Keys placed on imagery sheets use the
+  number). `Dark` (black fill, white number) is for drawn base maps. Keys placed on imagery sheets use the
   same contrast as their map.
 - **Two kinds of file** (split 2026-10-25; spec `design-language/specs/2026-10-25-figma-library-split-design.md`).
   - **Site Design Toolkit** (`aF9SVeTLwFN8PCEiU2OSBQ`) is the published library: Cover

@@ -192,14 +192,19 @@ sample, zones (every lot has them; rows differ per site), the regional placehold
 resources, county, state, region, bioregion), lidar terrain, color infrared and historic aerial.
 Course keys (water, contour, soil and resilience brainstorms, thematic design) leave the library
 once their sheets migrate.
-- **Rows name the kind of thing, not the site's values.** "Lot boundary / Source and area", not
-  "1993 plan, 0.43 ac". Sheets override every row. Placeholder pass and pinning method:
-  `2026-11-15-toolkit-usage-audit.md`, Phase 1 log.
+- **Library variants are examples; sheet keys are local** (Andrew, 2026-11-18). Library rows name
+  the kind of thing ("Lot boundary / Source and area"), not a site's values. Every Lot 86 sheet's
+  key is a detached `key` frame built from `map-key-row` instances, edited on the map. This is the
+  approach this section first described; the 16 Lot 86 variants it kept "until each sheet
+  migrates" are now examples. Details: `2026-11-15-toolkit-usage-audit.md`, Phase 1 log.
 - **Variants renamed or retired:** `Bioregion NA10` → `Bioregion` (the old One Earth outline key
   was retired; sheet 01 keeps a detached copy); `Aerial 1934` → `Historic Aerial` (H1 and H3 both
   use it). `Macro Watershed` and `State Watershed` merge into one `Watershed` key (open: see the
   audit log).
-- **Imagery sheets** use `map-site-marker` `Theme=Light` on the map and in the key.
+- **Imagery sheets** use `map-site-marker` `Theme=Light` on the map and in the key; drawn maps use
+  `Theme=Dark` (black fill).
+- **Some sheets carry an inline key strip** instead of a key panel (24a's 3×3 shadow grid). That
+  counts as a key; don't add a panel over the map.
 
 ## The set
 

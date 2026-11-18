@@ -134,7 +134,7 @@ Read-only pass over the site file's Map Set and the library's `map-key` (36 vari
   section, and its Contents entry.
 
 **Site file**
-- **Pinning before the text change.** Setting a row property to the value it already has records
+- **Pinning before the text change** (superseded the same day by local keys, below). Setting a row property to the value it already has records
   no override, so an update would replace it. Setting it to a temporary value and back records one
   that survives. Done for every row, title and note in the 24 sheets whose key text changed.
 - Sector compass (05, 06, 08a): winter sun path → "Low 25° winter arc through the southern sky;
@@ -149,11 +149,28 @@ Read-only pass over the site file's Map Set and the library's `map-key` (36 vari
 **Repo:** `tokens/ramps.json`, `map.json`, new `reference.json`; `--map-ecoregion-*` in
 `chart-tokens.css`; `check_chart_tokens.py tokens` passes.
 
-### After the library publishes (site file)
-1. Accept the update; confirm pinned sheets kept their text.
-2. R7 key rows: the three ecoregion names; rebind R7 fills to `ecoregion/*`.
-3. Markers on R3, R4, R5, R6, R7 → `Theme=Light`.
-4. `24a` gets the `Shadow Study` key. `26a` needs a key (none fits yet).
+### Keys go local (Andrew, 2026-11-18)
+In practice, keys driven from the library were slow to edit, and a map and its key have to change
+together. All 36 `map-key` instances on the Map Set (17 regional, 18 current, 1 proposed) were
+detached into local `key` frames. Rows stay `map-key-row` instances. The library variants stay as
+placeholder examples. This is what the map-sheet spec's Key section planned on 2026-10-15.
+- The first publish reached the site file before the detach. Pinning held on every row but R7,
+  where the library inserted two rows and the pinned text shifted onto the wrong ones. R7's six
+  rows were rebuilt locally, and its map fills rebound to `ecoregion/*`.
+- A scan of all 214 rows for placeholder text found only hidden rows (zones 3–5 on 12a and 14a,
+  09.1's lot boundary). Those were removed.
+- Six titles on 25a–30a → `Mono/24/Bold`. The library gains `Mono/14/Regular` for key notes (no
+  14 px style existed), with a Styles page row.
+- `map-site-marker`: `Contrast` renamed to `Theme=Dark|Light`; Dark is now `neutral/Black`. The
+  cloned Light variants had lost the number text's link to `Number`; relinked.
+- 24a already has an inline key strip under its 3×3 grid. The inventory missed it because it isn't
+  a `map-key` instance. A key panel added there covered the map and was removed.
+
+### After the next publish (site file)
+1. Accept the update (`Theme` rename, black Dark markers, `Mono/14/Regular`).
+2. Markers on R3, R4, R5, R6, R7 (map and key) → `Theme=Light`.
+3. The nine imagery key notes → `Mono/14/Regular`.
+4. `26a Color infrared` has no key; decide whether it needs one.
 
 ### Open
 - **Watershed merge.** Redraw 03/04 from the USGS Watershed Boundary Dataset as vectors over
