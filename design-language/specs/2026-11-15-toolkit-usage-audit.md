@@ -172,12 +172,33 @@ placeholder examples. This is what the map-sheet spec's Key section planned on 2
 3. The nine imagery key notes → `Mono/14/Regular`.
 4. `26a Color infrared` has no key; decide whether it needs one.
 
+### Floor sweep: reusable sheets (2026-11-18)
+Swept to the floor, visible layers only: 09, 09.2, 12a, 14a, 20a, 24a. A final scan finds no raw
+paint, unbound stroke or unstyled text on them.
+- **Strokes:** 1→xs, 1.5→sm, 2→sm, 3→md, 3.5→lg, 4→lg, 5→lg, 6→xl, 8→2xl. Frames and instances
+  store the binding per side (`strokeTopWeight`…), so a check that reads only `strokeWeight`
+  over-reports.
+- **12a and 14a paints:** exact Ramps hues and their 25% alphas; `#d9d9d9` → charcoal/100 (ΔE
+  2.4). 14a's zone fills were teal-100 and violet-500 at 20% while its own key and 12a use
+  `alpha/teal-300-25` and `alpha/violet-300-25`; the map now matches the key. Children inside the
+  zone boolean shapes (old Zone 3–5 geometry) take their parent's token; their fills never render.
+- **Template:** the visible zone 1 and 2 `Pill` labels on 12a and 14a → toolkit `caption` (Black,
+  LG), text kept. 14a's five circulation labels → `Mono Caps/24/Medium`.
+- **Left alone:** the hidden "zones 1–5 (superseded 2026-11-14)" groups on 12a and 14a, kept as a
+  record. They still hold template Pills and raw fills.
+- **Held:** 09.1 Sun path 3D scene. Its lines (0.4–1.21 px), 7.2 px Inter labels and three
+  ground colors (ΔE 16–20 from any ramp) belong to a scaled 3D render; binding them to tokens would
+  thicken every line. Needs a call: exempt it like dot rows, or rebuild the scene at 1:1.
+- **Gotcha:** `fills` returns fresh objects on each read, so `fills.map(p => p === f ? … : p)`
+  with `f` from an earlier read changes nothing and reports success. Replace by index, then read
+  back.
+
 ### Open
 - **Watershed merge.** Redraw 03/04 from the USGS Watershed Boundary Dataset as vectors over
   imagery, like R7, so one `Watershed` key can bind graduated `watershed/*` tokens? Or merge the keys
   now and accept the raster mismatch until a redraw?
-- Floor sweeps on reusable sheets: sun paths (57–146 unbound strokes), 03/04 (18 unstyled texts
-  each), 20a and 24a strokes, 12a and 14a raw paints and 14a's local key.
+- Floor sweeps still to do: 03/04 (wait on the watershed call), 09.1 (see above), and the
+  sheets not yet scanned (the rest of Property – current, regional, Site Profile).
 - Remaining graduation: sector compass, water flow, catchment, succession, soil sample, and species
   function still bind Color Roles directly.
 
