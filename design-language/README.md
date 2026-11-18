@@ -64,11 +64,11 @@ Every color variable aliases a **Ramps** primitive; no other collection holds a 
 - **Species:** native, naturalized, cultivated, and invasive status colors, plus plant layers.
   History: `specs/2026-10-14-species-palette-design.md`.
 - **Map Semantic:** one-mode color scales that a raster and its key share: `sun/*`, `vigor/*`,
-  `terrain/*`, and `ecoregion/*` (translucent fills over imagery, 2026-11-18). History:
+  `terrain/*`, `ecoregion/*` and `watershed/*` (translucent fills over imagery, 2026-11-18). History:
   `plans/2026-10-24-map-semantic-tokens.md`.
 - **Reference:** industry palettes kept at their source values instead of snapped to Ramps:
-  `usda-hardiness/*` (USDA 2023 legend) and `cir-1990/*` (sampled from the 1990 color-infrared
-  aerial). Each variable's description cites its source. Use them only on the map type they come
+  `usda-hardiness/*` (USDA 2023 legend), `cir-1990/*` and `cir-2023/*` (sampled from the 1990 and
+  2023 color-infrared imagery). Each variable's description cites its source. Use them only on the map type they come
   from. History: `specs/2026-11-15-toolkit-usage-audit.md`, Phase 1.
 - **Page:** microsite chrome and status chips, Light and Dark. Amber is the accent. History:
   `specs/2026-10-25-page-tokens-design.md`.

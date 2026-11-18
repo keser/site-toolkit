@@ -2,7 +2,8 @@
   "_note": "Mirrors the Figma Reference collection (Site Design Toolkit library). Industry palettes kept at their source values; not aliases of Ramps. Use only on the map type they come from.",
   "sources": {
     "usda-hardiness": "USDA Plant Hardiness Zone Map, 2023 (USDA-ARS), legend colors",
-    "cir-1990": "Sampled from the 1990 color-infrared aerial (CT ECO)"
+    "cir-1990": "Sampled from the 1990 color-infrared aerial (CT ECO)",
+    "cir-2023": "Median class colors in the 2023 color-infrared panels (CT ECO 2023 ortho, NAIP 2023), sheet 26a"
   },
   "tokens": {
     "usda-hardiness/5a": "#7d9ff8",
@@ -13,6 +14,9 @@
     "usda-hardiness/7b": "#d0db7e",
     "cir-1990/vegetation": "#d1454d",
     "cir-1990/built": "#9eadbd",
-    "cir-1990/water": "#141a24"
+    "cir-1990/water": "#141a24",
+    "cir-2023/vegetation": "#db6c78",
+    "cir-2023/built": "#80c2c0",
+    "cir-2023/water": "#16130e"
   }
 }

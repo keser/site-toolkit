@@ -15,6 +15,10 @@
     "terrain/contour-index": "slate/600",
     "ecoregion/site": "alpha/gold-100-50",
     "ecoregion/2": "alpha/teal-300-50",
-    "ecoregion/3": "alpha/violet-300-50"
+    "ecoregion/3": "alpha/violet-300-50",
+    "watershed/basin": "alpha/sage-400-25",
+    "watershed/huc8": "alpha/coral-200-25",
+    "watershed/huc10": "alpha/gold-100-25",
+    "watershed/huc12": "alpha/magenta-400-25"
   }
 }

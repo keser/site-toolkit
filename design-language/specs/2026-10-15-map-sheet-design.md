@@ -203,8 +203,9 @@ once their sheets migrate.
   audit log).
 - **Imagery sheets** use `map-site-marker` `Theme=Light` on the map and in the key; drawn maps use
   `Theme=Dark` (black fill).
-- **Some sheets carry an inline key strip** instead of a key panel (24a's 3×3 shadow grid). That
-  counts as a key; don't add a panel over the map.
+- **Inline key rows** (2026-11-18): when a key panel would cover the map (24a's 3×3 grid, 26a's
+  two panels), the key is one horizontal row of `map-key-row` instances under the map, with fixed
+  row widths. Start from the matching library example, detach it, and move its rows into the row.
 
 ## The set
 

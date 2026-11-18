@@ -166,12 +166,6 @@ placeholder examples. This is what the map-sheet spec's Key section planned on 2
 - 24a already has an inline key strip under its 3×3 grid. The inventory missed it because it isn't
   a `map-key` instance. A key panel added there covered the map and was removed.
 
-### After the next publish (site file)
-1. Accept the update (`Theme` rename, black Dark markers, `Mono/14/Regular`).
-2. Markers on R3, R4, R5, R6, R7 (map and key) → `Theme=Light`.
-3. The nine imagery key notes → `Mono/14/Regular`.
-4. `26a Color infrared` has no key; decide whether it needs one.
-
 ### Floor sweep: reusable sheets (2026-11-18)
 Swept to the floor, visible layers only: 09, 09.2, 12a, 14a, 20a, 24a. A final scan finds no raw
 paint, unbound stroke or unstyled text on them.
@@ -193,12 +187,34 @@ paint, unbound stroke or unstyled text on them.
   with `f` from an earlier read changes nothing and reports success. Replace by index, then read
   back.
 
+### Andrew's calls, carried out (2026-11-18)
+- **09.1 rebuilt at real sizes.** The scene keeps its 1200 × 760 footprint; its lines and labels
+  no longer shrink with it. Hour marks, arcs and time-label frames take 09's tokens by layer name;
+  grid lines and altitude rings → `xs`; degree labels → `Mono/14/Regular`; time labels →
+  `Mono Caps/16/Bold`; three house-wall faces → charcoal 300/400/500.
+- **Watershed sheets 03 and 04 redrawn from USGS.** WBD HU4 0108 → HU8 01080205 → HU10
+  0108020507 → HU12 010802050702 and NHDPlus V2 rivers (order 5+ on 03, 4+ on 04) on Sentinel-2
+  cloudless 2016, built like R4–R7 (Lot 86 `fetch_wbd.py`, `context_maps_build.py` `w03`/`w04`).
+  Same details as the Google Earth versions; the areas match the old key (11,264 / 1,084.6 / 71.3 /
+  51.5 sq mi). Lines reach Figma through `upload_assets` as SVG, then bind to tokens. Frames sit at
+  a round scale across the 234 px bar (03: 100 mi, 04: 20 mi), because the legend's nested
+  `map-scale` won't resize; legends swapped to the scaled site legend. New Map Semantic
+  `watershed/basin|huc8|huc10|huc12` (25% alphas); outlines in the same hue. The library's two
+  watershed keys merged into one `Watershed` example.
+- **Inline key rows (24a, 26a).** A single horizontal row of `map-key-row` instances, taken from
+  the library example and detached, replaces 24a's loose swatch-and-text strip and gives 26a a key
+  under its reading notes. Rows need fixed widths: HUG collapses them, because their text fills.
+- **26a colors** are the 2023 flights', not 1990's, so the Reference collection gains
+  `cir-2023/vegetation|built|water`: median class colors sampled from the two panels.
+
+### After the next publish (site file)
+1. Accept the library update in the site file (only Andrew can). It carries `Theme`, black Dark
+   markers, `cir-2023/*` and `watershed/*`.
+2. Markers on R3, R4, R5, R6, R7 (map and key) → `Theme=Light`.
+3. 26a key swatches → `cir-2023/*`; 03/04 fills and key swatches → `watershed/*`.
+
 ### Open
-- **Watershed merge.** Redraw 03/04 from the USGS Watershed Boundary Dataset as vectors over
-  imagery, like R7, so one `Watershed` key can bind graduated `watershed/*` tokens? Or merge the keys
-  now and accept the raster mismatch until a redraw?
-- Floor sweeps still to do: 03/04 (wait on the watershed call), 09.1 (see above), and the
-  sheets not yet scanned (the rest of Property – current, regional, Site Profile).
+- Floor sweeps still to do: the sheets not yet scanned (the rest of Property – current, regional, Site Profile).
 - Remaining graduation: sector compass, water flow, catchment, succession, soil sample, and species
   function still bind Color Roles directly.
 
