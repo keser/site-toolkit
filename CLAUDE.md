@@ -126,6 +126,12 @@ settled.
     variable resets it to 1. A translucent style binds a Color Roles variable (`<hue>/Tint/50`)
     that aliases an `alpha/*` Ramps copy.
   - JetBrains Mono has no SemiBold; use Bold.
+  - `fills`/`strokes` return fresh objects on every read. Replace a paint by index, never by
+    comparing to a paint from an earlier read; read back to confirm.
+  - On frames, rectangles and instances a `Stroke` binding is stored per side (`strokeTopWeight`…).
+    Check those keys too, or a floor scan reports bound strokes as unbound.
+  - `findAll` from a component doesn't always reach into nested instances; walk instance children
+    explicitly when scanning for overrides.
 
 ## Working rules
 - The course rubric is a floor, not the scope. Track every site view and dataset that makes the
