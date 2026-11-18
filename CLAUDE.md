@@ -69,8 +69,8 @@ settled.
   overrides: set each row property to a temporary value and back. Setting the same value records
   nothing, and an unpinned row takes the new library text on update, on the sheets and on the live
   deck slides.
-- **Markers over imagery use `map-site-marker` `Contrast=High`** (white fill, black stroke and
-  number). `Standard` (charcoal fill) is for drawn base maps. Keys placed on imagery sheets use the
+- **Markers over imagery use `map-site-marker` `Theme=Light`** (white fill, black stroke and
+  number). `Dark` (charcoal fill) is for drawn base maps. Keys placed on imagery sheets use the
   same contrast as their map.
 - **Two kinds of file** (split 2026-10-25; spec `design-language/specs/2026-10-25-figma-library-split-design.md`).
   - **Site Design Toolkit** (`aF9SVeTLwFN8PCEiU2OSBQ`) is the published library: Cover

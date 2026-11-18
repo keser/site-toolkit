@@ -124,9 +124,9 @@ Read-only pass over the site file's Map Set and the library's `map-key` (36 vari
   and Soil brainstorm black to `neutral/Black`; the 37 marker-number overrides to `neutral/White`.
   No pixel changed.
 - Map Semantic `ecoregion/site|2|3` (gold-100, teal-300, violet-300, all at 50%).
-- `map-site-marker` gains `Contrast=Standard|High`. High: white fill, black stroke and number.
-  Existing instances map to Standard. Keys for Community Resources, County, State, Region and
-  Bioregion use High.
+- `map-site-marker` gains `Theme=Dark|Light`. Light: white fill, black stroke and number.
+  Existing instances map to Dark. The cloned Light variants first lost the number text's link to `Number`; relinked 2026-11-18. Keys for Community Resources, County, State, Region and
+  Bioregion use Light.
 - Placeholder text in the eighteen reusable variants that named Lot 86. `Bioregion NA10` →
   `Bioregion` with three area rows (site's ecoregion, two neighbors); `Aerial 1934` →
   `Historic Aerial`; the old `Bioregion` variant deleted.
@@ -152,7 +152,7 @@ Read-only pass over the site file's Map Set and the library's `map-key` (36 vari
 ### After the library publishes (site file)
 1. Accept the update; confirm pinned sheets kept their text.
 2. R7 key rows: the three ecoregion names; rebind R7 fills to `ecoregion/*`.
-3. Markers on R3, R4, R5, R6, R7 → `Contrast=High`.
+3. Markers on R3, R4, R5, R6, R7 → `Theme=Light`.
 4. `24a` gets the `Shadow Study` key. `26a` needs a key (none fits yet).
 
 ### Open

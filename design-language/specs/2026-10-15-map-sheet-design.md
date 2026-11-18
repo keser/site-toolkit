@@ -199,7 +199,7 @@ once their sheets migrate.
   was retired; sheet 01 keeps a detached copy); `Aerial 1934` → `Historic Aerial` (H1 and H3 both
   use it). `Macro Watershed` and `State Watershed` merge into one `Watershed` key (open: see the
   audit log).
-- **Imagery sheets** use `map-site-marker` `Contrast=High` on the map and in the key.
+- **Imagery sheets** use `map-site-marker` `Theme=Light` on the map and in the key.
 
 ## The set
 
