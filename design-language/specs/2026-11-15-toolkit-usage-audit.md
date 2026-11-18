@@ -207,11 +207,9 @@ paint, unbound stroke or unstyled text on them.
 - **26a colors** are the 2023 flights', not 1990's, so the Reference collection gains
   `cir-2023/vegetation|built|water`: median class colors sampled from the two panels.
 
-### After the next publish (site file)
-1. Accept the library update in the site file (only Andrew can). It carries `Theme`, black Dark
-   markers, `cir-2023/*` and `watershed/*`.
-2. Markers on R3, R4, R5, R6, R7 (map and key) → `Theme=Light`.
-3. 26a key swatches → `cir-2023/*`; 03/04 fills and key swatches → `watershed/*`.
+### After the publish (done 2026-11-18)
+Andrew published the library and site file. Markers on R3–R7 are `Theme=Light` (map and key); 26a's
+swatches bind `cir-2023/*`; 03 and 04 fills and key swatches bind `watershed/*`.
 
 ### Open
 - Floor sweeps still to do: the sheets not yet scanned (the rest of Property – current, regional, Site Profile).
